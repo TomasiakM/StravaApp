@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Common.Infrastructure.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using Strava.Application.Interfaces;
 using Strava.Infrastructure.Interfaces;
+using Strava.Infrastructure.Persistence;
 using Strava.Infrastructure.Services;
 using Strava.Infrastructure.Settings;
 
@@ -21,8 +23,11 @@ public static class DependencyInjection
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
+        services.AddServiceDbContext<ServiceDbContext>();
+
         services.AddScoped<IStravaAuthenticationService, StravaAuthenticationService>();
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }

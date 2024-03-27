@@ -32,7 +32,7 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
         var authenticationResponse = await StravaAuthorizationRequestAsync<StravaAuthorizationResponse>(
             request.Code, isRefreshTokenRequest: false, cancellationToken);
 
-        var token = await _unitOfWork.TokenRepository
+        var token = await _unitOfWork.Tokens
             .FindAsync(e => e.StravaUserId == authenticationResponse.Athlete.Id, cancellationToken);
         if (token is not null)
         {
@@ -52,7 +52,7 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
                 authenticationResponse.AccessToken,
                 authenticationResponse.ExpiresAt);
 
-            _unitOfWork.TokenRepository.Add(token);
+            _unitOfWork.Tokens.Add(token);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             //TODO: Publish message with new athlete
@@ -70,7 +70,7 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
 
     public async Task<TokenAggregate?> RefreshToken(long stravaUserId, CancellationToken cancellationToken = default)
     {
-        var token = await _unitOfWork.TokenRepository
+        var token = await _unitOfWork.Tokens
             .FindAsync(e => e.StravaUserId == stravaUserId, cancellationToken);
 
         if (token is null)
