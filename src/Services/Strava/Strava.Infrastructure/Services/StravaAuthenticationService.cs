@@ -59,7 +59,7 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
         }
 
 
-        var accessToken = await _tokenService.GenerateToken(token.StravaUserId);
+        var accessToken = _tokenService.GenerateToken(token.StravaUserId);
 
 
         return new AuthResponse(
