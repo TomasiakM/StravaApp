@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  strava-api:
+    container_name: strava-api
+    image: ${DOCKER_REGISTRY-}strava-api
+    ports:
+      - "8001:80"
+      - "8002:433"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DbConnection=${StravaApiDbConnectionString}
+
+      - TokenSettings__Key=${TokenKey}
+      - TokenSettings__Issuer=${TokenIssuer}
+      - TokenSettings__ExpiresInDays=${TokenExpiresInDays}
+
+      - StravaSettings__ClientId=${StravaClientId}
+      - StravaSettings__ClientSecret=${StravaClientSecret}
+    build:
+      context: .
+      dockerfile: src/Services/Strava/Strava.Api/Dockerfile
