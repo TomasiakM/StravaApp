@@ -1,5 +1,5 @@
 ﻿namespace Common.Domain.Interfaces;
 public interface IBaseUnitOfWork
 {
-    Task<int> SaveChangesAsync(CancellationToken cancellation = default);
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

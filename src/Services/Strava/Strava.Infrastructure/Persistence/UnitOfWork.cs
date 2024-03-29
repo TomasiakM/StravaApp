@@ -1,5 +1,5 @@
-﻿using Strava.Domain.Aggregates.Token;
-using Strava.Infrastructure.Interfaces;
+﻿using Strava.Application.Interfaces;
+using Strava.Domain.Aggregates.Token;
 using Strava.Infrastructure.Persistence.Repositories;
 
 namespace Strava.Infrastructure.Persistence;
@@ -15,8 +15,8 @@ internal sealed class UnitOfWork : IUnitOfWork
         Tokens = new TokenRepository(_dbContext);
     }
 
-    public async Task<int> SaveChangesAsync(CancellationToken cancellation = default)
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        return await _dbContext.SaveChangesAsync(cancellation);
+        return await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }
