@@ -122,7 +122,7 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
         res.EnsureSuccessStatusCode();
 
         var contentStream = await res.Content.ReadAsStreamAsync(cancellationToken);
-        var deserializedData = JsonSerializer.Deserialize<TResponse>(contentStream);
+        var deserializedData = JsonSerializer.Deserialize<TResponse>(contentStream, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower });
         if (deserializedData is null)
         {
             throw new Exception("Błąd podczas logowania");
