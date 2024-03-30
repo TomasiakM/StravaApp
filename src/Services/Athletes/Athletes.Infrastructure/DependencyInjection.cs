@@ -10,7 +10,7 @@ public static class DependencyInjection
     {
         services.AddServiceDbContext<ServiceDbContext>();
 
-        services.AddSingleton<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }

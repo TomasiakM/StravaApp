@@ -23,6 +23,21 @@ services:
     depends_on:
       - db_server
 
+  athletes-api:
+    container_name: athletes-api
+    image: ${DOCKER_REGISTRY-}athletes-api
+    ports:
+      - "8003:80"
+      - "8004:433"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DbConnection=${AthletesApiDbConnectionString}
+    build:
+      context: .
+      dockerfile: src/Services/Athletes/Athletes.Api/Dockerfile
+    depends_on:
+      - db_server
+
   db_server:
     container_name: sqlserver
     image: mcr.microsoft.com/mssql/server:2022-latest
