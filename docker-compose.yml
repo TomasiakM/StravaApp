@@ -17,11 +17,17 @@ services:
 
       - StravaSettings__ClientId=${StravaClientId}
       - StravaSettings__ClientSecret=${StravaClientSecret}
+
+      - MessageBrokerSettings__Host=amqp://rabbitmq:5672
+      - MessageBrokerSettings__Username=${RabbitMQUsername}
+      - MessageBrokerSettings__Password=${RabbitMQPassword}
     build:
       context: .
       dockerfile: src/Services/Strava/Strava.Api/Dockerfile
     depends_on:
       - db_server
+      - rabbitmq 
+
 
   athletes-api:
     container_name: athletes-api
@@ -32,11 +38,17 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DbConnection=${AthletesApiDbConnectionString}
+
+      - MessageBrokerSettings__Host=amqp://rabbitmq:5672
+      - MessageBrokerSettings__Username=${RabbitMQUsername}
+      - MessageBrokerSettings__Password=${RabbitMQPassword}
     build:
       context: .
       dockerfile: src/Services/Athletes/Athletes.Api/Dockerfile
     depends_on:
       - db_server
+      - rabbitmq
+
 
   db_server:
     container_name: sqlserver
@@ -46,3 +58,19 @@ services:
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=${DbPassword}
+
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.13-management
+    hostname: rabbitmq
+    restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RabbitMQUsername}
+      - RABBITMQ_DEFAULT_PASS=${RabbitMQPassword}
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq

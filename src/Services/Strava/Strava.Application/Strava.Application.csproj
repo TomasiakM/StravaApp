@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\Common.Application\Common.Application.csproj" />
+    <ProjectReference Include="..\..\..\Common\Common.MessageBroker\Common.MessageBroker.csproj" />
     <ProjectReference Include="..\Strava.Contracts\Strava.Contracts.csproj" />
     <ProjectReference Include="..\Strava.Domain\Strava.Domain.csproj" />
   </ItemGroup>
