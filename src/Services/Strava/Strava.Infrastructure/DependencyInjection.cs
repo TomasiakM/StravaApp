@@ -1,4 +1,6 @@
 ﻿using Common.Infrastructure.Extensions;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Strava.Application.Interfaces;
 using Strava.Infrastructure.Extensions;
@@ -22,5 +24,14 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
+    }
+
+    public static async Task<WebApplication> MigrateAsync(this WebApplication app)
+    {
+        await using var scope = app.Services.CreateAsyncScope();
+        await using var dbContext = scope.ServiceProvider.GetService<ServiceDbContext>();
+        await dbContext!.Database.MigrateAsync();
+
+        return app;
     }
 }

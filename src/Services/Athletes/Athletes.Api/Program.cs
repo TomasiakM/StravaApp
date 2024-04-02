@@ -17,6 +17,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    await app.MigrateAsync();
 }
 
 app.MapControllers();
