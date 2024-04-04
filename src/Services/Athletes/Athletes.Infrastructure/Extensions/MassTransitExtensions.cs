@@ -1,4 +1,5 @@
-﻿using Common.MessageBroker.Settings;
+﻿using Athletes.Application.Consumers;
+using Common.MessageBroker.Settings;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -11,6 +12,8 @@ internal static class MassTransitExtensions
         services.AddMassTransit(e =>
         {
             e.SetKebabCaseEndpointNameFormatter();
+
+            e.AddConsumer<ReceivedAthleteDataEventConsumer>();
 
             e.UsingRabbitMq((context, cfg) =>
             {

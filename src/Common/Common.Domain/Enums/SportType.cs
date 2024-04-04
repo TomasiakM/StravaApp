@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Strava.Contracts.Enums;
+namespace Common.Domain.Enums;
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum SportType
 {

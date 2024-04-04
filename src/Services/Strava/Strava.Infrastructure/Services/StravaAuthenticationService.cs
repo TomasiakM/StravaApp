@@ -1,4 +1,6 @@
-﻿using MapsterMapper;
+﻿using Common.MessageBroker.Contracts.Athletes;
+using MapsterMapper;
+using MassTransit;
 using Microsoft.Extensions.Options;
 using Strava.Application.Dtos.Athlete;
 using Strava.Application.Dtos.Auth;
@@ -17,14 +19,16 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
     private readonly IUnitOfWork _unitOfWork;
     private readonly ITokenService _tokenService;
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IBus _bus;
 
-    public StravaAuthenticationService(IOptions<StravaSettings> stravaSettingsOptions, IMapper mapper, ITokenService tokenService, IUnitOfWork unitOfWork, IHttpClientFactory httpClientFactory)
+    public StravaAuthenticationService(IOptions<StravaSettings> stravaSettingsOptions, IMapper mapper, ITokenService tokenService, IUnitOfWork unitOfWork, IHttpClientFactory httpClientFactory, IBus bus)
     {
         _stravaSettings = stravaSettingsOptions.Value;
         _mapper = mapper;
         _unitOfWork = unitOfWork;
         _tokenService = tokenService;
         _httpClientFactory = httpClientFactory;
+        _bus = bus;
     }
 
     public async Task<AuthResponse> LoginAsync(AuthRequest request, CancellationToken cancellationToken = default)
@@ -55,9 +59,10 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
             _unitOfWork.Tokens.Add(token);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            //TODO: Publish message with new athlete
+            await _bus.Publish(new NewAthleteLoggedInEvent(authenticationResponse.Athlete.Id));
         }
 
+        await _bus.Publish(_mapper.Map<ReceivedAthleteDataEvent>(authenticationResponse.Athlete));
 
         var accessToken = _tokenService.GenerateToken(token.StravaUserId);
 
@@ -81,14 +86,14 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
         var tokenExpiresAt = DateTimeOffset.FromUnixTimeSeconds(token.ExpiresAt);
         if (DateTime.UtcNow.AddMinutes(30) > tokenExpiresAt)
         {
-        var refreshResponse = await StravaAuthorizationRequestAsync<StravaRefreshTokenResponse>(token.RefreshToken, isRefreshTokenRequest: true, cancellationToken);
+            var refreshResponse = await StravaAuthorizationRequestAsync<StravaRefreshTokenResponse>(token.RefreshToken, isRefreshTokenRequest: true, cancellationToken);
 
-        token.Update(
-            refreshResponse.RefreshToken,
-            refreshResponse.AccessToken,
+            token.Update(
+                refreshResponse.RefreshToken,
+                refreshResponse.AccessToken,
                 refreshResponse.ExpiresAt);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         return token;

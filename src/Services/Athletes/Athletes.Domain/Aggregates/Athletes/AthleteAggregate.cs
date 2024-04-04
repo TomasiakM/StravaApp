@@ -26,4 +26,13 @@ public sealed class AthleteAggregate : AggregateRoot<AthleteId>
 
     public static AthleteAggregate Create(long stravaUserId, string username, string firstname, string lastname, string profile, string profileMedium, DateTime createdAt)
         => new(stravaUserId, username, firstname, lastname, profile, profileMedium, createdAt);
+
+    public void Update(string username, string firstname, string lastname, string profile, string profileMedium)
+    {
+        Username = username;
+        Firstname = firstname;
+        Lastname = lastname;
+        Profile = profile;
+        ProfileMedium = profileMedium;
+    }
 }

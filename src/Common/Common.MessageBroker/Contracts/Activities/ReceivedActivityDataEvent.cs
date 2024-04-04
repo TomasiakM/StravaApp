@@ -1,8 +1,7 @@
 ﻿using Common.Domain.Enums;
-using Strava.Contracts.Athlete;
 
-namespace Strava.Contracts.Activity;
-public record StravaActivityDetailsResponse(
+namespace Common.MessageBroker.Contracts.Activities;
+public record ReceivedActivityDataEvent(
     long Id,
     string Name,
     float Distance,
@@ -27,5 +26,13 @@ public record StravaActivityDetailsResponse(
     bool HasHeartrate,
     float AverageHeartrate,
     float MaxHeartrate,
-    StravaAthleteMetaResponse Athlete,
-    StravaMapSummaryResponse Map);
+    AthleteMetaEvent Athlete,
+    MapSummaryEvent Map);
+
+public record AthleteMetaEvent(
+    long Id);
+
+public record MapSummaryEvent(
+    string Id,
+    string? Polyline,
+    string? SummaryPolyline);
