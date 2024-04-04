@@ -4,7 +4,9 @@ namespace Strava.Infrastructure.Settings;
 public sealed class StravaSettings
 {
     [Required]
-    public int ClientId { get; init; }
+    public string BaseUrl { get; set; } = default!;
     [Required]
-    public string ClientSecret { get; init; } = default!;
+    public int ClientId { get; set; }
+    [Required]
+    public string ClientSecret { get; set; } = default!;
 }

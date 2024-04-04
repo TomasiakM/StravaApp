@@ -1,0 +1,31 @@
+﻿using Strava.Contracts.Athlete;
+using Strava.Contracts.Enums;
+
+namespace Strava.Contracts.Activity;
+public record StravaActivityDetailsResponse(
+    long Id,
+    string Name,
+    float Distance,
+    int MovingTime,
+    int ElapsedTime,
+    float TotalElevationGain,
+    SportType SportType,
+    DateTime StartDate,
+    DateTime StartDateLocal,
+    float[] StartLatlng,
+    float[] EndLatlng,
+    bool Private,
+    float AverageSpeed,
+    float MaxSpeed,
+    float AverageCadence,
+    float AverageWatts,
+    int MaxWatts,
+    bool DeviceWatts,
+    float Kilojoules,
+    float Calories,
+    string DeviceName,
+    bool HasHeartrate,
+    float AverageHeartrate,
+    float MaxHeartrate,
+    StravaAthleteMetaResponse Athlete,
+    StravaMapSummaryResponse Map);

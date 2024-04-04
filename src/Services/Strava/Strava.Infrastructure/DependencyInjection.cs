@@ -19,7 +19,11 @@ public static class DependencyInjection
 
         services.AddServiceDbContext<ServiceDbContext>();
 
+        services.AddScoped<StravaHttpClientService>();
+
         services.AddScoped<IStravaAuthenticationService, StravaAuthenticationService>();
+        services.AddScoped<IStravaActivitiesService, StravaActivitiesService>();
+
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 

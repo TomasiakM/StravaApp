@@ -39,7 +39,7 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
             token.Update(
                 authenticationResponse.RefreshToken,
                 authenticationResponse.AccessToken,
-                authenticationResponse.ExpiresIn);
+                authenticationResponse.ExpiresAt);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
@@ -68,7 +68,7 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
     }
 
 
-    public async Task<TokenAggregate?> RefreshToken(long stravaUserId, CancellationToken cancellationToken = default)
+    public async Task<TokenAggregate?> GetUserToken(long stravaUserId, CancellationToken cancellationToken = default)
     {
         var token = await _unitOfWork.Tokens
             .FindAsync(e => e.StravaUserId == stravaUserId, cancellationToken);
@@ -78,14 +78,18 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
             return null;
         }
 
+        var tokenExpiresAt = DateTimeOffset.FromUnixTimeSeconds(token.ExpiresAt);
+        if (DateTime.UtcNow.AddMinutes(30) > tokenExpiresAt)
+        {
         var refreshResponse = await StravaAuthorizationRequestAsync<StravaRefreshTokenResponse>(token.RefreshToken, isRefreshTokenRequest: true, cancellationToken);
 
         token.Update(
             refreshResponse.RefreshToken,
             refreshResponse.AccessToken,
-            refreshResponse.ExpiresIn);
+                refreshResponse.ExpiresAt);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+        }
 
         return token;
     }
@@ -123,9 +127,10 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
 
         var contentStream = await res.Content.ReadAsStreamAsync(cancellationToken);
         var deserializedData = JsonSerializer.Deserialize<TResponse>(contentStream, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower });
+
         if (deserializedData is null)
         {
-            throw new Exception("Błąd podczas logowania");
+            throw new Exception("Błąd podczas serializacji");
         }
 
         return deserializedData;
