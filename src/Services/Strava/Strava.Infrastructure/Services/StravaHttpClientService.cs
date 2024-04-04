@@ -63,18 +63,18 @@ internal sealed class StravaHttpClientService
             .HandleResult<HttpResponseMessage>(res => res.StatusCode == HttpStatusCode.TooManyRequests)
             .WaitAndRetryAsync(5, (retrycount) =>
             {
-                if (retrycount % 2 == 0)
+                if (retrycount % 2 == 1)
                 {
-                    var wait = 15 - (DateTime.UtcNow.Minute % 15);
-                    _logger.LogInformation("Waiting for {Wait} minutes. Request will be retried for {Retrycount} time.", wait, retrycount);
+                    var wait = TimeSpan.FromMinutes(15 - (DateTime.UtcNow.Minute % 15));
+                    _logger.LogInformation("Waiting for {Wait}. Request will be retried for {Retrycount} time. Next retry fetch at {Time}.", wait, retrycount, DateTime.UtcNow.Add(wait));
 
-                    return TimeSpan.FromMinutes(wait);
+                    return wait;
                 }
 
                 var waitTime = DateTime.Today.AddDays(1) - DateTime.UtcNow;
-                _logger.LogInformation("Waiting for {Wait} minutes. Request will be retried for {Retrycount} time.", waitTime.Minutes, retrycount);
+                _logger.LogInformation("Waiting for {Wait}. Request will be retried for {Retrycount} time. Next retry fetch at {Time}.", waitTime, retrycount, DateTime.UtcNow.Add(waitTime));
 
-                return waitTime;
+                return waitTime.Add(TimeSpan.FromMinutes(1));
             });
     }
 
@@ -85,7 +85,7 @@ internal sealed class StravaHttpClientService
             .WaitAndRetryAsync(8, (retrycount) =>
             {
                 var waitTime = TimeSpan.FromSeconds(Math.Pow(2, retrycount));
-                _logger.LogInformation("Api error occured with status code >= 500. Waiting for {Wait} seconds. Request will be retried for {Retrycount} time.", waitTime.Seconds, retrycount);
+                _logger.LogInformation("Api error occured with status code >= 500. Waiting for {Wait}. Request will be retried for {Retrycount} time.", waitTime, retrycount);
 
                 return waitTime;
             });
