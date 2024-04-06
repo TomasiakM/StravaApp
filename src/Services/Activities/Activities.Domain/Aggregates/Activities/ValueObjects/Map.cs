@@ -29,4 +29,6 @@ public sealed class Map : ValueObject
         yield return Polyline;
         yield return SummaryPolyline;
     }
+
+    private Map() { }
 }

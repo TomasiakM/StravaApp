@@ -26,4 +26,6 @@ public sealed class Time : ValueObject
         yield return StartDate;
         yield return StartDateLocal;
     }
+
+    private Time() { }
 }
