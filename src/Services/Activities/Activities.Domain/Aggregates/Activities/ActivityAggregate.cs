@@ -53,4 +53,25 @@ public sealed class ActivityAggregate : AggregateRoot<ActivityId>
 
     public static ActivityAggregate Create(long stravaId, long stravaUserId, string name, string deviceName, SportType sportType, bool @private, float distance, float totalElevationGain, float averageCadence, float kilojoules, float calories, Speed speed, Time time, Watts watts, Heartrate heartrate, Map map)
         => new(stravaId, stravaUserId, name, deviceName, sportType, @private, distance, totalElevationGain, averageCadence, kilojoules, calories, speed, time, watts, heartrate, map);
+
+    public void Update(string name, string deviceName, SportType sportType, bool @private, float distance, float totalElevationGain, float averageCadence, float kilojoules, float calories, Speed speed, Time time, Watts watts, Heartrate heartrate, Map map)
+    {
+        Name = name;
+        DeviceName = deviceName;
+        SportType = sportType;
+        Private = @private;
+
+        Distance = distance;
+        TotalElevationGain = totalElevationGain;
+        AverageCadence = averageCadence;
+
+        Kilojoules = kilojoules;
+        Calories = calories;
+
+        Speed = speed;
+        Time = time;
+        Watts = watts;
+        Heartrate = heartrate;
+        Map = map;
+    }
 }
