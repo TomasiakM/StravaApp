@@ -51,6 +51,27 @@ services:
       - rabbitmq
 
 
+  activities-api:
+    container_name: activities-api
+    image: ${DOCKER_REGISTRY-}activities-api
+    ports:
+      - "8005:80"
+      - "8006:433"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DbConnection=${ActivitiesApiDbConnectionString}
+
+      - MessageBrokerSettings__Host=amqp://rabbitmq:5672
+      - MessageBrokerSettings__Username=${RabbitMQUsername}
+      - MessageBrokerSettings__Password=${RabbitMQPassword}
+    build:
+      context: .
+      dockerfile: src/Services/Activities/Activities.Api/Dockerfile
+    depends_on:
+      - db_server
+      - rabbitmq
+
+
   db_server:
     container_name: sqlserver
     image: mcr.microsoft.com/mssql/server:2022-latest
