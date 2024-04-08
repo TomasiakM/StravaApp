@@ -22,7 +22,7 @@ public class NewAthleteLoggedInEventConsumer
     {
         var activities = await _stravaActivitiesService.GetAthleteActivities(context.Message.StravaUserId);
 
-        foreach (var activity in activities)
+        foreach (var activity in activities.Reverse())
         {
             _logger.LogInformation("[BUS] Sending activity event to fetch details for activity:{ActivityId}.", activity.Id);
             await _bus.Publish(new FetchAthleteActivityEvent(activity.Athlete.Id, activity.Id));

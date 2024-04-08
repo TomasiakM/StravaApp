@@ -25,6 +25,14 @@ internal static class MassTransitExtensions
                     h.Password(settings.Password);
                 });
 
+                cfg.AutoDelete = false;
+                cfg.Durable = true;
+
+                cfg.UseConcurrencyLimit(1);
+
+                cfg.SingleActiveConsumer = true;
+                cfg.PrefetchCount = 0;
+
                 cfg.ConfigureEndpoints(context);
             });
         });

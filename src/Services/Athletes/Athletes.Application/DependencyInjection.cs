@@ -6,6 +6,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
+        services.AddHttpContextAccessor();
+
         services.AddServiceMediatr();
         services.AddServiceMapper();
 

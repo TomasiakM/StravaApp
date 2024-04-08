@@ -8,8 +8,9 @@ public static class Mapster
 {
     public static IServiceCollection AddServiceMapper(this IServiceCollection services, Action<TypeAdapterConfig>? options = null)
     {
+        var assembly = Assembly.GetCallingAssembly();
         var config = new TypeAdapterConfig();
-        config.Scan(Assembly.GetExecutingAssembly());
+        config.Scan(assembly);
 
         options?.Invoke(config);
 

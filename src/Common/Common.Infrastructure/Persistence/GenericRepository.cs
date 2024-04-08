@@ -20,7 +20,7 @@ public abstract class GenericRepository<TEntity, TId>
     {
         return await _dbContext
             .Set<TEntity>()
-            .FindAsync(id, cancellationToken);
+            .FindAsync(new object[] { id }, cancellationToken: cancellationToken);
     }
 
     public async Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)

@@ -6,8 +6,9 @@ public static class Mediatr
 {
     public static IServiceCollection AddServiceMediatr(this IServiceCollection services)
     {
+        var assembly = Assembly.GetCallingAssembly();
         services.AddMediatR(e =>
-            e.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+            e.RegisterServicesFromAssembly(assembly));
 
         return services;
     }
