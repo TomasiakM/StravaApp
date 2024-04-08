@@ -1,0 +1,30 @@
+﻿using Common.Domain.Enums;
+
+namespace Activities.Application.Dtos.Activities;
+public record ActivityResponse(
+    long StravaId,
+    string Name,
+    float Distance,
+    int MovingTime,
+    int ElapsedTime,
+    float TotalElevationGain,
+    SportType SportType,
+    DateTime StartDate,
+    DateTime StartDateLocal,
+    float[] StartLatlng,
+    float[] EndLatlng,
+    bool Private,
+    float AverageSpeed,
+    float MaxSpeed,
+    float AverageCadence,
+    float AverageWatts,
+    int MaxWatts,
+    bool DeviceWatts,
+    float Kilojoules,
+    float Calories,
+    string DeviceName,
+    bool HasHeartrate,
+    float AverageHeartrate,
+    float MaxHeartrate,
+    string Polyline,
+    string SummaryPolyline);
