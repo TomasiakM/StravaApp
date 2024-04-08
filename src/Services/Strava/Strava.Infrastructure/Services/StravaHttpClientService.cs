@@ -25,6 +25,31 @@ internal sealed class StravaHttpClientService
 
     public async Task<TResponse> GetResponse<TResponse>(long stravaUserId, string url, IDictionary<string, string>? queryDictionary = null, CancellationToken cancellationToken = default)
     {
+        var response = await UnauthorizedPolicy(stravaUserId)
+            .WrapAsync(RateLimitPolicy())
+            .WrapAsync(ServerErrorRetryPolicy())
+            .ExecuteAsync(async () =>
+            {
+                var requestMessage = await CreateRequestMessage(stravaUserId, url, queryDictionary);
+
+                return await _httpClient.SendAsync(requestMessage);
+            });
+
+        response.EnsureSuccessStatusCode();
+
+        var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken);
+        var deserializedData = JsonSerializer.Deserialize<TResponse>(contentStream, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower });
+
+        if (deserializedData is null)
+        {
+            throw new Exception("Invalid deserialization data");
+        }
+
+        return deserializedData;
+    }
+
+    private async Task<HttpRequestMessage> CreateRequestMessage(long stravaUserId, string url, IDictionary<string, string>? queryDictionary = null)
+    {
         if (queryDictionary?.Count > 0)
         {
             var encodedContent = new FormUrlEncodedContent(queryDictionary);
@@ -38,23 +63,7 @@ internal sealed class StravaHttpClientService
         var token = await _stravaAuthenticationService.GetUserToken(stravaUserId);
         requestMessage.Headers.Authorization = new("Bearer", token?.AccessToken);
 
-        var response = await UnauthorizedPolicy(stravaUserId)
-            .WrapAsync(RateLimitPolicy())
-            .WrapAsync(ServerErrorRetryPolicy())
-            .ExecuteAsync(async () =>
-                await _httpClient.SendAsync(requestMessage));
-
-        response.EnsureSuccessStatusCode();
-
-        var contentStream = await response.Content.ReadAsStreamAsync(cancellationToken);
-        var deserializedData = JsonSerializer.Deserialize<TResponse>(contentStream, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower });
-
-        if (deserializedData is null)
-        {
-            throw new Exception("Invalid deserialization data");
-        }
-
-        return deserializedData;
+        return requestMessage;
     }
 
     private AsyncRetryPolicy<HttpResponseMessage> RateLimitPolicy()
