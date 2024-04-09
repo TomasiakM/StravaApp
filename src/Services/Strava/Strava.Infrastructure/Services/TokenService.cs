@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Common.Infrastructure.Settings;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using Strava.Infrastructure.Interfaces;
-using Strava.Infrastructure.Settings;
 using System.Security.Claims;
 using System.Text;
 
@@ -31,7 +31,6 @@ public sealed class TokenService : ITokenService
             Issuer = _tokenSettings.Issuer,
             Audience = _tokenSettings.Issuer,
             Claims = claims,
-            IssuedAt = null,
             NotBefore = DateTime.UtcNow,
             Expires = DateTime.UtcNow.AddDays(_tokenSettings.ExpiresInDays),
             SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature)

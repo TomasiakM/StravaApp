@@ -4,9 +4,6 @@ services:
   strava-api:
     container_name: strava-api
     image: ${DOCKER_REGISTRY-}strava-api
-    ports:
-      - "8001:80"
-      - "8002:433"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DbConnection=${StravaApiDbConnectionString}
@@ -33,9 +30,6 @@ services:
   athletes-api:
     container_name: athletes-api
     image: ${DOCKER_REGISTRY-}athletes-api
-    ports:
-      - "8003:80"
-      - "8004:433"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DbConnection=${AthletesApiDbConnectionString}
@@ -54,9 +48,6 @@ services:
   activities-api:
     container_name: activities-api
     image: ${DOCKER_REGISTRY-}activities-api
-    ports:
-      - "8005:80"
-      - "8006:433"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DbConnection=${ActivitiesApiDbConnectionString}
@@ -70,6 +61,23 @@ services:
     depends_on:
       - db_server
       - rabbitmq
+
+  gateway-api:
+    container_name: gateway-api
+    image: ${DOCKER_REGISTRY-}gateway-api
+    ports:
+      - "5000:80"
+      - "5001:433"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - AllowOrigin=http://localhost:3000
+
+      - TokenSettings__Key=${TokenKey}
+      - TokenSettings__Issuer=${TokenIssuer}
+      - TokenSettings__ExpiresInDays=${TokenExpiresInDays}
+    build:
+      context: .
+      dockerfile: src/Gateway/Gateway.Api/Dockerfile
 
 
   db_server:

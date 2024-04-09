@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Strava.Infrastructure.Settings;
+namespace Common.Infrastructure.Settings;
 public sealed class TokenSettings
 {
     [Required]

@@ -1,4 +1,5 @@
-﻿using Common.MessageBroker.Settings;
+﻿using Common.Infrastructure.Settings;
+using Common.MessageBroker.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using Strava.Infrastructure.Settings;
 
