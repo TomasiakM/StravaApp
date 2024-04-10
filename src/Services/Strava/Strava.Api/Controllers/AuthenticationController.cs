@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Strava.Application.Dtos.Auth;
 using Strava.Application.Interfaces;
@@ -25,5 +27,16 @@ public class AuthenticationController : ControllerBase
         _logger.LogInformation("Athlete:{UserId} logged in.", loginResponse.Athlete.Id);
 
         return Ok(loginResponse);
+    }
+
+    [HttpPost("refresh")]
+    [Authorize(CookieAuthenticationDefaults.AuthenticationScheme)]
+    public ActionResult<RefreshTokenResponse> RefreshToken()
+    {
+        var refreshResponse = _stravaAuthenticationService.RefreshToken();
+
+        _logger.LogInformation("Refreshing token.");
+
+        return Ok(refreshResponse);
     }
 }

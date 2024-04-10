@@ -17,6 +17,10 @@ public static class DependencyInjection
         services.AddServiceSettings();
         services.AddServiceMassTransit();
 
+        services.AddHttpContextAccessor();
+
+        services.AddStravaServiceAuthentication();
+
         services.AddServiceDbContext<ServiceDbContext>();
 
         services.AddScoped<StravaHttpClientService>();
