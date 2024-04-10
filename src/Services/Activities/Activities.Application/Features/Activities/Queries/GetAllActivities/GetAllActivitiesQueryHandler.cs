@@ -28,10 +28,11 @@ public sealed class GetAllActivitiesQueryHandler : IRequestHandler<GetAllActivit
             .First(e => e.Type == ClaimTypes.NameIdentifier).Value;
 
         var stravaUserId = long.Parse(stringId);
+
         _logger.LogInformation("Fetching activities for athlete:{AthleteId}", stravaUserId);
 
         var activities = await _unitOfWork.Activities.FindAllAsync(e => e.StravaUserId == stravaUserId, cancellationToken);
-        var activityDtos = activities.Select(e => _mapper.Map<ActivityResponse>(e));
+        var activityDtos = _mapper.Map<List<ActivityResponse>>(activities);
 
         return activityDtos;
     }

@@ -22,6 +22,8 @@ public class AuthenticationController : ControllerBase
     {
         var loginResponse = await _stravaAuthenticationService.LoginAsync(request, cancellationToken);
 
+        _logger.LogInformation("Athlete:{UserId} logged in.", loginResponse.Athlete.Id);
+
         return Ok(loginResponse);
     }
 }

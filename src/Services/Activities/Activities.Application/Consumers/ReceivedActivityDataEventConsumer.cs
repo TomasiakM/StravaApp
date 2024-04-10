@@ -21,7 +21,7 @@ public sealed class ReceivedActivityDataEventConsumer
 
     public async Task Consume(ConsumeContext<ReceivedActivityDataEvent> context)
     {
-        _logger.LogInformation("Received activity data.");
+        _logger.LogInformation("Starting processing activity:{Id} data.", context.Message.Id);
 
         var message = context.Message;
 
@@ -59,7 +59,7 @@ public sealed class ReceivedActivityDataEventConsumer
             _unitOfWork.Activities.Add(activity);
             await _unitOfWork.SaveChangesAsync();
 
-            _logger.LogInformation("New activity:{ActivityId} is created", activity.StravaId);
+            _logger.LogInformation("New activity:{Id} \"{Name}\" is created", activity.StravaId, activity.Name);
             return;
         }
 
@@ -81,6 +81,6 @@ public sealed class ReceivedActivityDataEventConsumer
 
         await _unitOfWork.SaveChangesAsync();
 
-        _logger.LogInformation("Activity:{ActivityId} updated successfully.", activity.StravaId);
+        _logger.LogInformation("Activity:{Id} \"{Name}\" updated successfully.", activity.StravaId, activity.Name);
     }
 }

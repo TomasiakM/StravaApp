@@ -1,5 +1,6 @@
 using Activities.Application.Features.Activities.Queries.GetAllActivities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Activities.Api.Controllers;
@@ -17,6 +18,7 @@ public class ActivityController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetAll()
     {
         _logger.LogInformation("Sending query {Name}.", nameof(GetAllActivitiesQuery));

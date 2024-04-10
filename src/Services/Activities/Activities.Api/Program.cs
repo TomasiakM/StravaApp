@@ -21,5 +21,8 @@ if (app.Environment.IsDevelopment())
     await app.MigrateAsync();
 }
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 app.Run();

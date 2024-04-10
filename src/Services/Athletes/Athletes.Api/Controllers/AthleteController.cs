@@ -1,5 +1,6 @@
 using Athletes.Application.Features.Athletes.Queries.GetAuthorizedAthlete;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Athletes.Api.Controllers;
@@ -17,10 +18,15 @@ public class AthleteController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetAuthorizedAthlete()
     {
+        _logger.LogInformation("Sending query {Name}.", nameof(GetAuthorizedAthleteQuery));
+
         var query = new GetAuthorizedAthleteQuery();
         var response = await _mediatr.Send(query);
+
+        _logger.LogInformation("Query {Name} was processed successfully.", nameof(GetAuthorizedAthlete));
 
         return Ok(response);
     }
