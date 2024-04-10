@@ -10,7 +10,7 @@ services:
 
       - TokenSettings__Key=${TokenKey}
       - TokenSettings__Issuer=${TokenIssuer}
-      - TokenSettings__ExpiresInDays=${TokenExpiresInDays}
+      - TokenSettings__ExpiresInMinutes=${TokenExpiresInMinutes}
 
       - StravaSettings__BaseUrl=https://www.strava.com/api/v3/
       - StravaSettings__ClientId=${StravaClientId}
@@ -74,7 +74,7 @@ services:
 
       - TokenSettings__Key=${TokenKey}
       - TokenSettings__Issuer=${TokenIssuer}
-      - TokenSettings__ExpiresInDays=${TokenExpiresInDays}
+      - TokenSettings__ExpiresInMinutes=${TokenExpiresInMinutes}
     build:
       context: .
       dockerfile: src/Gateway/Gateway.Api/Dockerfile

@@ -32,7 +32,7 @@ public sealed class TokenService : ITokenService
             Audience = _tokenSettings.Issuer,
             Claims = claims,
             NotBefore = DateTime.UtcNow,
-            Expires = DateTime.UtcNow.AddDays(_tokenSettings.ExpiresInDays),
+            Expires = DateTime.UtcNow.AddMinutes(_tokenSettings.ExpiresInMinutes),
             SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature)
         };
 

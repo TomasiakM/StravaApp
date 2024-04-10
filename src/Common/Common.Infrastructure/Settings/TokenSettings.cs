@@ -9,5 +9,5 @@ public sealed class TokenSettings
     [Required]
     public string Issuer { get; set; } = default!;
     [Required]
-    public int ExpiresInDays { get; set; }
+    public int ExpiresInMinutes { get; set; }
 }
