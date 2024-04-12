@@ -31,11 +31,11 @@ public class AuthenticationController : ControllerBase
 
     [HttpPost("refresh")]
     [Authorize(CookieAuthenticationDefaults.AuthenticationScheme)]
-    public ActionResult<RefreshTokenResponse> RefreshToken()
+    public async Task<ActionResult<RefreshTokenResponse>> RefreshToken()
     {
-        var refreshResponse = _stravaAuthenticationService.RefreshToken();
-
         _logger.LogInformation("Refreshing token.");
+
+        var refreshResponse = await _stravaAuthenticationService.RefreshToken();
 
         return Ok(refreshResponse);
     }

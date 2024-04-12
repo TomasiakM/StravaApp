@@ -79,10 +79,17 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
             _mapper.Map<AthleteSummitResponse>(authenticationResponse.Athlete));
     }
 
-    public RefreshTokenResponse RefreshToken()
+    public async Task<RefreshTokenResponse> RefreshToken()
     {
         var claimUserId = _httpContextAccessor.HttpContext!.User.Claims.First(e => e.Type == ClaimTypes.NameIdentifier);
         var stravaUserId = long.Parse(claimUserId.Value);
+
+        var token = await _unitOfWork.Tokens.FindAsync(e => e.StravaUserId == stravaUserId);
+
+        if (token is null)
+        {
+            throw new Exception("Token not found");
+        }
 
         var accessToken = _tokenService.GenerateToken(stravaUserId);
 

@@ -5,6 +5,6 @@ namespace Strava.Application.Interfaces;
 public interface IStravaAuthenticationService
 {
     Task<AuthResponse> LoginAsync(AuthRequest request, CancellationToken cancellationToken = default);
-    RefreshTokenResponse RefreshToken();
+    Task<RefreshTokenResponse> RefreshToken();
     Task<TokenAggregate?> GetUserToken(long stravaUserId, CancellationToken cancellationToken = default);
 }
