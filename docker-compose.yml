@@ -15,6 +15,7 @@ services:
       - StravaSettings__BaseUrl=https://www.strava.com/api/v3/
       - StravaSettings__ClientId=${StravaClientId}
       - StravaSettings__ClientSecret=${StravaClientSecret}
+      - StravaSettings__HubVerifyToken=${StravaHubVerifyToken} 
 
       - MessageBrokerSettings__Host=amqp://rabbitmq:5672
       - MessageBrokerSettings__Username=${RabbitMQUsername}

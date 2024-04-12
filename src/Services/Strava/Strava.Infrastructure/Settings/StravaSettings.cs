@@ -9,4 +9,6 @@ public sealed class StravaSettings
     public int ClientId { get; set; }
     [Required]
     public string ClientSecret { get; set; } = default!;
+    [Required]
+    public string HubVerifyToken { get; set; } = default!;
 }
