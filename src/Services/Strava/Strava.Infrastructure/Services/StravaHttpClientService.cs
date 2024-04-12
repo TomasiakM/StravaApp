@@ -60,8 +60,13 @@ internal sealed class StravaHttpClientService
 
         var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
 
-        var token = await _stravaAuthenticationService.GetUserToken(stravaUserId);
-        requestMessage.Headers.Authorization = new("Bearer", token?.AccessToken);
+        var token = await _stravaAuthenticationService.GetStravaUserToken(stravaUserId);
+        if (token is null)
+        {
+            throw new Exception("Athlete token not found");
+        }
+
+        requestMessage.Headers.Authorization = new("Bearer", token.AccessToken);
 
         return requestMessage;
     }
@@ -108,7 +113,7 @@ internal sealed class StravaHttpClientService
             {
                 _logger.LogInformation("Response unauthorized, getting token for {UserId} and retrying request.", userStravaId);
 
-                var token = await _stravaAuthenticationService.GetUserToken(userStravaId);
+                var token = await _stravaAuthenticationService.GetStravaUserToken(userStravaId);
                 context["Authorization"] = $"Bearer {token?.AccessToken}";
             });
     }

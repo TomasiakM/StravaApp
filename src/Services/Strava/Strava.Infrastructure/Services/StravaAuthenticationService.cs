@@ -96,7 +96,7 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
         return new RefreshTokenResponse(accessToken);
     }
 
-    public async Task<TokenAggregate?> GetUserToken(long stravaUserId, CancellationToken cancellationToken = default)
+    public async Task<TokenAggregate?> GetStravaUserToken(long stravaUserId, CancellationToken cancellationToken = default)
     {
         var token = await _unitOfWork.Tokens
             .FindAsync(e => e.StravaUserId == stravaUserId, cancellationToken);

@@ -6,5 +6,5 @@ public interface IStravaAuthenticationService
 {
     Task<AuthResponse> LoginAsync(AuthRequest request, CancellationToken cancellationToken = default);
     Task<RefreshTokenResponse> RefreshToken();
-    Task<TokenAggregate?> GetUserToken(long stravaUserId, CancellationToken cancellationToken = default);
+    Task<TokenAggregate?> GetStravaUserToken(long stravaUserId, CancellationToken cancellationToken = default);
 }
