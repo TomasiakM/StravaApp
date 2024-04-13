@@ -1,4 +1,5 @@
-﻿using Common.MessageBroker.Contracts.Athletes;
+﻿using Common.Domain.Exceptions;
+using Common.MessageBroker.Contracts.Athletes;
 using MapsterMapper;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication;
@@ -88,7 +89,8 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
 
         if (token is null)
         {
-            throw new Exception("Token not found");
+            await _httpContextAccessor.HttpContext!.SignOutAsync();
+            throw new ForbiddenException();
         }
 
         var accessToken = _tokenService.GenerateToken(stravaUserId);
@@ -172,7 +174,7 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
 
         if (deserializedData is null)
         {
-            throw new Exception("Błąd podczas serializacji");
+            throw new Exception("Error occurred while deserializing response.");
         }
 
         return deserializedData;

@@ -42,7 +42,7 @@ internal sealed class StravaHttpClientService
 
         if (deserializedData is null)
         {
-            throw new Exception("Invalid deserialization data");
+            throw new Exception("Error occurred while deserializing response.");
         }
 
         return deserializedData;
@@ -63,7 +63,7 @@ internal sealed class StravaHttpClientService
         var token = await _stravaAuthenticationService.GetStravaUserToken(stravaUserId);
         if (token is null)
         {
-            throw new Exception("Athlete token not found");
+            throw new Exception("Athlete token not found.");
         }
 
         requestMessage.Headers.Authorization = new("Bearer", token.AccessToken);

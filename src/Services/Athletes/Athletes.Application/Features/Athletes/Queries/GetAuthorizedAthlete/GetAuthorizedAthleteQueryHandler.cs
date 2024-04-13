@@ -1,5 +1,6 @@
 ﻿using Athletes.Application.Dtos.Athletes.Responses;
 using Athletes.Application.Interfaces;
+using Common.Domain.Exceptions;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -31,7 +32,7 @@ internal sealed class GetAuthorizedAthleteQueryHandler
 
         if (athlete is null)
         {
-            throw new Exception($"Nie odnaleziono zasobu z id {stravaUserId}");
+            throw new NotFoundException(stravaUserId);
         }
 
         var dto = _mapper.Map<AthleteResponse>(athlete);
