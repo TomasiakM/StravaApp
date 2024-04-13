@@ -1,7 +1,11 @@
+using Common.Api;
+using Common.Api.Middlewares;
 using Strava.Application;
 using Strava.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCommonApi();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -11,7 +15,11 @@ builder.Services
     .AddInfrastructure()
     .AddApplication();
 
+
 var app = builder.Build();
+
+app.UseMiddleware<GlobalErrorHandlingMiddleware>();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

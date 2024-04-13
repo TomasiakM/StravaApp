@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Common.Api\Common.Api.csproj" />
     <ProjectReference Include="..\Athletes.Application\Athletes.Application.csproj" />
     <ProjectReference Include="..\Athletes.Infrastructure\Athletes.Infrastructure.csproj" />
   </ItemGroup>

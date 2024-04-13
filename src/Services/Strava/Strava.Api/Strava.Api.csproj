@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Common.Api\Common.Api.csproj" />
     <ProjectReference Include="..\Strava.Application\Strava.Application.csproj" />
     <ProjectReference Include="..\Strava.Infrastructure\Strava.Infrastructure.csproj" />
   </ItemGroup>

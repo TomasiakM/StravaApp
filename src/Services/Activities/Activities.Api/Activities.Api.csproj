@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Common.Api\Common.Api.csproj" />
     <ProjectReference Include="..\Activities.Application\Activities.Application.csproj" />
     <ProjectReference Include="..\Activities.Infrastracture\Activities.Infrastracture.csproj" />
   </ItemGroup>
