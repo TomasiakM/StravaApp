@@ -15,6 +15,7 @@ internal static class MassTransitExtensions
 
             e.AddConsumer<NewAthleteLoggedInEventConsumer>();
             e.AddConsumer<FetchAthleteActivityEventConsumer>();
+            e.AddConsumer<UnauthorizeAthleteEventConsumer>();
 
             e.UsingRabbitMq((context, cfg) =>
             {
