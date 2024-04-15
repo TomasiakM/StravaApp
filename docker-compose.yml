@@ -6,20 +6,20 @@ services:
     image: ${DOCKER_REGISTRY-}strava-api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DbConnection=${StravaApiDbConnectionString}
+      - ConnectionStrings__DbConnection=${STRAVA_SERVICE_DB_CONNECTION_STRING:-Server=db_server;Database=Strava;User Id=SA;Password=Password_123;TrustServerCertificate=True}
 
-      - TokenSettings__Key=${TokenKey}
-      - TokenSettings__Issuer=${TokenIssuer}
-      - TokenSettings__ExpiresInMinutes=${TokenExpiresInMinutes}
+      - TokenSettings__Key=${TOKEN_KEY:-1n6wET70nCfhq8VPz9vWqSQxLg85vxq4pcKMbdcFMGvgVy25rUBcEgjBwvKUbJ9U}
+      - TokenSettings__Issuer=${TOKEN_ISSUER:-http://localhost:5000}
+      - TokenSettings__ExpiresInMinutes=${TOKEN_EXPIRES_IN_MINUTES:-20}
 
       - StravaSettings__BaseUrl=https://www.strava.com/api/v3/
-      - StravaSettings__ClientId=${StravaClientId}
-      - StravaSettings__ClientSecret=${StravaClientSecret}
-      - StravaSettings__HubVerifyToken=${StravaHubVerifyToken} 
+      - StravaSettings__ClientId=${STRAVA_CLIENT_ID:?Strava clientId is required. Add it to .env file.}
+      - StravaSettings__ClientSecret=${STRAVA_CLIENT_SECRET:?Strava client secret is required. Add it to .env file.}
+      - StravaSettings__HubVerifyToken=${STRAVA_HUB_VERIFY_TOKEN:-4VxgKI00hyw2kYWUp5oKC7FN0pSEkgCm} 
 
       - MessageBrokerSettings__Host=amqp://rabbitmq:5672
-      - MessageBrokerSettings__Username=${RabbitMQUsername}
-      - MessageBrokerSettings__Password=${RabbitMQPassword}
+      - MessageBrokerSettings__Username=${RABBITMQ_USERNAME:-admin}
+      - MessageBrokerSettings__Password=${RABBITMQ_PASSWORD:-admin}
     build:
       context: .
       dockerfile: src/Services/Strava/Strava.Api/Dockerfile
@@ -33,11 +33,11 @@ services:
     image: ${DOCKER_REGISTRY-}athletes-api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DbConnection=${AthletesApiDbConnectionString}
+      - ConnectionStrings__DbConnection=${ATHLETES_SERVICE_DB_CONNECTION_STRING:-Server=db_server;Database=Athletes;User Id=SA;Password=Password_123;TrustServerCertificate=True}
 
       - MessageBrokerSettings__Host=amqp://rabbitmq:5672
-      - MessageBrokerSettings__Username=${RabbitMQUsername}
-      - MessageBrokerSettings__Password=${RabbitMQPassword}
+      - MessageBrokerSettings__Username=${RABBITMQ_USERNAME:-admin}
+      - MessageBrokerSettings__Password=${RABBITMQ_PASSWORD:-admin}
     build:
       context: .
       dockerfile: src/Services/Athletes/Athletes.Api/Dockerfile
@@ -51,17 +51,18 @@ services:
     image: ${DOCKER_REGISTRY-}activities-api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DbConnection=${ActivitiesApiDbConnectionString}
+      - ConnectionStrings__DbConnection=${ACTIVITIES_SERVICE_DB_CONNECTION_STRING:-Server=db_server;Database=Activities;User Id=SA;Password=Password_123;TrustServerCertificate=True}
 
       - MessageBrokerSettings__Host=amqp://rabbitmq:5672
-      - MessageBrokerSettings__Username=${RabbitMQUsername}
-      - MessageBrokerSettings__Password=${RabbitMQPassword}
+      - MessageBrokerSettings__Username=${RABBITMQ_USERNAME:-admin}
+      - MessageBrokerSettings__Password=${RABBITMQ_PASSWORD:-admin}
     build:
       context: .
       dockerfile: src/Services/Activities/Activities.Api/Dockerfile
     depends_on:
       - db_server
       - rabbitmq
+
 
   gateway-api:
     container_name: gateway-api
@@ -71,11 +72,11 @@ services:
       - "5001:433"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - AllowOrigin=http://localhost:3000
+      - AllowOrigin=${ALLOW_ORIGIN:-http://localhost:3000}
 
-      - TokenSettings__Key=${TokenKey}
-      - TokenSettings__Issuer=${TokenIssuer}
-      - TokenSettings__ExpiresInMinutes=${TokenExpiresInMinutes}
+      - TokenSettings__Key=${TOKEN_KEY:-1n6wET70nCfhq8VPz9vWqSQxLg85vxq4pcKMbdcFMGvgVy25rUBcEgjBwvKUbJ9U}
+      - TokenSettings__Issuer=${TOKEN_ISSUER:-http://localhost:5000}
+      - TokenSettings__ExpiresInMinutes=${TOKEN_EXPIRES_IN_MINUTES:-20}
     build:
       context: .
       dockerfile: src/Gateway/Gateway.Api/Dockerfile
@@ -88,7 +89,7 @@ services:
       - 1433:1433
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=${DbPassword}
+      - SA_PASSWORD=${DB_PASSWORD:-Password_123}
 
 
   rabbitmq:
@@ -100,8 +101,8 @@ services:
       - 5672:5672
       - 15672:15672
     environment:
-      - RABBITMQ_DEFAULT_USER=${RabbitMQUsername}
-      - RABBITMQ_DEFAULT_PASS=${RabbitMQPassword}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USERNAME:-admin}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD:-admin}
     volumes:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
