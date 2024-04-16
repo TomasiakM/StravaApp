@@ -55,7 +55,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateway", "Gateway", "{719D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gateway.Api", "src\Gateway\Gateway.Api\Gateway.Api.csproj", "{34EAF514-F907-4E84-A656-488C455F226A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Api", "src\Common\Common.Api\Common.Api.csproj", "{F2E03CC3-EE0F-402B-A635-61F9C51B5F75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Api", "src\Common\Common.Api\Common.Api.csproj", "{F2E03CC3-EE0F-402B-A635-61F9C51B5F75}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{471697B9-F4C7-4867-8037-97DCD3A7F60C}"
+	ProjectSection(SolutionItems) = preProject
+		.env = .env
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{B8F896EA-B662-4264-8B3B-5B3B12E24715}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{865D03CE-1584-4007-93F5-1181FE7751B5}"
+	ProjectSection(SolutionItems) = preProject
+		docs\images\architecture.png = docs\images\architecture.png
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -173,6 +188,8 @@ Global
 		{719D08B8-EBFA-4195-A77B-F335D31573BC} = {644977CB-D761-4953-84B1-BAC96AA8F82A}
 		{34EAF514-F907-4E84-A656-488C455F226A} = {719D08B8-EBFA-4195-A77B-F335D31573BC}
 		{F2E03CC3-EE0F-402B-A635-61F9C51B5F75} = {B5A6B23B-E295-439E-88B6-AD386C5CAAA0}
+		{B8F896EA-B662-4264-8B3B-5B3B12E24715} = {471697B9-F4C7-4867-8037-97DCD3A7F60C}
+		{865D03CE-1584-4007-93F5-1181FE7751B5} = {B8F896EA-B662-4264-8B3B-5B3B12E24715}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D3722679-F2EA-4213-837A-7BA48B497A6E}
