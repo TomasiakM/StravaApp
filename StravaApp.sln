@@ -59,7 +59,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Api", "src\Common\Co
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{471697B9-F4C7-4867-8037-97DCD3A7F60C}"
 	ProjectSection(SolutionItems) = preProject
-		.env = .env
 		.env.example = .env.example
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
