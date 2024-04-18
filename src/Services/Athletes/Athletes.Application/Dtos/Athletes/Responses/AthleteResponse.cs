@@ -1,7 +1,6 @@
 ﻿namespace Athletes.Application.Dtos.Athletes.Responses;
 public record AthleteResponse(
-    Guid Id,
-    long StravaUserId,
+    long Id,
     string Username,
     string Firstname,
     string Lastname,

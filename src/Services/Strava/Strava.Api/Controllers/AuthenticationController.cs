@@ -30,7 +30,7 @@ public class AuthenticationController : ControllerBase
     }
 
     [HttpPost("refresh")]
-    [Authorize(CookieAuthenticationDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     public async Task<ActionResult<RefreshTokenResponse>> RefreshToken()
     {
         _logger.LogInformation("Refreshing token.");
