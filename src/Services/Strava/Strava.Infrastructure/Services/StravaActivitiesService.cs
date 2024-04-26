@@ -22,7 +22,8 @@ internal sealed class StravaActivitiesService : IStravaActivitiesService
 
         var response = await _stravaHttpClientService.GetResponse<StravaActivityDetailsResponse>(
                 stravaUserId,
-                $"activities/{stravaActivityId}");
+                $"activities/{stravaActivityId}",
+                cancellationToken: cancellationToken);
 
         _logger.LogInformation("Success with fetching activity:{ActifityId}, made by user:{UserId}.", stravaActivityId, stravaUserId);
 
@@ -32,7 +33,7 @@ internal sealed class StravaActivitiesService : IStravaActivitiesService
     public async Task<ICollection<StravaActivitySummaryResponse>> GetAthleteActivities(long stravaUserId, CancellationToken cancellationToken = default)
     {
         var page = 1;
-        var lastActivitiesCount = 0;
+        int lastActivitiesCount;
         var activities = new List<StravaActivitySummaryResponse>();
 
         _logger.LogInformation("Starting feching all user:{UserId} activities.", stravaUserId);
@@ -48,7 +49,8 @@ internal sealed class StravaActivitiesService : IStravaActivitiesService
                 {
                     { "page", page.ToString() },
                     { "per_page", PageSize.ToString() },
-                });
+                },
+                cancellationToken);
 
             _logger.LogInformation("Received page {Page} containing {Count} elements.", page, response.Count);
 
@@ -60,5 +62,23 @@ internal sealed class StravaActivitiesService : IStravaActivitiesService
         } while (lastActivitiesCount == PageSize);
 
         return activities;
+    }
+
+    public async Task<List<StravaActivityStreamResponse>> GetActivityStreams(long stravaUserId, long stravaActivityId, CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation("Starting feching activity:{ActivityId} streams.", stravaActivityId);
+
+        var response = await _stravaHttpClientService.GetResponse<List<StravaActivityStreamResponse>>(
+                stravaUserId,
+                $"activities/{stravaActivityId}/streams",
+                new Dictionary<string, string>()
+                {
+                    { "keys", "latlng,distance,altitude,heartrate,cadence,watts" },
+                },
+                cancellationToken);
+
+        _logger.LogInformation("Activity:{ActivityId} streams fetched successfully.", stravaActivityId);
+
+        return response;
     }
 }

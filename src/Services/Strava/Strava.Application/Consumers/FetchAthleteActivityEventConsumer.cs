@@ -1,8 +1,10 @@
-﻿using Common.MessageBroker.Contracts.Activities;
+﻿using Common.Domain.Models;
+using Common.MessageBroker.Contracts.Activities;
 using MapsterMapper;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 using Strava.Application.Interfaces;
+using Strava.Contracts.Activity;
 
 namespace Strava.Application.Consumers;
 public sealed class FetchAthleteActivityEventConsumer
@@ -31,8 +33,26 @@ public sealed class FetchAthleteActivityEventConsumer
             return;
         }
 
-        _logger.LogInformation("[BUS] Sending event with detailed activity {ActivityId} \"{Name}\"", activity.Id, activity.Name);
+        var activityStreams = await _stravaActivitiesService.GetActivityStreams(activity.Athlete.Id, activity.Id);
 
+        var gpxCoordinats = new List<LatLng>();
+        var gpxCoordinatsStream = activityStreams.FirstOrDefault(e => e.Type == StreamType.Latlng);
+        if (gpxCoordinatsStream is not null)
+        {
+            gpxCoordinatsStream.Data.ForEach(e =>
+            {
+                LatLng latlng = LatLng.Create(
+                    float.Parse(e[0].GetRawText()),
+                    float.Parse(e[1].GetRawText()));
+
+                gpxCoordinats.Add(latlng);
+            });
+        }
+
+        _logger.LogInformation("[BUS] Sending event with detailed activity:{ActivityId} \"{Name}\"", activity.Id, activity.Name);
         await _bus.Publish(_mapper.Map<ReceivedActivityDataEvent>(activity));
+
+        _logger.LogInformation("[BUS] Sending event with detailed gpx track for activity:{ActivityId}.", activity.Id);
+        await _bus.Publish(new ReceivedActivityTrackDetailsEvent(activity.Athlete.Id, activity.Id, gpxCoordinats));
     }
 }
