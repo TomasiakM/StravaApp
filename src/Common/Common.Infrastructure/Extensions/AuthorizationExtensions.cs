@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -6,9 +7,9 @@ using System.IdentityModel.Tokens.Jwt;
 namespace Common.Infrastructure.Extensions;
 public static class AuthorizationExtensions
 {
-    public static IServiceCollection AddServiceAuthentication(this IServiceCollection services)
+    public static AuthenticationBuilder AddServiceAuthentication(this IServiceCollection services)
     {
-        services
+        return services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -30,7 +31,5 @@ public static class AuthorizationExtensions
                     ClockSkew = TimeSpan.Zero,
                 };
             });
-
-        return services;
     }
 }

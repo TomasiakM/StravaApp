@@ -89,7 +89,7 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
 
         if (token is null)
         {
-            await _httpContextAccessor.HttpContext!.SignOutAsync();
+            await _httpContextAccessor.HttpContext!.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             throw new ForbiddenException();
         }
 

@@ -8,8 +8,7 @@ internal static class AuthenticationExtensions
 {
     public static IServiceCollection AddStravaServiceAuthentication(this IServiceCollection services)
     {
-        services.AddServiceAuthentication();
-        services.AddAuthentication()
+        services.AddServiceAuthentication()
             .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
             {
                 options.ExpireTimeSpan = TimeSpan.FromDays(30);
@@ -25,16 +24,15 @@ internal static class AuthenticationExtensions
                 {
                     OnRedirectToLogin = context =>
                     {
-                        context.Response.StatusCode = 401;
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                         return Task.CompletedTask;
                     },
                     OnRedirectToAccessDenied = context =>
                     {
-                        context.Response.StatusCode = 403;
+                        context.Response.StatusCode = StatusCodes.Status403Forbidden;
                         return Task.CompletedTask;
                     }
                 };
-
             });
 
         return services;
