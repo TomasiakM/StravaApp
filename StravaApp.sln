@@ -72,6 +72,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{865D03
 		docs\images\architecture.png = docs\images\architecture.png
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tiles", "Tiles", "{A2364B12-A599-420B-8414-1E27945F451A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tiles.Domain", "src\Services\Tiles\Tiles.Domain\Tiles.Domain.csproj", "{BB0418B9-0500-4F33-AB16-D6770EE2E0A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -158,6 +162,10 @@ Global
 		{F2E03CC3-EE0F-402B-A635-61F9C51B5F75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2E03CC3-EE0F-402B-A635-61F9C51B5F75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2E03CC3-EE0F-402B-A635-61F9C51B5F75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB0418B9-0500-4F33-AB16-D6770EE2E0A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB0418B9-0500-4F33-AB16-D6770EE2E0A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB0418B9-0500-4F33-AB16-D6770EE2E0A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB0418B9-0500-4F33-AB16-D6770EE2E0A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -190,6 +198,8 @@ Global
 		{F2E03CC3-EE0F-402B-A635-61F9C51B5F75} = {B5A6B23B-E295-439E-88B6-AD386C5CAAA0}
 		{B8F896EA-B662-4264-8B3B-5B3B12E24715} = {471697B9-F4C7-4867-8037-97DCD3A7F60C}
 		{865D03CE-1584-4007-93F5-1181FE7751B5} = {B8F896EA-B662-4264-8B3B-5B3B12E24715}
+		{A2364B12-A599-420B-8414-1E27945F451A} = {D41107AA-4EA7-4DF6-AB68-0078A805DCA6}
+		{BB0418B9-0500-4F33-AB16-D6770EE2E0A5} = {A2364B12-A599-420B-8414-1E27945F451A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D3722679-F2EA-4213-837A-7BA48B497A6E}
