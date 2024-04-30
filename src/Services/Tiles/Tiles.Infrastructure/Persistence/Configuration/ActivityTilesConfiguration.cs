@@ -1,0 +1,36 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Tiles.Domain.Aggregates.ActivityTiles;
+using Tiles.Domain.Aggregates.ActivityTiles.ValueObjects;
+
+namespace Tiles.Infrastructure.Persistence.Configuration;
+internal sealed class ActivityTilesConfiguration : IEntityTypeConfiguration<ActivityTilesAggregate>
+{
+    public void Configure(EntityTypeBuilder<ActivityTilesAggregate> builder)
+    {
+        builder.ToTable("ActivityTiles");
+
+        builder.HasKey(e => e.Id);
+        builder.Property(e => e.Id)
+            .ValueGeneratedNever()
+            .HasConversion(
+                e => e.Value,
+                e => ActivityTilesId.Create(e));
+
+        builder.HasIndex(e => e.StravaActivityId)
+            .IsUnique();
+
+        builder.OwnsMany(e => e.Tiles, e =>
+        {
+            e.ToTable("Tiles");
+
+            e.WithOwner()
+                .HasForeignKey("ActivityTilesId");
+
+            e.HasKey("ActivityTilesId", "X", "Y", "Z");
+        });
+
+        builder.Metadata.FindNavigation(nameof(ActivityTilesAggregate.Tiles))!.
+            SetPropertyAccessMode(PropertyAccessMode.Field);
+    }
+}
