@@ -53,6 +53,6 @@ public sealed class FetchAthleteActivityEventConsumer
         await _bus.Publish(_mapper.Map<ReceivedActivityDataEvent>(activity));
 
         _logger.LogInformation("[BUS] Sending event with detailed gpx track for activity:{ActivityId}.", activity.Id);
-        await _bus.Publish(new ReceivedActivityTrackDetailsEvent(activity.Athlete.Id, activity.Id, gpxCoordinats));
+        await _bus.Publish(new ReceivedActivityTrackDetailsEvent(activity.Athlete.Id, activity.Id, activity.StartDate, gpxCoordinats));
     }
 }
