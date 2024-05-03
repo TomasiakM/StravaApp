@@ -1,16 +1,15 @@
-﻿using Common.Infrastructure.Persistence;
-using Tiles.Application.Interfaces;
+﻿using Tiles.Application.Interfaces;
 using Tiles.Domain.Aggregates.ActivityTiles;
 using Tiles.Infrastructure.Persistence.Repositories;
 
 namespace Tiles.Infrastructure.Persistence;
 internal sealed class UnitOfWork : IUnitOfWork
 {
-    private readonly BaseDbContext _dbContext;
+    private readonly ServiceDbContext _dbContext;
 
     public IActivityTilesRepository Tiles { get; }
 
-    public UnitOfWork(BaseDbContext dbContext)
+    public UnitOfWork(ServiceDbContext dbContext)
     {
         _dbContext = dbContext;
 
