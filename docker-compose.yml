@@ -64,6 +64,24 @@ services:
       - rabbitmq
 
 
+  tiles-api:
+    container_name: tiles-api
+    image: ${DOCKER_REGISTRY-}tiles-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DbConnection=${TILES_SERVICE_DB_CONNECTION_STRING:-Server=db_server;Database=Tiles;User Id=SA;Password=Password_123;TrustServerCertificate=True}
+
+      - MessageBrokerSettings__Host=amqp://rabbitmq:5672
+      - MessageBrokerSettings__Username=${RABBITMQ_USERNAME:-admin}
+      - MessageBrokerSettings__Password=${RABBITMQ_PASSWORD:-admin}
+    build:
+      context: .
+      dockerfile: src/Services/Tiles/Tiles.Api/Dockerfile
+    depends_on:
+      - db_server
+      - rabbitmq
+
+
   gateway-api:
     container_name: gateway-api
     image: ${DOCKER_REGISTRY-}gateway-api
