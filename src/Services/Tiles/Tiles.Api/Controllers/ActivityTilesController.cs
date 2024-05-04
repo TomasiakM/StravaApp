@@ -5,7 +5,7 @@ using Tiles.Application.Features.ActivityTiles.Queries.GetAll;
 
 namespace Tiles.Api.Controllers;
 [ApiController]
-[Route("api/tiles")]
+[Route("api/tile")]
 public sealed class ActivityTilesController : ControllerBase
 {
     private readonly ILogger<ActivityTilesController> _logger;
