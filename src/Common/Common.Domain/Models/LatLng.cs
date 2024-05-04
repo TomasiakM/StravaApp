@@ -19,4 +19,6 @@ public sealed class LatLng : ValueObject
         yield return Latitude;
         yield return Longitude;
     }
+
+    public LatLng() { }
 }
