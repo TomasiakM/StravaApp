@@ -42,8 +42,8 @@ public sealed class FetchAthleteActivityEventConsumer
             gpxCoordinatsStream.Data.ForEach(e =>
             {
                 LatLng latlng = LatLng.Create(
-                    float.Parse(e[0].GetRawText()),
-                    float.Parse(e[1].GetRawText()));
+                    double.Parse(e[0].GetRawText()),
+                    double.Parse(e[1].GetRawText()));
 
                 gpxCoordinats.Add(latlng);
             });

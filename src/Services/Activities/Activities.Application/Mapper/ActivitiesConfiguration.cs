@@ -15,8 +15,8 @@ public sealed class ActivitiesConfiguration : IRegister
             .Map(dest => dest, src => src.Watts)
             .Map(dest => dest, src => src.Map);
 
-        config.NewConfig<LatLng, float[]>()
-            .ConstructUsing(e => new float[]
+        config.NewConfig<LatLng, double[]>()
+            .ConstructUsing(e => new double[]
                 {
                     e.Latitude,
                     e.Longitude

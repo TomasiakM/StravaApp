@@ -32,6 +32,7 @@ public sealed class GetAllActivitiesQueryHandler : IRequestHandler<GetAllActivit
         _logger.LogInformation("Fetching activities for athlete:{AthleteId}", stravaUserId);
 
         var activities = await _unitOfWork.Activities.FindAllAsync(e => e.StravaUserId == stravaUserId, cancellationToken);
+        activities = activities.OrderByDescending(e => e.Time.StartDate).ToList();
         var activityDtos = _mapper.Map<List<ActivityResponse>>(activities);
 
         return activityDtos;
