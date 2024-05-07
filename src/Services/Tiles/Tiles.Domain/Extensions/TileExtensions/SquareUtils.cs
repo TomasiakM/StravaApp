@@ -1,4 +1,5 @@
-﻿using Tiles.Domain.Aggregates.ActivityTiles.ValueObjects;
+﻿using Common.Domain.Extensions;
+using Tiles.Domain.Aggregates.ActivityTiles.ValueObjects;
 
 namespace Tiles.Domain.Extensions.TileExtensions;
 public static class SquareUtils
@@ -24,10 +25,7 @@ public static class SquareUtils
             squares.Add(sqare);
         }
 
-        foreach (var tile in activityTiles)
-        {
-            tilesSet.Add(tile);
-        }
+        tilesSet.AddRange(activityTiles);
 
         var newSquare = new HashSet<Tile>();
         processedTilesSet.Clear();
@@ -44,7 +42,7 @@ public static class SquareUtils
         }
 
 
-        var squareToComparison = squares.FirstOrDefault(e => e.Except(newSquare).Any());
+        var squareToComparison = squares.FirstOrDefault(e => !e.Except(newSquare).Any());
         if (squareToComparison is null)
         {
             return newSquare;
@@ -60,14 +58,14 @@ public static class SquareUtils
         var size = 1;
         var newSizeAvailable = true;
 
-        var squareTiles = new List<Tile>() { tile };
+        var squareTiles = new HashSet<Tile>() { tile };
         while (newSizeAvailable)
         {
             var newSizeTiles = new List<Tile>();
-            for (var i = 0; i < size; i++)
+            for (var i = 0; i <= size; i++)
             {
-                var right = Tile.Create(tile.X + size, tile.Z + i, tile.Y);
-                var bottom = Tile.Create(tile.X + i, tile.Z + size, tile.Y);
+                var right = Tile.Create(tile.X + size, tile.Y + i, tile.Z);
+                var bottom = Tile.Create(tile.X + i, tile.Y + size, tile.Z);
 
                 processedTilesSet.Add(right);
                 processedTilesSet.Add(bottom);
@@ -92,7 +90,7 @@ public static class SquareUtils
             size++;
         }
 
-        return squareTiles.ToHashSet();
+        return squareTiles;
     }
 
     public static int MaxSquare(this IEnumerable<Tile> tilesSet)
@@ -100,11 +98,12 @@ public static class SquareUtils
         var tiles = tilesSet.ToHashSet();
         var processedTilesSet = new HashSet<Tile>();
         var maxSquare = 0;
+
         foreach (var tile in tiles)
         {
             var maxSquareTiles = tile.FindMaxSquareTiles(tiles, processedTilesSet);
 
-            var size = Math.Log2(maxSquareTiles.Count);
+            var size = Math.Sqrt(maxSquareTiles.Count);
             if (size > maxSquare)
             {
                 maxSquare = (int)size;

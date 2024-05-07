@@ -29,7 +29,7 @@ public sealed class ActivityTilesAggregate : AggregateRoot<ActivityTilesId>
         StravaUserId = stravaUserId;
         CreatedAt = createdAt;
 
-        NewSquare = previousTiles.MaxSquare() - previousTiles.Concat(activityTiles).MaxSquare();
+        NewSquare = previousTiles.Concat(activityTiles).MaxSquare() - previousTiles.MaxSquare();
 
         _tiles = activityTiles
             .ToList();
@@ -55,7 +55,7 @@ public sealed class ActivityTilesAggregate : AggregateRoot<ActivityTilesId>
 
     public void Update(IEnumerable<Tile> previousTiles, IEnumerable<Tile> activityTiles)
     {
-        NewSquare = previousTiles.MaxSquare() - previousTiles.Concat(activityTiles).MaxSquare();
+        NewSquare = previousTiles.Concat(activityTiles).MaxSquare() - previousTiles.MaxSquare();
 
         _tiles = activityTiles
             .ToList();

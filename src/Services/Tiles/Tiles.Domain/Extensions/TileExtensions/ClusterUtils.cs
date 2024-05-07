@@ -12,23 +12,23 @@ public static class ClusterUtils
             .Where(e => e.IsCluster(tilesSet))
             .ToHashSet();
 
-        foreach (var tile in activityTiles)
-        {
-            tilesSet.Add(tile);
-        }
+        tilesSet.AddRange(activityTiles);
 
-        return tilesSet
-            .Where(tile => tile.IsCluster(tilesSet))
+        var allNewClusters = tilesSet
+            .Where(e => e.IsCluster(tilesSet))
+            .ToHashSet();
+
+        return allNewClusters
             .Except(allClusters)
             .ToList();
     }
 
     public static bool IsCluster(this Tile tile, IEnumerable<Tile> tiles)
     {
-        var left = Tile.Create(tile.X - 1, tile.Z, tile.Y);
-        var top = Tile.Create(tile.X, tile.Z + 1, tile.Y);
-        var right = Tile.Create(tile.X + 1, tile.Z, tile.Y);
-        var bottom = Tile.Create(tile.X, tile.Z - 1, tile.Y);
+        var left = Tile.Create(tile.X - 1, tile.Y, tile.Z);
+        var top = Tile.Create(tile.X, tile.Y + 1, tile.Z);
+        var right = Tile.Create(tile.X + 1, tile.Y, tile.Z);
+        var bottom = Tile.Create(tile.X, tile.Y - 1, tile.Z);
 
         return tiles.Contains(left) &&
             tiles.Contains(top) &&
@@ -39,16 +39,17 @@ public static class ClusterUtils
     public static int MaxCluster(this IEnumerable<Tile> tiles)
     {
         var maxCluster = 0;
-        var tilesSet = tiles
+        var clustersSet = tiles
             .Where(e => e.IsCluster(tiles))
             .ToHashSet();
+
         var processedTilesSet = new HashSet<Tile>();
 
-        foreach (var tile in tilesSet)
+        foreach (var tile in clustersSet)
         {
             if (processedTilesSet.Contains(tile)) continue;
 
-            var foundedCluster = tile.FindNeighbourTileCluster(tilesSet, processedTilesSet);
+            var foundedCluster = tile.FindNeighbourTileCluster(clustersSet, processedTilesSet);
             if (foundedCluster.Count > maxCluster)
             {
                 maxCluster = foundedCluster.Count;
@@ -58,44 +59,38 @@ public static class ClusterUtils
         return maxCluster;
     }
 
-    public static ICollection<Tile> FindNeighbourTileCluster(this Tile tile, IEnumerable<Tile> tiles, ICollection<Tile> processedTiles)
+    public static ICollection<Tile> FindNeighbourTileCluster(this Tile tile, IEnumerable<Tile> clusters, ICollection<Tile> processedTiles)
     {
         processedTiles.Add(tile);
-
-        if (!tile.IsCluster(tiles))
-        {
-            return new HashSet<Tile>();
-        }
-
-        var left = Tile.Create(tile.X - 1, tile.Z, tile.Y);
-        var top = Tile.Create(tile.X, tile.Z + 1, tile.Y);
-        var right = Tile.Create(tile.X + 1, tile.Z, tile.Y);
-        var bottom = Tile.Create(tile.X, tile.Z - 1, tile.Y);
-
-        processedTiles.Add(tile);
         var cluster = new HashSet<Tile>() { tile };
-        if (!processedTiles.Contains(left) && tiles.Contains(left))
+
+        var left = Tile.Create(tile.X - 1, tile.Y, tile.Z);
+        var top = Tile.Create(tile.X, tile.Y + 1, tile.Z);
+        var right = Tile.Create(tile.X + 1, tile.Y, tile.Z);
+        var bottom = Tile.Create(tile.X, tile.Y - 1, tile.Z);
+
+        if (!processedTiles.Contains(left) && clusters.Contains(left))
         {
             processedTiles.Add(left);
-            cluster.AddRange(left.FindNeighbourTileCluster(tiles, processedTiles));
+            cluster.AddRange(left.FindNeighbourTileCluster(clusters, processedTiles));
         }
 
-        if (!processedTiles.Contains(top) && tiles.Contains(top))
+        if (!processedTiles.Contains(top) && clusters.Contains(top))
         {
             processedTiles.Add(top);
-            cluster.AddRange(top.FindNeighbourTileCluster(tiles, processedTiles));
+            cluster.AddRange(top.FindNeighbourTileCluster(clusters, processedTiles));
         }
 
-        if (!processedTiles.Contains(right) && tiles.Contains(right))
+        if (!processedTiles.Contains(right) && clusters.Contains(right))
         {
             processedTiles.Add(right);
-            cluster.AddRange(right.FindNeighbourTileCluster(tiles, processedTiles));
+            cluster.AddRange(right.FindNeighbourTileCluster(clusters, processedTiles));
         }
 
-        if (!processedTiles.Contains(bottom) && tiles.Contains(bottom))
+        if (!processedTiles.Contains(bottom) && clusters.Contains(bottom))
         {
             processedTiles.Add(bottom);
-            cluster.AddRange(bottom.FindNeighbourTileCluster(tiles, processedTiles));
+            cluster.AddRange(bottom.FindNeighbourTileCluster(clusters, processedTiles));
         }
 
         return cluster;
