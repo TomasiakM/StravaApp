@@ -1,0 +1,14 @@
+﻿namespace Common.Domain.Extensions;
+public static class HashSetExtenstions
+{
+    public static bool AddRange<T>(this HashSet<T> source, IEnumerable<T> items)
+    {
+        bool allAdded = true;
+        foreach (T item in items)
+        {
+            allAdded &= source.Add(item);
+        }
+        return allAdded;
+    }
+
+}
