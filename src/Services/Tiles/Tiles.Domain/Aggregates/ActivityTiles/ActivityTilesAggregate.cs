@@ -1,14 +1,14 @@
 ﻿using Common.Domain.DDD;
 using Tiles.Domain.Aggregates.ActivityTiles.ValueObjects;
-using Tiles.Domain.Utils.Tiles;
+using Tiles.Domain.Extensions.TileExtensions;
 
 namespace Tiles.Domain.Aggregates.ActivityTiles;
 public sealed class ActivityTilesAggregate : AggregateRoot<ActivityTilesId>
 {
     private List<Tile> _tiles = new();
-    private List<Tile> _newTiles = new();
-    private List<Tile> _newClusterTiles = new();
-    private List<Tile> _newSquareTiles = new();
+    private List<NewTile> _newTiles = new();
+    private List<NewClusterTile> _newClusterTiles = new();
+    private List<NewSquareTile> _newSquareTiles = new();
 
     public long StravaActivityId { get; init; }
     public long StravaUserId { get; init; }
@@ -17,9 +17,9 @@ public sealed class ActivityTilesAggregate : AggregateRoot<ActivityTilesId>
     public int NewSquare { get; private set; }
 
     public IReadOnlyList<Tile> Tiles => _tiles.AsReadOnly();
-    public IReadOnlyList<Tile> NewTiles => _newTiles.AsReadOnly();
-    public IReadOnlyList<Tile> NewClusterTiles => _newClusterTiles.AsReadOnly();
-    public IReadOnlyList<Tile> NewSquareTiles => _newSquareTiles.AsReadOnly();
+    public IReadOnlyList<NewTile> NewTiles => _newTiles.AsReadOnly();
+    public IReadOnlyList<NewClusterTile> NewClusterTiles => _newClusterTiles.AsReadOnly();
+    public IReadOnlyList<NewSquareTile> NewSquareTiles => _newSquareTiles.AsReadOnly();
 
 
     private ActivityTilesAggregate(long stravaActivityId, long stravaUserId, DateTime createdAt, IEnumerable<Tile> previousTiles, IEnumerable<Tile> activityTiles)
@@ -36,14 +36,17 @@ public sealed class ActivityTilesAggregate : AggregateRoot<ActivityTilesId>
 
         _newTiles = previousTiles
             .FindNewTiles(activityTiles)
+            .ToNewTiles()
             .ToList();
 
         _newClusterTiles = previousTiles
             .FindNewClusterTiles(activityTiles)
+            .ToNewClusterTiles()
             .ToList();
 
         _newSquareTiles = previousTiles
             .FindNewSquareTiles(activityTiles)
+            .ToNewSquareTiles()
             .ToList();
     }
 
@@ -59,14 +62,17 @@ public sealed class ActivityTilesAggregate : AggregateRoot<ActivityTilesId>
 
         _newTiles = previousTiles
             .FindNewTiles(activityTiles)
+            .ToNewTiles()
             .ToList();
 
         _newClusterTiles = previousTiles
             .FindNewClusterTiles(activityTiles)
+            .ToNewClusterTiles()
             .ToList();
 
         _newSquareTiles = previousTiles
             .FindNewSquareTiles(activityTiles)
+            .ToNewSquareTiles()
             .ToList();
     }
 

@@ -1,13 +1,13 @@
 ﻿using Common.Domain.DDD;
 
 namespace Tiles.Domain.Aggregates.ActivityTiles.ValueObjects;
-public sealed class Tile : ValueObject
+public class Tile : ValueObject
 {
     public int X { get; init; }
     public int Y { get; init; }
     public int Z { get; init; }
 
-    private Tile(int x, int y, int z)
+    protected Tile(int x, int y, int z)
     {
         X = x;
         Y = y;
