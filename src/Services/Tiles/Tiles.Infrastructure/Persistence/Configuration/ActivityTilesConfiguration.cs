@@ -25,12 +25,51 @@ internal sealed class ActivityTilesConfiguration : IEntityTypeConfiguration<Acti
             e.ToTable("Tiles");
 
             e.WithOwner()
-                .HasForeignKey("ActivityTilesId");
+                .HasForeignKey(nameof(ActivityTilesId));
 
-            e.HasKey("ActivityTilesId", "X", "Y", "Z");
+            e.HasKey(nameof(ActivityTilesId), "X", "Y", "Z");
         });
 
         builder.Metadata.FindNavigation(nameof(ActivityTilesAggregate.Tiles))!.
+            SetPropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.OwnsMany(e => e.NewTiles, e =>
+        {
+            e.ToTable("NewTiles");
+
+            e.WithOwner()
+                .HasForeignKey(nameof(ActivityTilesId));
+
+            e.HasKey(nameof(ActivityTilesId), "X", "Y", "Z");
+        });
+
+        builder.Metadata.FindNavigation(nameof(ActivityTilesAggregate.NewTiles))!.
+            SetPropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.OwnsMany(e => e.NewClusterTiles, e =>
+        {
+            e.ToTable("NewClusterTiles");
+
+            e.WithOwner()
+                .HasForeignKey(nameof(ActivityTilesId));
+
+            e.HasKey(nameof(ActivityTilesId), "X", "Y", "Z");
+        });
+
+        builder.Metadata.FindNavigation(nameof(ActivityTilesAggregate.NewClusterTiles))!.
+            SetPropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.OwnsMany(e => e.NewSquareTiles, e =>
+        {
+            e.ToTable("NewSquareTiles");
+
+            e.WithOwner()
+                .HasForeignKey(nameof(ActivityTilesId));
+
+            e.HasKey(nameof(ActivityTilesId), "X", "Y", "Z");
+        });
+
+        builder.Metadata.FindNavigation(nameof(ActivityTilesAggregate.NewSquareTiles))!.
             SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }
