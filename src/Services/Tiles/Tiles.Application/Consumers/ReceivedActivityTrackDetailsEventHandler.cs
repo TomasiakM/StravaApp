@@ -21,66 +21,29 @@ public sealed class ReceivedActivityTrackDetailsEventHandler : IConsumer<Receive
 
     public async Task Consume(ConsumeContext<ReceivedActivityTrackDetailsEvent> context)
     {
-        _logger.LogInformation("Handling list of coordinates for activity:{ActivityId}.", context.Message.StravaActivityId);
+        _logger.LogInformation("Calculating tiles for activity:{ActivityId}.", context.Message.StravaActivityId);
 
-        var activityTilesList = await _unitOfWork.Tiles.GetAllAsync();
+        var activityTilesList = await _unitOfWork.Tiles.FindAllAsync(e => e.StravaUserId == context.Message.StravaUserId);
 
-        if (IsLatest(context.Message, activityTilesList))
-        {
-            await HandleLatestActivityTiles(context.Message, activityTilesList);
-            return;
-        }
-
-        if (IsCreated(context.Message, activityTilesList))
+        if (IsListContainingActivity(context.Message, activityTilesList))
         {
             await HandleExistingActivityTiles(context.Message, activityTilesList);
+
             return;
         }
 
         await HandleNewActivityTiles(context.Message, activityTilesList);
     }
 
-    private static bool IsCreated(ReceivedActivityTrackDetailsEvent message, IEnumerable<ActivityTilesAggregate> activityTilesList)
+    private static bool IsListContainingActivity(ReceivedActivityTrackDetailsEvent message, IEnumerable<ActivityTilesAggregate> activityTilesList)
     {
         return activityTilesList.Any(e => e.StravaActivityId == message.StravaActivityId);
-    }
-
-    private async Task HandleLatestActivityTiles(ReceivedActivityTrackDetailsEvent message, IEnumerable<ActivityTilesAggregate> activityTilesList)
-    {
-        var tiles = message.LatLngs.GetTiles();
-
-        var previousTiles = activityTilesList.SelectMany(e => e.Tiles.ToList());
-        var activityTiles = activityTilesList.FirstOrDefault(e => e.StravaActivityId == message.StravaActivityId);
-
-        if (activityTiles is null)
-        {
-            activityTiles = ActivityTilesAggregate.Create(
-                message.StravaActivityId,
-                message.StravaUserId,
-                message.CreatedAt,
-                previousTiles,
-                new List<Tile>());
-
-            activityTiles.Update(previousTiles, tiles);
-
-            _unitOfWork.Tiles.Add(activityTiles);
-            await _unitOfWork.SaveChangesAsync();
-
-            return;
-        }
-
-        activityTiles.Update(previousTiles, tiles);
-        await _unitOfWork.SaveChangesAsync();
-    }
-
-    private static bool IsLatest(ReceivedActivityTrackDetailsEvent message, IEnumerable<ActivityTilesAggregate> activityTilesList)
-    {
-        return activityTilesList.All(e => e.CreatedAt < message.CreatedAt);
     }
 
     private async Task HandleExistingActivityTiles(ReceivedActivityTrackDetailsEvent message, IEnumerable<ActivityTilesAggregate> activityTilesList)
     {
         var prevTiles = new HashSet<Tile>();
+        var activityUpdated = false;
         foreach (var actTiles in activityTilesList)
         {
             if (actTiles.StravaActivityId == message.StravaActivityId)
@@ -88,6 +51,15 @@ public sealed class ReceivedActivityTrackDetailsEventHandler : IConsumer<Receive
                 var tiles = message.LatLngs.GetTiles();
                 actTiles.Update(prevTiles, tiles);
 
+                prevTiles.AddRange(actTiles.Tiles);
+
+                activityUpdated = true;
+
+                continue;
+            }
+
+            if (!activityUpdated)
+            {
                 prevTiles.AddRange(actTiles.Tiles);
 
                 continue;
@@ -102,14 +74,28 @@ public sealed class ReceivedActivityTrackDetailsEventHandler : IConsumer<Receive
 
     private async Task HandleNewActivityTiles(ReceivedActivityTrackDetailsEvent message, IEnumerable<ActivityTilesAggregate> activityTilesList)
     {
+        if (IsActivityLatest(message, activityTilesList))
+        {
+            var tiles = message.LatLngs.GetTiles();
+            var newActivityTiles = ActivityTilesAggregate.Create(
+                message.StravaActivityId,
+                message.StravaUserId,
+                message.CreatedAt,
+                activityTilesList.SelectMany(e => e.Tiles).ToHashSet(),
+                tiles);
+
+            _unitOfWork.Tiles.Add(newActivityTiles);
+            await _unitOfWork.SaveChangesAsync();
+
+            return;
+        }
+
+        var activityCreated = false;
         var prevTiles = new HashSet<Tile>();
-        var created = false;
         foreach (var actTiles in activityTilesList)
         {
-            if (!created && actTiles.CreatedAt > message.CreatedAt)
+            if (!activityCreated && actTiles.CreatedAt > message.CreatedAt)
             {
-                created = true;
-
                 var tiles = message.LatLngs.GetTiles();
                 var newActivityTiles = ActivityTilesAggregate.Create(
                     message.StravaActivityId,
@@ -119,6 +105,16 @@ public sealed class ReceivedActivityTrackDetailsEventHandler : IConsumer<Receive
                     tiles);
 
                 _unitOfWork.Tiles.Add(newActivityTiles);
+                activityCreated = true;
+
+                prevTiles.AddRange(tiles);
+            }
+
+            if (!activityCreated)
+            {
+                prevTiles.AddRange(actTiles.Tiles);
+
+                continue;
             }
 
             actTiles.Update(prevTiles, actTiles.Tiles);
@@ -126,5 +122,10 @@ public sealed class ReceivedActivityTrackDetailsEventHandler : IConsumer<Receive
         }
 
         await _unitOfWork.SaveChangesAsync();
+    }
+
+    private bool IsActivityLatest(ReceivedActivityTrackDetailsEvent message, IEnumerable<ActivityTilesAggregate> activityTilesList)
+    {
+        return activityTilesList.All(e => e.CreatedAt < message.CreatedAt);
     }
 }
