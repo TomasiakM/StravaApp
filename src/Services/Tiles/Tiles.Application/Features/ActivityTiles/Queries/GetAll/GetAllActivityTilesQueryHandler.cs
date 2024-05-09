@@ -25,7 +25,9 @@ internal sealed class GetAllActivityTilesQueryHandler : IRequestHandler<GetAllAc
             .First(e => e.Type == ClaimTypes.NameIdentifier).Value;
         var stravaUserId = long.Parse(stringId);
 
-        var activityTiles = await _unitOfWork.Tiles.FindAllAsync(e => e.StravaUserId == stravaUserId);
+        var activityTiles = await _unitOfWork.Tiles
+            .FindAllAsSplitQueryAsync(e => e.StravaUserId == stravaUserId);
+
         var dtos = _mapper.Map<IEnumerable<ActivityTilesResponse>>(activityTiles);
 
         return dtos;

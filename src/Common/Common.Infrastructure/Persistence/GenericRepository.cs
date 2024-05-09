@@ -31,10 +31,27 @@ public abstract class GenericRepository<TEntity, TId>
             .FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<TEntity?> FindAsSplitQueryAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        return await _dbContext
+            .Set<TEntity>()
+            .Where(predicate)
+            .AsSplitQuery()
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return await _dbContext
             .Set<TEntity>()
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IEnumerable<TEntity>> GetAllAsSplitQueryAsync(CancellationToken cancellationToken = default)
+    {
+        return await _dbContext
+            .Set<TEntity>()
+            .AsSplitQuery()
             .ToListAsync(cancellationToken);
     }
 
@@ -43,6 +60,15 @@ public abstract class GenericRepository<TEntity, TId>
         return await _dbContext
             .Set<TEntity>()
             .Where(predicate)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IEnumerable<TEntity>> FindAllAsSplitQueryAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        return await _dbContext
+            .Set<TEntity>()
+            .Where(predicate)
+            .AsSplitQuery()
             .ToListAsync(cancellationToken);
     }
 

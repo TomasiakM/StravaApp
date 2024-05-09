@@ -8,9 +8,12 @@ public interface IRepository<TEntity, TId>
 {
     Task<TEntity?> GetAsync(TId id, CancellationToken cancellationToken = default);
     Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<IEnumerable<TEntity>> GetAllAsSplitQueryAsync(CancellationToken cancellationToken = default);
 
     Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+    Task<TEntity?> FindAsSplitQueryAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
     Task<IEnumerable<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+    Task<IEnumerable<TEntity>> FindAllAsSplitQueryAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 
     void Add(TEntity entity);
     void Update(TEntity entity);
