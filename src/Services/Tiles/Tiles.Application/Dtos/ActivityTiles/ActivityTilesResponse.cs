@@ -2,7 +2,11 @@
 public record ActivityTilesResponse(
     long StravaUserId,
     long StravaActivityId,
-    ICollection<TileResponse> Tiles);
+    int NewSquare,
+    ICollection<TileResponse> Tiles,
+    ICollection<TileResponse> NewTiles,
+    ICollection<TileResponse> NewClusterTiles,
+    ICollection<TileResponse> NewSquareTiles);
 
 public record TileResponse(
     int X,
