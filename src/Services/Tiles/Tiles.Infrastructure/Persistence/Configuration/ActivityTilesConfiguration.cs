@@ -58,18 +58,5 @@ internal sealed class ActivityTilesConfiguration : IEntityTypeConfiguration<Acti
 
         builder.Metadata.FindNavigation(nameof(ActivityTilesAggregate.NewClusterTiles))!.
             SetPropertyAccessMode(PropertyAccessMode.Field);
-
-        builder.OwnsMany(e => e.NewSquareTiles, e =>
-        {
-            e.ToTable("NewSquareTiles");
-
-            e.WithOwner()
-                .HasForeignKey(nameof(ActivityTilesId));
-
-            e.HasKey(nameof(ActivityTilesId), "X", "Y", "Z");
-        });
-
-        builder.Metadata.FindNavigation(nameof(ActivityTilesAggregate.NewSquareTiles))!.
-            SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

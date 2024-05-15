@@ -8,7 +8,6 @@ public sealed class ActivityTilesAggregate : AggregateRoot<ActivityTilesId>
     private List<Tile> _tiles = new();
     private List<NewTile> _newTiles = new();
     private List<NewClusterTile> _newClusterTiles = new();
-    private List<NewSquareTile> _newSquareTiles = new();
 
     public long StravaActivityId { get; init; }
     public long StravaUserId { get; init; }
@@ -19,7 +18,6 @@ public sealed class ActivityTilesAggregate : AggregateRoot<ActivityTilesId>
     public IReadOnlyList<Tile> Tiles => _tiles.AsReadOnly();
     public IReadOnlyList<NewTile> NewTiles => _newTiles.AsReadOnly();
     public IReadOnlyList<NewClusterTile> NewClusterTiles => _newClusterTiles.AsReadOnly();
-    public IReadOnlyList<NewSquareTile> NewSquareTiles => _newSquareTiles.AsReadOnly();
 
 
     private ActivityTilesAggregate(long stravaActivityId, long stravaUserId, DateTime createdAt, IEnumerable<Tile> previousTiles, IEnumerable<Tile> activityTiles)
@@ -43,11 +41,6 @@ public sealed class ActivityTilesAggregate : AggregateRoot<ActivityTilesId>
             .FindNewClusterTiles(activityTiles)
             .ToNewClusterTiles()
             .ToList();
-
-        _newSquareTiles = previousTiles
-            .FindNewSquareTiles(activityTiles)
-            .ToNewSquareTiles()
-            .ToList();
     }
 
     public static ActivityTilesAggregate Create(long stravaActivityId, long stravaUserId, DateTime createdAt, IEnumerable<Tile> previousTiles, IEnumerable<Tile> activityTiles)
@@ -68,11 +61,6 @@ public sealed class ActivityTilesAggregate : AggregateRoot<ActivityTilesId>
         _newClusterTiles = previousTiles
             .FindNewClusterTiles(activityTiles)
             .ToNewClusterTiles()
-            .ToList();
-
-        _newSquareTiles = previousTiles
-            .FindNewSquareTiles(activityTiles)
-            .ToNewSquareTiles()
             .ToList();
     }
 

@@ -19,8 +19,8 @@ public class FindMaxSquareTiles
             Tile.Create(1, 1, 14)
         };
 
-        Assert.Single(tiles.First().FindMaxSquareTiles(tiles, new HashSet<Tile>()));
-        Assert.Single(tiles2.First().FindMaxSquareTiles(tiles2, new HashSet<Tile>()));
+        Assert.Single(tiles.First().FindMaxSquareTiles(tiles));
+        Assert.Single(tiles2.First().FindMaxSquareTiles(tiles2));
     }
 
     [Fact]
@@ -48,7 +48,7 @@ public class FindMaxSquareTiles
             Tile.Create(5, 5, 14)
         };
 
-        Assert.Equal(4, tiles.First().FindMaxSquareTiles(tiles, new HashSet<Tile>()).Count);
-        Assert.Equal(4, tiles2.First().FindMaxSquareTiles(tiles2, new HashSet<Tile>()).Count);
+        Assert.Equal(4, tiles.First().FindMaxSquareTiles(tiles).Count);
+        Assert.Equal(4, tiles2.First().FindMaxSquareTiles(tiles2).Count);
     }
 }

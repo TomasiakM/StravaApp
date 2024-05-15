@@ -5,8 +5,7 @@ public record ActivityTilesResponse(
     int NewSquare,
     ICollection<TileResponse> Tiles,
     ICollection<TileResponse> NewTiles,
-    ICollection<TileResponse> NewClusterTiles,
-    ICollection<TileResponse> NewSquareTiles);
+    ICollection<TileResponse> NewClusterTiles);
 
 public record TileResponse(
     int X,
