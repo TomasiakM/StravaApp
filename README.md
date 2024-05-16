@@ -31,8 +31,9 @@ Project is created with:
 | ------- | :------------- |
 | Api Gateway        | Api Gateway is only one element in microservice that is the single entry point for clients. Gateway is responsible for redirect requests to appropriate service. It also handling main full security verification of JWT authentication so the services can decode it without secret key. |
 | Strava service     | Strava service is responsible for users authentication, storing strava users tokens, call external Strava API for athletes/activities information and receiving strava webhook events. |
-| Athletes service   | Athletes service responsible for athletes data. |
-| Activities service | Activities service responsible for activities data. |
+| Athletes service   | Athletes service responsible for storing athletes data. |
+| Activities service | Activities service responsible for storing activities data. |
+| Tiles service | Activities service responsible for visited tiles calculation & storing data. Main responsibility is receiving track data and calculate it to tiles (more about tiles [here](https://developer.tomtom.com/map-display-api/documentation/zoom-levels-and-tile-grid)). |
 
 ## Installation
 
@@ -102,7 +103,7 @@ ngrok:
 
 ```curl
 curl -X POST -G https://www.strava.com/api/v3/push_subscriptions \
-	-d client_id=YOUR_STRAVA_CLIENT_ID \
+    -d client_id=YOUR_STRAVA_CLIENT_ID \
     -d client_secret=YOUR_STRAVA_CLIENT_SECRET \
     -d callback_url=NGROK_URL/api/webhook \
     -d verify_token=4VxgKI00hyw2kYWUp5oKC7FN0pSEkgCm
@@ -141,7 +142,6 @@ curl -X GET http://localhost:5000/api/activity \
 
 List of things to-do in future:
 
-- Add service to calculate visited squares at zoom 14 ([Square details](https://developer.tomtom.com/map-display-api/documentation/zoom-levels-and-tile-grid))
 - Add service with badges
 - Create unit tests
 - Check if activities without GPX track saving properly
