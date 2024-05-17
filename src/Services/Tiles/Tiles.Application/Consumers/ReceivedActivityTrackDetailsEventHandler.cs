@@ -23,10 +23,10 @@ public sealed class ReceivedActivityTrackDetailsEventHandler : IConsumer<Receive
     {
         _logger.LogInformation("Calculating tiles for activity:{ActivityId}.", context.Message.StravaActivityId);
 
-        var activityTilesList = await _unitOfWork.Tiles
-            .FindAllAsSplitQueryAsync(e => e.StravaUserId == context.Message.StravaUserId);
-
-        activityTilesList = activityTilesList.OrderBy(e => e.CreatedAt);
+        var activityTilesList = await _unitOfWork.Tiles.GetAllAsync(
+            filter: e => e.StravaUserId == context.Message.StravaUserId,
+            orderBy: e => e.CreatedAt,
+            asSplitQuery: true);
 
         if (IsListContainingActivity(context.Message, activityTilesList))
         {

@@ -4,7 +4,6 @@ using Common.Application.Interfaces;
 using Common.Domain.Exceptions;
 using MapsterMapper;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 
 namespace Athletes.Application.Features.Athletes.Queries.GetAuthorizedAthlete;
 internal sealed class GetAuthorizedAthleteQueryHandler
@@ -14,7 +13,7 @@ internal sealed class GetAuthorizedAthleteQueryHandler
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public GetAuthorizedAthleteQueryHandler(IUserIdProvider userIdProvider, IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork, IMapper mapper)
+    public GetAuthorizedAthleteQueryHandler(IUserIdProvider userIdProvider, IUnitOfWork unitOfWork, IMapper mapper)
     {
         _userIdProvider = userIdProvider;
         _unitOfWork = unitOfWork;
@@ -25,8 +24,9 @@ internal sealed class GetAuthorizedAthleteQueryHandler
     {
         var stravaUserId = _userIdProvider.GetUserId();
 
-        var athlete = await _unitOfWork.Athletes
-            .FindAsync(e => e.StravaUserId == stravaUserId, cancellationToken);
+        var athlete = await _unitOfWork.Athletes.GetAsync(
+            filter: e => e.StravaUserId == stravaUserId,
+            cancellationToken: cancellationToken);
 
         if (athlete is null)
         {

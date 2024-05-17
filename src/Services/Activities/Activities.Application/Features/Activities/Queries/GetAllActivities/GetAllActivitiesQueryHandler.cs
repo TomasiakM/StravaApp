@@ -1,6 +1,7 @@
 ﻿using Activities.Application.Dtos.Activities;
 using Activities.Application.Interfaces;
 using Common.Application.Interfaces;
+using Common.Domain.Enums;
 using MapsterMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -27,8 +28,12 @@ public sealed class GetAllActivitiesQueryHandler : IRequestHandler<GetAllActivit
 
         _logger.LogInformation("Fetching activities for athlete:{AthleteId}", stravaUserId);
 
-        var activities = await _unitOfWork.Activities.FindAllAsync(e => e.StravaUserId == stravaUserId, cancellationToken);
-        activities = activities.OrderByDescending(e => e.Time.StartDate).ToList();
+        var activities = await _unitOfWork.Activities.GetAllAsync(
+            filter: e => e.StravaUserId == stravaUserId,
+            orderBy: e => e.Time.StartDate,
+            sortOrder: SortOrder.Desc,
+            cancellationToken: cancellationToken);
+
         var activityDtos = _mapper.Map<List<ActivityResponse>>(activities);
 
         return activityDtos;

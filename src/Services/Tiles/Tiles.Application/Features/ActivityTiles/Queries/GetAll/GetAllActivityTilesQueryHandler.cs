@@ -1,4 +1,5 @@
 ﻿using Common.Application.Interfaces;
+using Common.Domain.Enums;
 using MapsterMapper;
 using MediatR;
 using Tiles.Application.Dtos.ActivityTiles;
@@ -22,8 +23,12 @@ internal sealed class GetAllActivityTilesQueryHandler : IRequestHandler<GetAllAc
     {
         var stravaUserId = _userIdProvider.GetUserId();
 
-        var activityTiles = await _unitOfWork.Tiles
-            .FindAllAsSplitQueryAsync(e => e.StravaUserId == stravaUserId);
+        var activityTiles = await _unitOfWork.Tiles.GetAllAsync(
+                filter: e => e.StravaUserId == stravaUserId,
+                orderBy: e => e.CreatedAt,
+                asSplitQuery: true,
+                sortOrder: SortOrder.Desc,
+                cancellationToken: cancellationToken);
 
         var dtos = _mapper.Map<IEnumerable<ActivityTilesResponse>>(activityTiles);
 

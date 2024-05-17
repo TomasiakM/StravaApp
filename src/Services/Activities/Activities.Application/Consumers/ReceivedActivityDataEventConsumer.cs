@@ -34,7 +34,8 @@ public sealed class ReceivedActivityDataEventConsumer
         var endLatLng = message.EndLatlng.Length == 2 ? LatLng.Create(message.EndLatlng[0], message.EndLatlng[1]) : null;
         var map = Map.Create(startLatLng, endLatLng, message.Map.Polyline, message.Map.SummaryPolyline);
 
-        var activity = await _unitOfWork.Activities.FindAsync(e => e.StravaId == message.Id);
+        var activity = await _unitOfWork.Activities
+            .GetAsync(e => e.StravaId == message.Id);
 
         if (activity is null)
         {

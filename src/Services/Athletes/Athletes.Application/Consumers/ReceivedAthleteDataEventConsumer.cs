@@ -15,7 +15,8 @@ public sealed class ReceivedAthleteDataEventConsumer : IConsumer<ReceivedAthlete
 
     public async Task Consume(ConsumeContext<ReceivedAthleteDataEvent> context)
     {
-        var athlete = await _unitOfWork.Athletes.FindAsync(e => e.StravaUserId == context.Message.Id);
+        var athlete = await _unitOfWork.Athletes
+            .GetAsync(e => e.StravaUserId == context.Message.Id);
 
         var message = context.Message;
         if (athlete is null)

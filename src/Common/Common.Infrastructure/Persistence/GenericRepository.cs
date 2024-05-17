@@ -16,60 +16,76 @@ public abstract class GenericRepository<TEntity, TId>
         _dbContext = dbContext;
     }
 
-    public async Task<TEntity?> GetAsync(TId id, CancellationToken cancellationToken = default)
+    public async Task<TEntity?> GetAsync(
+        Expression<Func<TEntity, bool>>? filter = null,
+        Expression<Func<TEntity, object>>? orderBy = null,
+        Domain.Enums.SortOrder sortOrder = Domain.Enums.SortOrder.Asc,
+        bool asSplitQuery = false,
+        CancellationToken cancellationToken = default)
     {
-        return await _dbContext
+        var query = _dbContext
             .Set<TEntity>()
-            .FindAsync(new object[] { id }, cancellationToken: cancellationToken);
+            .AsQueryable();
+
+        if (filter is not null)
+        {
+            query = query.Where(filter);
+        }
+
+        if (orderBy is not null)
+        {
+            if (sortOrder == Domain.Enums.SortOrder.Asc)
+            {
+                query = query.OrderBy(orderBy);
+            }
+            else
+            {
+                query = query.OrderByDescending(orderBy);
+            }
+        }
+
+        if (asSplitQuery)
+        {
+            query = query.AsSplitQuery();
+        }
+
+        return await query.FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<TEntity>> GetAllAsync(
+        Expression<Func<TEntity, bool>>? filter = null,
+        Expression<Func<TEntity, object>>? orderBy = null,
+        Domain.Enums.SortOrder sortOrder = Domain.Enums.SortOrder.Asc,
+        bool asSplitQuery = false,
+        CancellationToken cancellationToken = default)
     {
-        return await _dbContext
+        var query = _dbContext
             .Set<TEntity>()
-            .Where(predicate)
-            .FirstOrDefaultAsync(cancellationToken);
-    }
+            .AsQueryable();
 
-    public async Task<TEntity?> FindAsSplitQueryAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-    {
-        return await _dbContext
-            .Set<TEntity>()
-            .Where(predicate)
-            .AsSplitQuery()
-            .FirstOrDefaultAsync(cancellationToken);
-    }
+        if (filter is not null)
+        {
+            query = query.Where(filter);
+        }
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
-    {
-        return await _dbContext
-            .Set<TEntity>()
-            .ToListAsync(cancellationToken);
-    }
+        if (orderBy is not null)
+        {
+            if (sortOrder == Domain.Enums.SortOrder.Asc)
+            {
+                query = query.OrderBy(orderBy);
+            }
+            else
+            {
+                query = query.OrderByDescending(orderBy);
+            }
+        }
 
-    public async Task<IEnumerable<TEntity>> GetAllAsSplitQueryAsync(CancellationToken cancellationToken = default)
-    {
-        return await _dbContext
-            .Set<TEntity>()
-            .AsSplitQuery()
-            .ToListAsync(cancellationToken);
-    }
+        if (asSplitQuery)
+        {
+            query = query.AsSplitQuery();
+        }
 
-    public async Task<IEnumerable<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-    {
-        return await _dbContext
-            .Set<TEntity>()
-            .Where(predicate)
-            .ToListAsync(cancellationToken);
-    }
-
-    public async Task<IEnumerable<TEntity>> FindAllAsSplitQueryAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-    {
-        return await _dbContext
-            .Set<TEntity>()
-            .Where(predicate)
-            .AsSplitQuery()
-            .ToListAsync(cancellationToken);
+        return await query.ToListAsync(cancellationToken);
     }
 
     public void Add(TEntity entity)

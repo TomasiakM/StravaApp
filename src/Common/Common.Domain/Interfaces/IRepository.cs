@@ -1,4 +1,5 @@
 ﻿using Common.Domain.DDD;
+using Common.Domain.Enums;
 using System.Linq.Expressions;
 
 namespace Common.Domain.Interfaces;
@@ -6,14 +7,19 @@ public interface IRepository<TEntity, TId>
     where TEntity : IAggregateRoot
     where TId : ValueObject
 {
-    Task<TEntity?> GetAsync(TId id, CancellationToken cancellationToken = default);
-    Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
-    Task<IEnumerable<TEntity>> GetAllAsSplitQueryAsync(CancellationToken cancellationToken = default);
+    Task<TEntity?> GetAsync(
+        Expression<Func<TEntity, bool>>? filter = null,
+        Expression<Func<TEntity, object>>? orderBy = null,
+        SortOrder sortOrder = SortOrder.Asc,
+        bool asSplitQuery = false,
+        CancellationToken cancellationToken = default);
 
-    Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
-    Task<TEntity?> FindAsSplitQueryAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
-    Task<IEnumerable<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
-    Task<IEnumerable<TEntity>> FindAllAsSplitQueryAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+    Task<IEnumerable<TEntity>> GetAllAsync(
+        Expression<Func<TEntity, bool>>? filter = null,
+        Expression<Func<TEntity, object>>? orderBy = null,
+        SortOrder sortOrder = SortOrder.Asc,
+        bool asSplitQuery = false,
+        CancellationToken cancellationToken = default);
 
     void Add(TEntity entity);
     void Update(TEntity entity);

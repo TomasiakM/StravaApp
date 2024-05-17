@@ -19,7 +19,8 @@ public sealed class DeleteActivityEventConsumer : IConsumer<DeleteActivityEvent>
     {
         _logger.LogInformation("Deleting activity:{ActivityId}.", context.Message.StravaActivityId);
 
-        var activity = await _unitOfWork.Activities.FindAsync(e => e.StravaId == context.Message.StravaActivityId);
+        var activity = await _unitOfWork.Activities
+            .GetAsync(e => e.StravaId == context.Message.StravaActivityId);
 
         if (activity is not null)
         {

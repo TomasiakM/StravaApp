@@ -19,7 +19,8 @@ public sealed class UnauthorizeAthleteEventConsumer : IConsumer<UnauthorizeAthle
     {
         _logger.LogInformation("Deleting athlete:{AthletId} token.", context.Message.StravaUserId);
 
-        var token = await _unitOfWork.Tokens.FindAsync(e => e.StravaUserId == context.Message.StravaUserId);
+        var token = await _unitOfWork.Tokens
+            .GetAsync(e => e.StravaUserId == context.Message.StravaUserId);
 
         if (token is not null)
         {

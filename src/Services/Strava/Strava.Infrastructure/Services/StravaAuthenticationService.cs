@@ -46,8 +46,10 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
         var authenticationResponse = await StravaAuthorizationRequestAsync<StravaAuthorizationResponse>(
             request.Code, isRefreshTokenRequest: false, cancellationToken);
 
-        var token = await _unitOfWork.Tokens
-            .FindAsync(e => e.StravaUserId == authenticationResponse.Athlete.Id, cancellationToken);
+        var token = await _unitOfWork.Tokens.GetAsync(
+            filter: e => e.StravaUserId == authenticationResponse.Athlete.Id,
+            cancellationToken: cancellationToken);
+
         if (token is not null)
         {
             token.Update(
@@ -87,7 +89,8 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
     {
         var stravaUserId = _userIdProvider.GetUserId();
 
-        var token = await _unitOfWork.Tokens.FindAsync(e => e.StravaUserId == stravaUserId);
+        var token = await _unitOfWork.Tokens
+            .GetAsync(e => e.StravaUserId == stravaUserId);
 
         if (token is null)
         {
@@ -102,8 +105,9 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
 
     public async Task<TokenAggregate?> GetStravaUserToken(long stravaUserId, CancellationToken cancellationToken = default)
     {
-        var token = await _unitOfWork.Tokens
-            .FindAsync(e => e.StravaUserId == stravaUserId, cancellationToken);
+        var token = await _unitOfWork.Tokens.GetAsync(
+            filter: e => e.StravaUserId == stravaUserId,
+            cancellationToken: cancellationToken);
 
         if (token is null)
         {
