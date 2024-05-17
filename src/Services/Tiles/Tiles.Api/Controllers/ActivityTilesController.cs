@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Tiles.Application.Dtos.ActivityTiles;
 using Tiles.Application.Features.ActivityTiles.Queries.GetAll;
@@ -18,6 +19,7 @@ public sealed class ActivityTilesController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<IEnumerable<ActivityTilesResponse>>> GetAllActivityTiles()
     {
         var query = new GetAllActivityTilesQuery();

@@ -26,6 +26,8 @@ public sealed class ReceivedActivityTrackDetailsEventHandler : IConsumer<Receive
         var activityTilesList = await _unitOfWork.Tiles
             .FindAllAsSplitQueryAsync(e => e.StravaUserId == context.Message.StravaUserId);
 
+        activityTilesList = activityTilesList.OrderBy(e => e.CreatedAt);
+
         if (IsListContainingActivity(context.Message, activityTilesList))
         {
             await HandleExistingActivityTiles(context.Message, activityTilesList);
