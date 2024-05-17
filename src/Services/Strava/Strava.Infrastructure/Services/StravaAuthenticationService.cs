@@ -1,4 +1,5 @@
-﻿using Common.Domain.Exceptions;
+﻿using Common.Application.Interfaces;
+using Common.Domain.Exceptions;
 using Common.MessageBroker.Contracts.Athletes;
 using MapsterMapper;
 using MassTransit;
@@ -26,8 +27,9 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IBus _bus;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IUserIdProvider _userIdProvider;
 
-    public StravaAuthenticationService(IOptions<StravaSettings> stravaSettingsOptions, IMapper mapper, ITokenService tokenService, IUnitOfWork unitOfWork, IHttpClientFactory httpClientFactory, IBus bus, IHttpContextAccessor httpContextAccessor)
+    public StravaAuthenticationService(IOptions<StravaSettings> stravaSettingsOptions, IMapper mapper, ITokenService tokenService, IUnitOfWork unitOfWork, IHttpClientFactory httpClientFactory, IBus bus, IHttpContextAccessor httpContextAccessor, IUserIdProvider userIdProvider)
     {
         _stravaSettings = stravaSettingsOptions.Value;
         _mapper = mapper;
@@ -36,6 +38,7 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
         _httpClientFactory = httpClientFactory;
         _bus = bus;
         _httpContextAccessor = httpContextAccessor;
+        _userIdProvider = userIdProvider;
     }
 
     public async Task<AuthResponse> LoginAsync(AuthRequest request, CancellationToken cancellationToken = default)
@@ -82,8 +85,7 @@ internal class StravaAuthenticationService : IStravaAuthenticationService
 
     public async Task<RefreshTokenResponse> RefreshToken()
     {
-        var claimUserId = _httpContextAccessor.HttpContext!.User.Claims.First(e => e.Type == ClaimTypes.NameIdentifier);
-        var stravaUserId = long.Parse(claimUserId.Value);
+        var stravaUserId = _userIdProvider.GetUserId();
 
         var token = await _unitOfWork.Tokens.FindAsync(e => e.StravaUserId == stravaUserId);
 
