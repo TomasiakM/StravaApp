@@ -1,4 +1,6 @@
-﻿using Common.Application;
+﻿using Activities.Application.Factories;
+using Activities.Application.Interfaces;
+using Common.Application;
 using Common.Application.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +13,8 @@ public static class DependencyInjection
 
         services.AddServiceMapper();
         services.AddServiceMediatr();
+
+        services.AddScoped<IActivityAggregateFactory, ActivityAggregateFactory>();
 
         return services;
     }

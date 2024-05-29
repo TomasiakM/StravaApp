@@ -1,7 +1,4 @@
 ﻿using Activities.Application.Interfaces;
-using Activities.Domain.Aggregates.Activities;
-using Activities.Domain.Aggregates.Activities.ValueObjects;
-using Common.Domain.Models;
 using Common.MessageBroker.Contracts.Activities;
 using MassTransit;
 using Microsoft.Extensions.Logging;
@@ -12,36 +9,35 @@ public sealed class ReceivedActivityDataEventConsumer
 {
     private readonly ILogger<ReceivedActivityDataEventConsumer> _logger;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IActivityAggregateFactory _activityAggregateFactory;
 
-    public ReceivedActivityDataEventConsumer(ILogger<ReceivedActivityDataEventConsumer> logger, IUnitOfWork unitOfWork)
+    public ReceivedActivityDataEventConsumer(ILogger<ReceivedActivityDataEventConsumer> logger, IUnitOfWork unitOfWork, IActivityAggregateFactory activityAggregateFactory)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
+        _activityAggregateFactory = activityAggregateFactory;
     }
 
     public async Task Consume(ConsumeContext<ReceivedActivityDataEvent> context)
     {
         _logger.LogInformation("Starting processing activity:{Id} data.", context.Message.Id);
 
-        var message = context.Message;
-
-        var speed = Speed.Create(message.MaxSpeed, message.AverageSpeed);
-        var time = Time.Create(message.MovingTime, message.ElapsedTime, message.StartDate, message.StartDateLocal);
-        var watts = Watts.Create(message.DeviceWatts, message.MaxWatts, message.AverageWatts);
-        var heartrate = Heartrate.Create(message.HasHeartrate, message.MaxHeartrate, message.AverageHeartrate);
-
-        var startLatLng = message.StartLatlng.Length == 2 ? LatLng.Create(message.StartLatlng[0], message.StartLatlng[1]) : null;
-        var endLatLng = message.EndLatlng.Length == 2 ? LatLng.Create(message.EndLatlng[0], message.EndLatlng[1]) : null;
-        var map = Map.Create(startLatLng, endLatLng, message.Map.Polyline, message.Map.SummaryPolyline);
-
         var activity = await _unitOfWork.Activities
-            .GetAsync(e => e.StravaId == message.Id);
+            .GetAsync(e => e.StravaId == context.Message.Id);
 
         if (activity is null)
         {
-            activity = ActivityAggregate.Create(
-                message.Id,
-                message.Athlete.Id,
+            var newActivity = _activityAggregateFactory.CreateActivity(context.Message);
+
+            _unitOfWork.Activities.Add(newActivity);
+            await _unitOfWork.SaveChangesAsync();
+
+            _logger.LogInformation("New activity:{Id} \"{Name}\" is created", newActivity.StravaId, newActivity.Name);
+            return;
+        }
+
+        var message = context.Message;
+        activity.Update(
                 message.Name,
                 message.DeviceName,
                 message.SportType,
@@ -51,34 +47,11 @@ public sealed class ReceivedActivityDataEventConsumer
                 message.AverageCadence,
                 message.Kilojoules,
                 message.Calories,
-                speed,
-                time,
-                watts,
-                heartrate,
-                map);
-
-            _unitOfWork.Activities.Add(activity);
-            await _unitOfWork.SaveChangesAsync();
-
-            _logger.LogInformation("New activity:{Id} \"{Name}\" is created", activity.StravaId, activity.Name);
-            return;
-        }
-
-        activity.Update(
-            message.Name,
-            message.DeviceName,
-            message.SportType,
-            message.Private,
-            message.Distance,
-            message.TotalElevationGain,
-            message.AverageCadence,
-            message.Kilojoules,
-            message.Calories,
-            speed,
-            time,
-            watts,
-            heartrate,
-            map);
+                _activityAggregateFactory.CreateSpeed(message),
+                _activityAggregateFactory.CreateTime(message),
+                _activityAggregateFactory.CreateWatts(message),
+                _activityAggregateFactory.CreateHeartrate(message),
+                _activityAggregateFactory.CreateMap(message));
 
         await _unitOfWork.SaveChangesAsync();
 
