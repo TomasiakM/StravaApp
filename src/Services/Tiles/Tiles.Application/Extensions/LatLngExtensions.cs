@@ -4,13 +4,13 @@ using Tiles.Domain.Aggregates.ActivityTiles.ValueObjects;
 namespace Tiles.Application.Extensions;
 public static class LatLngExtensions
 {
-    public static IEnumerable<Tile> GetTiles(this IEnumerable<LatLng> latLngs)
+    public static IEnumerable<Tile> ToUniqueTiles(this IEnumerable<LatLng> latLngs, int zoom)
     {
         var tiles = new HashSet<Tile>();
 
         foreach (var latLng in latLngs)
         {
-            tiles.Add(latLng.ToTile(14));
+            tiles.Add(latLng.ToTile(zoom));
         }
 
         return tiles;

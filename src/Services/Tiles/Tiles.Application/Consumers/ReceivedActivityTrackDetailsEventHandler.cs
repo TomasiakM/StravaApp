@@ -51,7 +51,7 @@ public sealed class ReceivedActivityTrackDetailsEventHandler : IConsumer<Receive
         {
             if (actTiles.StravaActivityId == message.StravaActivityId)
             {
-                var tiles = message.LatLngs.GetTiles();
+                var tiles = message.LatLngs.ToUniqueTiles(Tile.DEFAULT_TILE_ZOOM);
                 actTiles.Update(prevTiles, tiles);
 
                 prevTiles.AddRange(actTiles.Tiles);
@@ -79,7 +79,7 @@ public sealed class ReceivedActivityTrackDetailsEventHandler : IConsumer<Receive
     {
         if (IsActivityLatest(message, activityTilesList))
         {
-            var tiles = message.LatLngs.GetTiles();
+            var tiles = message.LatLngs.ToUniqueTiles(Tile.DEFAULT_TILE_ZOOM);
             var newActivityTiles = ActivityTilesAggregate.Create(
                 message.StravaActivityId,
                 message.StravaUserId,
@@ -99,7 +99,7 @@ public sealed class ReceivedActivityTrackDetailsEventHandler : IConsumer<Receive
         {
             if (!activityCreated && actTiles.CreatedAt > message.CreatedAt)
             {
-                var tiles = message.LatLngs.GetTiles();
+                var tiles = message.LatLngs.ToUniqueTiles(Tile.DEFAULT_TILE_ZOOM);
                 var newActivityTiles = ActivityTilesAggregate.Create(
                     message.StravaActivityId,
                     message.StravaUserId,
