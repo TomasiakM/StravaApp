@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Strava.Application.Interfaces;
+using Strava.Application.Interfaces.Services.StravaDataServices;
 using Strava.Infrastructure.Extensions;
 using Strava.Infrastructure.Interfaces;
 using Strava.Infrastructure.Persistence;
 using Strava.Infrastructure.Services;
+using Strava.Infrastructure.Services.StravaDataServices;
 
 namespace Strava.Infrastructure;
 public static class DependencyInjection
@@ -24,7 +26,10 @@ public static class DependencyInjection
         services.AddScoped<StravaHttpClientService>();
 
         services.AddScoped<IStravaAuthenticationService, StravaAuthenticationService>();
-        services.AddScoped<IStravaActivitiesService, StravaActivitiesService>();
+
+        services.AddScoped<IUserActivityService, UserActivityService>();
+        services.AddScoped<IActivityStreamsService, ActivityStreamsService>();
+        services.AddScoped<IAllUserActivitiesService, AllUserActivitiesService>();
 
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
