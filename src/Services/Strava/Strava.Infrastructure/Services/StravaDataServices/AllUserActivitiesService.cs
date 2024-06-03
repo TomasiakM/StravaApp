@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Strava.Application.Interfaces.Services.StravaDataServices;
 using Strava.Contracts.Activity;
+using Strava.Infrastructure.HttpClients;
 
 namespace Strava.Infrastructure.Services.StravaDataServices;
 internal class AllUserActivitiesService : IAllUserActivitiesService

@@ -2,22 +2,22 @@
 using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Retry;
-using Strava.Application.Interfaces;
+using Strava.Infrastructure.Interfaces;
 using Strava.Infrastructure.Settings;
 using System.Net;
 using System.Text.Json;
 
-namespace Strava.Infrastructure.Services;
+namespace Strava.Infrastructure.HttpClients;
 internal sealed class StravaHttpClientService
 {
     private readonly ILogger<StravaHttpClientService> _logger;
-    private readonly IStravaAuthenticationService _stravaAuthenticationService;
+    private readonly IUserStravaTokenProvider _userStravaTokenProvider;
     private readonly HttpClient _httpClient;
 
-    public StravaHttpClientService(ILogger<StravaHttpClientService> logger, IStravaAuthenticationService stravaAuthenticationService, IHttpClientFactory httpClientFactory, IOptions<StravaSettings> stravaSettings)
+    public StravaHttpClientService(ILogger<StravaHttpClientService> logger, IUserStravaTokenProvider userStravaTokenProvider, IHttpClientFactory httpClientFactory, IOptions<StravaSettings> stravaSettings)
     {
         _logger = logger;
-        _stravaAuthenticationService = stravaAuthenticationService;
+        _userStravaTokenProvider = userStravaTokenProvider;
         _httpClient = httpClientFactory.CreateClient();
 
         _httpClient.BaseAddress = new Uri(stravaSettings.Value.BaseUrl);
@@ -60,7 +60,7 @@ internal sealed class StravaHttpClientService
 
         var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
 
-        var token = await _stravaAuthenticationService.GetStravaUserToken(stravaUserId);
+        var token = await _userStravaTokenProvider.GetTokenAsync(stravaUserId);
         if (token is null)
         {
             throw new Exception("Athlete token not found.");
@@ -79,7 +79,7 @@ internal sealed class StravaHttpClientService
             {
                 if (retrycount % 2 == 1)
                 {
-                    var wait = TimeSpan.FromMinutes(15 - (DateTime.UtcNow.Minute % 15));
+                    var wait = TimeSpan.FromMinutes(15 - DateTime.UtcNow.Minute % 15);
                     _logger.LogInformation("Waiting for {Wait}. Request will be retried for {Retrycount} time. Next retry fetch at {Time}.", wait, retrycount, DateTime.UtcNow.Add(wait));
 
                     return wait;
@@ -113,7 +113,7 @@ internal sealed class StravaHttpClientService
             {
                 _logger.LogInformation("Response unauthorized, getting token for {UserId} and retrying request.", userStravaId);
 
-                var token = await _stravaAuthenticationService.GetStravaUserToken(userStravaId);
+                var token = await _userStravaTokenProvider.GetTokenAsync(userStravaId);
                 context["Authorization"] = $"Bearer {token?.AccessToken}";
             });
     }
