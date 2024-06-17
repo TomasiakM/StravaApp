@@ -7,14 +7,14 @@ public class IsCluster
     [Fact]
     public void Should_Return_True_When_Tile_Is_Cluster()
     {
-        var tile = Tile.Create(1, 1, 14);
+        var tile = Tile.Create(1, 1);
 
         var tiles = new List<Tile>
         {
-            Tile.Create(1, 0, 14),
-            Tile.Create(0, 1, 14),
-            Tile.Create(2, 1, 14),
-            Tile.Create(1, 2, 14),
+            Tile.Create(1, 0),
+            Tile.Create(0, 1),
+            Tile.Create(2, 1),
+            Tile.Create(1, 2),
         };
 
         // 0, 1, 0
@@ -27,14 +27,14 @@ public class IsCluster
     [Fact]
     public void Should_Return_False_When_Tile_Is_Not_Cluster()
     {
-        var tile = Tile.Create(1, 1, 14);
+        var tile = Tile.Create(1, 1);
 
         var tiles = new List<Tile>
         {
-            Tile.Create(0, 0, 14),
-            Tile.Create(2, 0, 14),
-            Tile.Create(0, 2, 14),
-            Tile.Create(2, 2, 14),
+            Tile.Create(0, 0),
+            Tile.Create(2, 0),
+            Tile.Create(0, 2),
+            Tile.Create(2, 2),
         };
 
         // 1, 0, 1

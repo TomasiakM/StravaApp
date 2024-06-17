@@ -9,14 +9,14 @@ public class FindMaxSquareTiles
     {
         var tiles = new List<Tile>()
         {
-            Tile.Create(1, 1, 14)
+            Tile.Create(1, 1)
         };
 
         var tiles2 = new List<Tile>()
         {
-            Tile.Create(0, 0, 14),
-            Tile.Create(0, 1, 14),
-            Tile.Create(1, 1, 14)
+            Tile.Create(0, 0),
+            Tile.Create(0, 1),
+            Tile.Create(1, 1)
         };
 
         Assert.Single(tiles.First().FindMaxSquareTiles(tiles));
@@ -28,24 +28,24 @@ public class FindMaxSquareTiles
     {
         var tiles = new List<Tile>()
         {
-            Tile.Create(0, 0, 14),
-            Tile.Create(0, 1, 14),
-            Tile.Create(1, 0, 14),
-            Tile.Create(1, 1, 14),
-            Tile.Create(0, 2, 14),
-            Tile.Create(1, 2, 14)
+            Tile.Create(0, 0),
+            Tile.Create(0, 1),
+            Tile.Create(1, 0),
+            Tile.Create(1, 1),
+            Tile.Create(0, 2),
+            Tile.Create(1, 2)
         };
 
         var tiles2 = new List<Tile>()
         {
-            Tile.Create(0, 0, 14),
-            Tile.Create(0, 1, 14),
-            Tile.Create(1, 0, 14),
-            Tile.Create(1, 1, 14),
-            Tile.Create(4, 4, 14),
-            Tile.Create(4, 5, 14),
-            Tile.Create(5, 4, 14),
-            Tile.Create(5, 5, 14)
+            Tile.Create(0, 0),
+            Tile.Create(0, 1),
+            Tile.Create(1, 0),
+            Tile.Create(1, 1),
+            Tile.Create(4, 4),
+            Tile.Create(4, 5),
+            Tile.Create(5, 4),
+            Tile.Create(5, 5)
         };
 
         Assert.Equal(4, tiles.First().FindMaxSquareTiles(tiles).Count);

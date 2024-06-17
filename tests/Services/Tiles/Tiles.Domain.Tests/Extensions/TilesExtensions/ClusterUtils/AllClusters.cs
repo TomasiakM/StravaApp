@@ -9,11 +9,11 @@ public class AllClusters
     {
         var tiles = new List<Tile>
         {
-            Tile.Create(1, 0, 14),
-            Tile.Create(0, 1, 14),
-            Tile.Create(1, 1, 14),
-            Tile.Create(2, 1, 14),
-            Tile.Create(1, 2, 14),
+            Tile.Create(1, 0),
+            Tile.Create(0, 1),
+            Tile.Create(1, 1),
+            Tile.Create(2, 1),
+            Tile.Create(1, 2),
         };
 
         Assert.Equal(1, tiles.AllClusters());
@@ -24,17 +24,17 @@ public class AllClusters
     {
         var tiles = new List<Tile>
         {
-            Tile.Create(1, 0, 14),
-            Tile.Create(0, 1, 14),
-            Tile.Create(1, 1, 14),
-            Tile.Create(2, 1, 14),
-            Tile.Create(1, 2, 14),
+            Tile.Create(1, 0),
+            Tile.Create(0, 1),
+            Tile.Create(1, 1),
+            Tile.Create(2, 1),
+            Tile.Create(1, 2),
 
-            Tile.Create(4, 3, 14),
-            Tile.Create(3, 4, 14),
-            Tile.Create(4, 4, 14),
-            Tile.Create(5, 4, 14),
-            Tile.Create(4, 5, 14),
+            Tile.Create(4, 3),
+            Tile.Create(3, 4),
+            Tile.Create(4, 4),
+            Tile.Create(5, 4),
+            Tile.Create(4, 5),
         };
 
         Assert.Equal(2, tiles.AllClusters());
@@ -45,14 +45,14 @@ public class AllClusters
     {
         var tiles = new List<Tile>
         {
-            Tile.Create(1, 0, 14),
-            Tile.Create(2, 0, 14),
-            Tile.Create(0, 1, 14),
-            Tile.Create(1, 1, 14),
-            Tile.Create(2, 1, 14),
-            Tile.Create(3, 1, 14),
-            Tile.Create(1, 2, 14),
-            Tile.Create(2, 2, 14),
+            Tile.Create(1, 0),
+            Tile.Create(2, 0),
+            Tile.Create(0, 1),
+            Tile.Create(1, 1),
+            Tile.Create(2, 1),
+            Tile.Create(3, 1),
+            Tile.Create(1, 2),
+            Tile.Create(2, 2),
         };
 
         // 0, 1, 1, 0,
@@ -67,10 +67,10 @@ public class AllClusters
     {
         var tiles = new List<Tile>
         {
-            Tile.Create(1, 0, 14),
-            Tile.Create(0, 1, 14),
-            Tile.Create(2, 1, 14),
-            Tile.Create(1, 2, 14),
+            Tile.Create(1, 0),
+            Tile.Create(0, 1),
+            Tile.Create(2, 1),
+            Tile.Create(1, 2),
         };
 
         Assert.Equal(0, tiles.AllClusters());

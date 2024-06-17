@@ -10,7 +10,7 @@ public class FindNewTiles
         var tiles = new List<Tile>();
         var newTiles = new List<Tile>
         {
-            Tile.Create(1, 1, 14)
+            Tile.Create(1, 1)
         };
 
         Assert.Single(tiles.FindNewTiles(newTiles));
@@ -21,14 +21,14 @@ public class FindNewTiles
     {
         var tiles = new List<Tile>()
         {
-            Tile.Create(0, 1, 14),
-            Tile.Create(1, 0, 14),
-            Tile.Create(1, 1, 14)
+            Tile.Create(0, 1),
+            Tile.Create(1, 0),
+            Tile.Create(1, 1)
         };
         var newTiles = new List<Tile>
         {
-            Tile.Create(0, 1, 14),
-            Tile.Create(1, 1, 14),
+            Tile.Create(0, 1),
+            Tile.Create(1, 1),
         };
 
         Assert.Empty(tiles.FindNewTiles(newTiles));
@@ -39,16 +39,16 @@ public class FindNewTiles
     {
         var tiles = new List<Tile>()
         {
-            Tile.Create(0, 1, 14),
-            Tile.Create(1, 0, 14),
-            Tile.Create(1, 1, 14)
+            Tile.Create(0, 1),
+            Tile.Create(1, 0),
+            Tile.Create(1, 1)
         };
         var newTiles = new List<Tile>
         {
-            Tile.Create(0, 1, 14),
-            Tile.Create(1, 0, 14),
-            Tile.Create(2, 2, 14),
-            Tile.Create(1, 2, 14),
+            Tile.Create(0, 1),
+            Tile.Create(1, 0),
+            Tile.Create(2, 2),
+            Tile.Create(1, 2),
         };
 
         Assert.Equal(2, tiles.FindNewTiles(newTiles).Count);

@@ -17,7 +17,7 @@ public class MaxSquare
     {
         var tiles = new List<Tile>()
         {
-            Tile.Create(1, 1, 14)
+            Tile.Create(1, 1)
         };
 
         Assert.Equal(1, tiles.MaxSquare());
@@ -28,9 +28,9 @@ public class MaxSquare
     {
         var tiles = new List<Tile>()
         {
-            Tile.Create(0, 0, 14),
-            Tile.Create(0, 1, 14),
-            Tile.Create(1, 1, 14),
+            Tile.Create(0, 0),
+            Tile.Create(0, 1),
+            Tile.Create(1, 1),
         };
 
         Assert.Equal(1, tiles.MaxSquare());
@@ -41,10 +41,10 @@ public class MaxSquare
     {
         var tiles = new List<Tile>()
         {
-            Tile.Create(0, 0, 14),
-            Tile.Create(0, 1, 14),
-            Tile.Create(1, 0, 14),
-            Tile.Create(1, 1, 14),
+            Tile.Create(0, 0),
+            Tile.Create(0, 1),
+            Tile.Create(1, 0),
+            Tile.Create(1, 1),
         };
 
         Assert.Equal(2, tiles.MaxSquare());

@@ -7,7 +7,7 @@ public class FindNeighbourTileCluster
     [Fact]
     public void Should_Return_Single_Tile()
     {
-        var tile = Tile.Create(1, 1, 14);
+        var tile = Tile.Create(1, 1);
         var clusters = new List<Tile>
         {
             tile
@@ -22,16 +22,16 @@ public class FindNeighbourTileCluster
     [Fact]
     public void Should_Return_5_When_Max_Cluster_Is_5()
     {
-        var tile = Tile.Create(1, 1, 14);
+        var tile = Tile.Create(1, 1);
         var clusters = new List<Tile>
         {
-            Tile.Create(1, 0, 14),
-            Tile.Create(0, 1, 14),
+            Tile.Create(1, 0),
+            Tile.Create(0, 1),
             tile,
-            Tile.Create(2, 1, 14),
-            Tile.Create(1, 2, 14),
+            Tile.Create(2, 1),
+            Tile.Create(1, 2),
 
-            Tile.Create(4, 4, 14),
+            Tile.Create(4, 4),
         };
 
         // 0, 1, 0,
@@ -39,7 +39,6 @@ public class FindNeighbourTileCluster
         // 0, 1, 0,
 
         var processed = new HashSet<Tile>();
-
 
         Assert.Equal(5, tile.FindNeighbourTileCluster(clusters, processed).Count);
     }
