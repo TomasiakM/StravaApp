@@ -23,11 +23,4 @@ public static class TileUtils
             .Select(e => NewClusterTile.Create(e.X, e.Y, e.Z))
             .ToHashSet();
     }
-
-    public static ICollection<NewSquareTile> ToNewSquareTiles(this IEnumerable<Tile> tiles)
-    {
-        return tiles
-            .Select(e => NewSquareTile.Create(e.X, e.Y, e.Z))
-            .ToHashSet();
-    }
 }

@@ -16,7 +16,7 @@ public class Tile : ValueObject
         Z = z;
     }
 
-    public static Tile Create(int x, int y, int z) =>
+    public static Tile Create(int x, int y, int z = DEFAULT_TILE_ZOOM) =>
         new(x, y, z);
 
     protected override IEnumerable<object?> GetEqualityComponents()
