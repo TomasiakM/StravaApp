@@ -12,4 +12,7 @@
     <ProjectReference Include="..\Activities.Domain\Activities.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+	<InternalsVisibleTo Include="Activities.Application.Tests" />
+  </ItemGroup>
 </Project>
