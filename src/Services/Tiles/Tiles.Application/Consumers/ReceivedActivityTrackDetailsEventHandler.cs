@@ -1,11 +1,14 @@
 ﻿using Common.Domain.Extensions;
+using Common.Domain.Models;
 using Common.MessageBroker.Contracts.Activities;
 using MassTransit;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
 using Tiles.Application.Extensions;
 using Tiles.Application.Interfaces;
 using Tiles.Domain.Aggregates.ActivityTiles;
 using Tiles.Domain.Aggregates.ActivityTiles.ValueObjects;
+using Tiles.Domain.Aggregates.Coordinates;
 
 namespace Tiles.Application.Consumers;
 public sealed class ReceivedActivityTrackDetailsEventHandler : IConsumer<ReceivedActivityTrackDetailsEvent>
@@ -21,7 +24,27 @@ public sealed class ReceivedActivityTrackDetailsEventHandler : IConsumer<Receive
 
     public async Task Consume(ConsumeContext<ReceivedActivityTrackDetailsEvent> context)
     {
+        var coordinates = await _unitOfWork.Coordinates
+            .GetAsync(e => e.StravaActivityId == context.Message.StravaActivityId);
+
+        if (!IsRecalculationRequired(coordinates, context.Message.LatLngs))
+        {
+            _logger.LogInformation("Activity:{ActivityId} latlngs are the same, no need to recalculate it.", context.Message.StravaActivityId);
+            return;
+        }
+
         _logger.LogInformation("Calculating tiles for activity:{ActivityId}.", context.Message.StravaActivityId);
+        var coordinatesCreated = coordinates is null;
+        if (coordinates is null)
+        {
+            coordinates = CoordinatesAggregate.Create(context.Message.StravaActivityId, context.Message.LatLngs);
+            _unitOfWork.Coordinates.Add(coordinates);
+        }
+
+        if (!coordinatesCreated)
+        {
+            coordinates.Update(context.Message.LatLngs);
+        }
 
         var activityTilesList = await _unitOfWork.Tiles.GetAllAsync(
             filter: e => e.StravaUserId == context.Message.StravaUserId,
@@ -36,6 +59,12 @@ public sealed class ReceivedActivityTrackDetailsEventHandler : IConsumer<Receive
         }
 
         await HandleNewActivityTiles(context.Message, activityTilesList);
+    }
+
+    private static bool IsRecalculationRequired(CoordinatesAggregate? coordinates, List<LatLng> latlngs)
+    {
+        return coordinates is not null &&
+            JsonSerializer.Serialize(coordinates.Coordinates) != JsonSerializer.Serialize(latlngs);
     }
 
     private static bool IsListContainingActivity(ReceivedActivityTrackDetailsEvent message, IEnumerable<ActivityTilesAggregate> activityTilesList)
