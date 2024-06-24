@@ -27,8 +27,10 @@ public class Create
         Assert.Equal(stravaActivityId, activityTiles.StravaActivityId);
         Assert.Equal(stravaUserId, activityTiles.StravaUserId);
         Assert.Equal(createdAt, activityTiles.CreatedAt);
+
+        Assert.True(activityTilesList.SequenceEqual(activityTiles.Tiles));
+
         Assert.Equal(3, activityTiles.NewSquare);
-        Assert.Equal(9, activityTiles.Tiles.Count);
         Assert.Equal(9, activityTiles.NewTiles.Count);
         Assert.Equal(1, activityTiles.NewClusterTiles.Count);
     }
@@ -55,8 +57,9 @@ public class Create
             prevTiles,
             activityTilesList);
 
+        Assert.True(activityTilesList.SequenceEqual(activityTiles.Tiles));
+
         Assert.Equal(2, activityTiles.NewSquare);
-        Assert.Equal(8, activityTiles.Tiles.Count);
         Assert.Equal(7, activityTiles.NewTiles.Count);
         Assert.Equal(1, activityTiles.NewClusterTiles.Count);
     }
