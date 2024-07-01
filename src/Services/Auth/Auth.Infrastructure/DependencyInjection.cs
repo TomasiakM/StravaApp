@@ -1,5 +1,11 @@
 ﻿using Auth.Application.Interfaces;
+using Auth.Application.Interfaces.Services;
+using Auth.Infrastructure.Interfaces;
+using Auth.Infrastructure.Interfaces.Services.StravaService;
 using Auth.Infrastructure.Persistence;
+using Auth.Infrastructure.Services;
+using Auth.Infrastructure.Services.Auth;
+using Auth.Infrastructure.Services.StravaService;
 using Common.Infrastructure.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +16,11 @@ public static class DependencyInjection
     {
         services.AddServiceDbContext<ServiceDbContext>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddScoped<ITokenService, TokenService>();
+
+        services.AddScoped<ILoginService, LoginService>();
+        services.AddScoped<IAuthorizeCodeService, AuthorizeCodeService>();
 
         return services;
     }
