@@ -3,5 +3,5 @@
 namespace Strava.Infrastructure.Interfaces;
 public interface IRefreshStravaUserTokenService
 {
-    Task<StravaRefreshTokenResponse> RefreshAsync(long stravaUserId, CancellationToken cancellationToken = default);
+    Task<StravaRefreshTokenResponse> RefreshAsync(string refreshToken, CancellationToken cancellationToken = default);
 }

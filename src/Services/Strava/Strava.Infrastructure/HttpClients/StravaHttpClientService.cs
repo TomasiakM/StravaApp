@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Retry;
-using Strava.Infrastructure.Interfaces;
+using Strava.Infrastructure.Interfaces.Auth;
 using Strava.Infrastructure.Settings;
 using System.Net;
 using System.Text.Json;
@@ -11,13 +11,13 @@ namespace Strava.Infrastructure.HttpClients;
 internal sealed class StravaHttpClientService
 {
     private readonly ILogger<StravaHttpClientService> _logger;
-    private readonly IUserStravaTokenProvider _userStravaTokenProvider;
+    private readonly IStravaTokenService _stravaTokenService;
     private readonly HttpClient _httpClient;
 
-    public StravaHttpClientService(ILogger<StravaHttpClientService> logger, IUserStravaTokenProvider userStravaTokenProvider, IHttpClientFactory httpClientFactory, IOptions<StravaSettings> stravaSettings)
+    public StravaHttpClientService(ILogger<StravaHttpClientService> logger, IStravaTokenService stravaTokenService, IHttpClientFactory httpClientFactory, IOptions<StravaSettings> stravaSettings)
     {
         _logger = logger;
-        _userStravaTokenProvider = userStravaTokenProvider;
+        _stravaTokenService = stravaTokenService;
         _httpClient = httpClientFactory.CreateClient();
 
         _httpClient.BaseAddress = new Uri(stravaSettings.Value.BaseUrl);
@@ -60,7 +60,7 @@ internal sealed class StravaHttpClientService
 
         var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
 
-        var token = await _userStravaTokenProvider.GetTokenAsync(stravaUserId);
+        var token = await _stravaTokenService.GetUserStravaTokens(stravaUserId);
         if (token is null)
         {
             throw new Exception("Athlete token not found.");
@@ -105,15 +105,15 @@ internal sealed class StravaHttpClientService
             });
     }
 
-    private AsyncRetryPolicy<HttpResponseMessage> UnauthorizedPolicy(long userStravaId)
+    private AsyncRetryPolicy<HttpResponseMessage> UnauthorizedPolicy(long stravaUserId)
     {
         return Policy
             .HandleResult<HttpResponseMessage>(res => res.StatusCode == HttpStatusCode.Unauthorized)
             .RetryAsync(1, async (response, retrycount, context) =>
             {
-                _logger.LogInformation("Response unauthorized, getting token for {UserId} and retrying request.", userStravaId);
+                _logger.LogInformation("Response unauthorized, getting token for {UserId} and retrying request.", stravaUserId);
 
-                var token = await _userStravaTokenProvider.GetTokenAsync(userStravaId);
+                var token = await _stravaTokenService.GetUserStravaTokens(stravaUserId);
                 context["Authorization"] = $"Bearer {token?.AccessToken}";
             });
     }

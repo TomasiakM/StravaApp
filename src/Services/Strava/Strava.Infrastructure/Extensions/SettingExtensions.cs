@@ -1,5 +1,4 @@
-﻿using Common.Infrastructure.Settings;
-using Common.MessageBroker.Settings;
+﻿using Common.MessageBroker.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using Strava.Infrastructure.Settings;
 
@@ -10,11 +9,6 @@ internal static class SettingExtensions
     {
         services.AddOptions<StravaSettings>()
             .BindConfiguration(nameof(StravaSettings))
-            .ValidateDataAnnotations()
-            .ValidateOnStart();
-
-        services.AddOptions<TokenSettings>()
-            .BindConfiguration(nameof(TokenSettings))
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
