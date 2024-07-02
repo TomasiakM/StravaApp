@@ -12,12 +12,14 @@ public class AuthenticationController : ControllerBase
 {
     private readonly ILoginService _loginService;
     private readonly IRefreshTokenService _refreshTokenService;
+    private readonly ILogoutService _logoutService;
     private readonly ILogger<AuthenticationController> _logger;
 
-    public AuthenticationController(ILoginService loginService, IRefreshTokenService refreshTokenService, ILogger<AuthenticationController> logger)
+    public AuthenticationController(ILoginService loginService, IRefreshTokenService refreshTokenService, ILogoutService logoutService, ILogger<AuthenticationController> logger)
     {
         _loginService = loginService;
         _refreshTokenService = refreshTokenService;
+        _logoutService = logoutService;
         _logger = logger;
     }
 
@@ -40,5 +42,16 @@ public class AuthenticationController : ControllerBase
         var refreshResponse = await _refreshTokenService.RefreshTokenAsync(cancellationToken);
 
         return Ok(refreshResponse);
+    }
+
+    [HttpPost("logout")]
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+    public async Task<ActionResult<RefreshTokenResponse>> Logout()
+    {
+        _logger.LogInformation("Logging out.");
+
+        await _logoutService.LogoutAsync();
+
+        return Ok();
     }
 }
