@@ -3,6 +3,7 @@ using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Strava.Application.Consumers;
+using Strava.Infrastructure.Consumers;
 
 namespace Strava.Infrastructure.Extensions;
 internal static class MassTransitExtensions
@@ -15,6 +16,9 @@ internal static class MassTransitExtensions
 
             e.AddConsumer<NewAthleteLoggedInEventConsumer>();
             e.AddConsumer<FetchAthleteActivityEventConsumer>();
+
+            e.AddConsumer<AuthorizeCodeConsumer>();
+            e.AddConsumer<RefreshStravaTokenConsumer>();
 
             e.UsingRabbitMq((context, cfg) =>
             {

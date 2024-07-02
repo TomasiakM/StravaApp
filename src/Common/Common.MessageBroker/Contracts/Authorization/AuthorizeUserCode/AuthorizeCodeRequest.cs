@@ -1,4 +1,4 @@
 ﻿
 namespace Common.MessageBroker.Contracts.Authorization.AuthorizeUserCode;
-public record AuthorizeUserCodeRequest(
+public record AuthorizeCodeRequest(
     string Code);

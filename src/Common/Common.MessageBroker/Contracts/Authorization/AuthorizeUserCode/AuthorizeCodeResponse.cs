@@ -1,5 +1,5 @@
 ﻿namespace Common.MessageBroker.Contracts.Authorization.AuthorizeUserCode;
-public record AuthorizeUserCodeResponse(
+public record AuthorizeCodeResponse(
     string AccessToken,
     string RefreshToken,
     int ExpiresAt,
