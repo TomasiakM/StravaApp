@@ -20,6 +20,8 @@ public static class DependencyInjection
     {
         services.AddServiceSettings();
         services.AddServiceMassTransit();
+        services.AddAuthServiceAuthentication();
+
         services.AddServiceDbContext<ServiceDbContext>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
