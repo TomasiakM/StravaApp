@@ -1,5 +1,6 @@
 ﻿using Auth.Application.Interfaces;
 using Auth.Application.Interfaces.Services;
+using Auth.Infrastructure.Extensions;
 using Auth.Infrastructure.Interfaces;
 using Auth.Infrastructure.Interfaces.Services.StravaService;
 using Auth.Infrastructure.Interfaces.Utils;
@@ -17,6 +18,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
+        services.AddServiceSettings();
+        services.AddServiceMassTransit();
         services.AddServiceDbContext<ServiceDbContext>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
