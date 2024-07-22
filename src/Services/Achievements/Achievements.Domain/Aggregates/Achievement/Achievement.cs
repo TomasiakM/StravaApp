@@ -28,8 +28,10 @@ public abstract class Achievement : AggregateRoot<AchievementId>
             throw new ArgumentException("Level cannot be negative");
         }
 
-        var currentMaxLevel = _achievementLevels.Max(e => e.Level);
-        if (currentMaxLevel < level)
+        var currentMaxLevel = _achievementLevels.Count == 0
+            ? 0 :
+            _achievementLevels.Max(e => e.Level);
+        if (currentMaxLevel > level)
         {
             _achievementLevels = _achievementLevels
                 .Where(e => e.Level <= level)

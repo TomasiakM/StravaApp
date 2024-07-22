@@ -7,9 +7,9 @@ public sealed class YearlyCumulativeDistanceAchievement : Achievement
 {
     private static readonly List<int> s_thresholds = new()
     {
-        100, 200, 300, 400, 500,
-        600, 700, 800, 900, 1000,
-        1250, 1500, 1750, 2000
+        1500, 2000, 2500, 3000, 4000,
+        5000, 6000, 7000, 8000, 9000,
+        10000, 15000, 20000
     };
 
     public YearlyCumulativeDistanceAchievement(long stravaUserId)
