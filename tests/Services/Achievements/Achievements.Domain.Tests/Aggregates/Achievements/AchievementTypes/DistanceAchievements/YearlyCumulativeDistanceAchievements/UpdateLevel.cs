@@ -8,15 +8,15 @@ public class UpdateLevel
     [MemberData(nameof(Data))]
     public void ShouldUpdateLevel(List<Activity> activities, int level)
     {
-        var achievement = new YearlyCumulativeDistanceAchievement(1);
-        var mockContext = new Mock<IDateProvider>();
+        var stravaUserId = 12;
+        var achievement = new YearlyCumulativeDistanceAchievement(stravaUserId);
 
         AchievementTestHelpers.TestAchievement(
             stravaUserId,
             achievement,
             activities,
             level);
-        }
+    }
 
     public static IEnumerable<object[]> Data()
     {
@@ -29,17 +29,30 @@ public class UpdateLevel
         yield return new object[] { new List<Activity>() { activity1, activity2 }, 0 };
         yield return new object[] { new List<Activity>() { activity2, activity3 }, 1 };
         yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 1500, DateTime.Now) }, 1 };
+        yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 1999.9, DateTime.Now) }, 1 };
         yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 2000, DateTime.Now) }, 2 };
+        yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 2499.9, DateTime.Now) }, 2 };
         yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 2500, DateTime.Now) }, 3 };
+        yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 2999.9, DateTime.Now) }, 3 };
         yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 3000, DateTime.Now) }, 4 };
+        yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 3999.9, DateTime.Now) }, 4 };
         yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 4000, DateTime.Now) }, 5 };
+        yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 4999.9, DateTime.Now) }, 5 };
         yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 5000, DateTime.Now) }, 6 };
+        yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 5999.9, DateTime.Now) }, 6 };
         yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 6000, DateTime.Now) }, 7 };
+        yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 6999.9, DateTime.Now) }, 7 };
         yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 7000, DateTime.Now) }, 8 };
+        yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 7999.9, DateTime.Now) }, 8 };
         yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 8000, DateTime.Now) }, 9 };
+        yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 8999.9, DateTime.Now) }, 9 };
         yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 9000, DateTime.Now) }, 10 };
+        yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 9999.9, DateTime.Now) }, 10 };
         yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 10000, DateTime.Now) }, 11 };
+        yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 14999.9, DateTime.Now) }, 11 };
         yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 15000, DateTime.Now) }, 12 };
+        yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 19999.9, DateTime.Now) }, 12 };
         yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 20000, DateTime.Now) }, 13 };
+        yield return new object[] { new List<Activity>() { new(Guid.NewGuid(), 100000000, DateTime.Now) }, 13 };
     }
 }
