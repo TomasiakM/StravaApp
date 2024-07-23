@@ -1,7 +1,5 @@
 ﻿using Achievements.Domain.Aggregates.Achievement.AchevementTypes.DistanceAchievements;
-using Common.Domain.Interfaces;
 using Common.Domain.Models;
-using Moq;
 
 namespace Achievements.Domain.Tests.Aggregates.Achievements.AchievementTypes.DistanceAchievements.YearlyCumulativeDistanceAchievements;
 public class UpdateLevel
@@ -13,28 +11,12 @@ public class UpdateLevel
         var achievement = new YearlyCumulativeDistanceAchievement(1);
         var mockContext = new Mock<IDateProvider>();
 
-        var date = new DateTimeOffset(2022, 1, 1, 0, 0, 0, TimeSpan.Zero);
-        mockContext.Setup(m => m.OffsetUtcNow).Returns(date);
-
-        achievement.UpdateLevel(activities, mockContext.Object);
-
-        Assert.Equal(1, achievement.StravaUserId);
-        Assert.True(achievement.AchievementLevels.Count == level);
-        Assert.True(achievement.AchievementLevels.All(e => e.AchievedAt == date));
-
-        if (level > 0)
-        {
-            var levels = achievement.AchievementLevels
-                .OrderBy(e => e.Level)
-                .Select(e => e.Level);
-
-            Assert.True(levels.SequenceEqual(Enumerable.Range(1, level)));
+        AchievementTestHelpers.TestAchievement(
+            stravaUserId,
+            achievement,
+            activities,
+            level);
         }
-        else
-        {
-            Assert.Empty(achievement.AchievementLevels);
-        }
-    }
 
     public static IEnumerable<object[]> Data()
     {

@@ -10,30 +10,14 @@ public class UpdateLevel
     [MemberData(nameof(Data))]
     public void ShouldUpdateLevel(List<Activity> activities, int level)
     {
-        var achievement = new MaxDistanceAchievement(1);
-        var mockContext = new Mock<IDateProvider>();
+        var stravaUserId = 12;
+        var achievement = new MaxDistanceAchievement(stravaUserId);
 
-        var date = new DateTimeOffset(2022, 1, 1, 0, 0, 0, TimeSpan.Zero);
-        mockContext.Setup(m => m.OffsetUtcNow).Returns(date);
-
-        achievement.UpdateLevel(activities, mockContext.Object);
-
-        Assert.Equal(1, achievement.StravaUserId);
-        Assert.True(achievement.AchievementLevels.Count == level);
-        Assert.True(achievement.AchievementLevels.All(e => e.AchievedAt == date));
-
-        if (level > 0)
-        {
-            var levels = achievement.AchievementLevels
-                .OrderBy(e => e.Level)
-                .Select(e => e.Level);
-
-            Assert.True(levels.SequenceEqual(Enumerable.Range(1, level)));
-        }
-        else
-        {
-            Assert.Empty(achievement.AchievementLevels);
-        }
+        AchievementTestHelpers.TestAchievement(
+            stravaUserId,
+            achievement,
+            activities,
+            level);
     }
 
     public static IEnumerable<object[]> Data()
