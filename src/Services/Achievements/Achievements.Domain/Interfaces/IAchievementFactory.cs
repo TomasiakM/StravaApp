@@ -5,5 +5,5 @@ namespace Achievements.Domain.Interfaces;
 public interface IAchievementFactory
 {
     Achievement Create(long stravaUserId, AchievementType achievementType);
-    ICollection<Achievement> CreateAll(long stravaUserId, IEnumerable<Achievement>? without);
+    ICollection<Achievement> CreateAll(long stravaUserId, IEnumerable<Achievement>? without = null);
 }

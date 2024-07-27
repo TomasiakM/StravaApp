@@ -23,7 +23,7 @@ public sealed class AchievementFactory : IAchievementFactory
         throw new NotImplementedException();
     }
 
-    public ICollection<Achievement> CreateAll(long stravaUserId, IEnumerable<Achievement>? without)
+    public ICollection<Achievement> CreateAll(long stravaUserId, IEnumerable<Achievement>? without = null)
     {
         without ??= new List<Achievement>();
 
