@@ -1,5 +1,7 @@
 ﻿using Achievements.Application.Interfaces;
+using Achievements.Application.Interfaces.Services;
 using Achievements.Infrastructure.Persistence;
+using Achievements.Infrastructure.Services.Activities;
 using Common.Infrastructure.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +12,8 @@ public static class DependencyInjection
     {
         services.AddServiceDbContext<ServiceDbContext>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddScoped<IUserActivitiesService, UserActivitiesService>();
 
         return services;
     }

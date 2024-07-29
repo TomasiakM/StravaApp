@@ -11,21 +11,21 @@ public sealed class UpdateAchievementsEventConsumer : IConsumer<UpdateAchievemen
     private readonly IUnitOfWork _unitOfWork;
     private readonly IAchievementFactory _achievementFactory;
     private readonly IDateProvider _dateProvider;
-    private readonly IAllUserActivitiesService _allUserActivitiesService;
+    private readonly IUserActivitiesService _userActivitiesService;
 
-    public UpdateAchievementsEventConsumer(IUnitOfWork unitOfWork, IAchievementFactory achievementFactory, IDateProvider dateProvider, IAllUserActivitiesService allUserActivitiesService)
+    public UpdateAchievementsEventConsumer(IUnitOfWork unitOfWork, IAchievementFactory achievementFactory, IDateProvider dateProvider, IUserActivitiesService userActivitiesService)
     {
         _unitOfWork = unitOfWork;
         _achievementFactory = achievementFactory;
         _dateProvider = dateProvider;
-        _allUserActivitiesService = allUserActivitiesService;
+        _userActivitiesService = userActivitiesService;
     }
 
     public async Task Consume(ConsumeContext<UpdateAchievementsEvent> context)
     {
         var stravaUserId = context.Message.StravaUserId;
 
-        var userActivities = await _allUserActivitiesService.GetAllAsync(stravaUserId);
+        var userActivities = await _userActivitiesService.GetAllAsync(stravaUserId);
         var userAchievements = await _unitOfWork.Achievements
             .GetAllAsync(e => e.StravaUserId == stravaUserId);
 
