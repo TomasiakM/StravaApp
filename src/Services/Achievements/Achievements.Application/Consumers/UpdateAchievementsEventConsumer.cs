@@ -1,0 +1,46 @@
+﻿using Achievements.Application.Interfaces;
+using Achievements.Application.Interfaces.Services;
+using Achievements.Domain.Interfaces;
+using Common.Domain.Interfaces;
+using Common.MessageBroker.Contracts.Achievements;
+using MassTransit;
+
+namespace Achievements.Application.Consumers;
+public sealed class UpdateAchievementsEventConsumer : IConsumer<UpdateAchievementsEvent>
+{
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IAchievementFactory _achievementFactory;
+    private readonly IDateProvider _dateProvider;
+    private readonly IAllUserActivitiesService _allUserActivitiesService;
+
+    public UpdateAchievementsEventConsumer(IUnitOfWork unitOfWork, IAchievementFactory achievementFactory, IDateProvider dateProvider, IAllUserActivitiesService allUserActivitiesService)
+    {
+        _unitOfWork = unitOfWork;
+        _achievementFactory = achievementFactory;
+        _dateProvider = dateProvider;
+        _allUserActivitiesService = allUserActivitiesService;
+    }
+
+    public async Task Consume(ConsumeContext<UpdateAchievementsEvent> context)
+    {
+        var stravaUserId = context.Message.StravaUserId;
+
+        var userActivities = await _allUserActivitiesService.GetAllAsync(stravaUserId);
+        var userAchievements = await _unitOfWork.Achievements
+            .GetAllAsync(e => e.StravaUserId == stravaUserId);
+
+        foreach (var achievement in userAchievements)
+        {
+            achievement.UpdateLevel(userActivities, _dateProvider);
+        }
+
+        var notSavedAchievements = _achievementFactory.CreateAll(stravaUserId, userAchievements);
+        foreach (var achievement in notSavedAchievements)
+        {
+            achievement.UpdateLevel(userActivities, _dateProvider);
+            _unitOfWork.Achievements.Add(achievement);
+        }
+
+        await _unitOfWork.SaveChangesAsync();
+    }
+}
