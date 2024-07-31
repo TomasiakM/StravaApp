@@ -118,9 +118,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Tests", "tests\Commo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Achievements.Domain.Tests", "tests\Services\Achievements\Achievements.Domain.Tests\Achievements.Domain.Tests.csproj", "{8F89E5B1-2CFF-404F-8A15-BF492B46E034}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Achievements.Application", "src\Services\Achievements\Achievements.Application\Achievements.Application.csproj", "{AFAEBAAD-CC13-4D40-B2F2-24948155595A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Achievements.Application", "src\Services\Achievements\Achievements.Application\Achievements.Application.csproj", "{AFAEBAAD-CC13-4D40-B2F2-24948155595A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Achievements.Infrastructure", "src\Services\Achievements\Achievements.Infrastructure\Achievements.Infrastructure.csproj", "{0D80FF1D-0CA0-409C-8175-BF013A9923D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Achievements.Infrastructure", "src\Services\Achievements\Achievements.Infrastructure\Achievements.Infrastructure.csproj", "{0D80FF1D-0CA0-409C-8175-BF013A9923D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Achievements.Api", "src\Services\Achievements\Achievements.Api\Achievements.Api.csproj", "{8A86FBBB-CC3C-4E58-AFB5-6212BCF6DC8C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -276,6 +278,10 @@ Global
 		{0D80FF1D-0CA0-409C-8175-BF013A9923D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D80FF1D-0CA0-409C-8175-BF013A9923D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D80FF1D-0CA0-409C-8175-BF013A9923D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A86FBBB-CC3C-4E58-AFB5-6212BCF6DC8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A86FBBB-CC3C-4E58-AFB5-6212BCF6DC8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A86FBBB-CC3C-4E58-AFB5-6212BCF6DC8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A86FBBB-CC3C-4E58-AFB5-6212BCF6DC8C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -332,6 +338,7 @@ Global
 		{8F89E5B1-2CFF-404F-8A15-BF492B46E034} = {02384182-0741-4F06-968E-BC87F4AD010C}
 		{AFAEBAAD-CC13-4D40-B2F2-24948155595A} = {F5FD0606-AB4F-4B6F-9B58-0B40A0CDB555}
 		{0D80FF1D-0CA0-409C-8175-BF013A9923D5} = {F5FD0606-AB4F-4B6F-9B58-0B40A0CDB555}
+		{8A86FBBB-CC3C-4E58-AFB5-6212BCF6DC8C} = {F5FD0606-AB4F-4B6F-9B58-0B40A0CDB555}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D3722679-F2EA-4213-837A-7BA48B497A6E}
