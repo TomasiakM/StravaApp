@@ -1,5 +1,6 @@
 ﻿using Achievements.Application.Interfaces;
 using Achievements.Application.Interfaces.Services;
+using Achievements.Infrastructure.Extensions;
 using Achievements.Infrastructure.Persistence;
 using Achievements.Infrastructure.Services.Activities;
 using Common.Infrastructure.Extensions;
@@ -14,6 +15,9 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<IUserActivitiesService, UserActivitiesService>();
+
+        services.AddServiceSettings();
+        services.AddServiceMassTransit();
 
         return services;
     }
