@@ -19,6 +19,8 @@ public static class DependencyInjection
         services.AddServiceSettings();
         services.AddServiceMassTransit();
 
+        services.AddServiceAuthentication();
+
         return services;
     }
 }
