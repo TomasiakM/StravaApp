@@ -1,4 +1,5 @@
 ﻿using Activities.Application.Interfaces;
+using Common.MessageBroker.Contracts.Achievements;
 using Common.MessageBroker.Contracts.Activities;
 using MassTransit;
 using Microsoft.Extensions.Logging;
@@ -10,12 +11,14 @@ public sealed class ReceivedActivityDataEventConsumer
     private readonly ILogger<ReceivedActivityDataEventConsumer> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IActivityAggregateFactory _activityAggregateFactory;
+    private readonly IBus _bus;
 
-    public ReceivedActivityDataEventConsumer(ILogger<ReceivedActivityDataEventConsumer> logger, IUnitOfWork unitOfWork, IActivityAggregateFactory activityAggregateFactory)
+    public ReceivedActivityDataEventConsumer(ILogger<ReceivedActivityDataEventConsumer> logger, IUnitOfWork unitOfWork, IActivityAggregateFactory activityAggregateFactory, IBus bus)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
         _activityAggregateFactory = activityAggregateFactory;
+        _bus = bus;
     }
 
     public async Task Consume(ConsumeContext<ReceivedActivityDataEvent> context)
@@ -54,6 +57,8 @@ public sealed class ReceivedActivityDataEventConsumer
                 _activityAggregateFactory.CreateMap(message));
 
         await _unitOfWork.SaveChangesAsync();
+
+        await _bus.Publish(new UpdateAchievementsEvent(activity.StravaUserId));
 
         _logger.LogInformation("Activity:{Id} \"{Name}\" updated successfully.", activity.StravaId, activity.Name);
     }

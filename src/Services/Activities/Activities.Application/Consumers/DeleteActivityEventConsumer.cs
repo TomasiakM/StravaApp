@@ -1,4 +1,5 @@
 ﻿using Activities.Application.Interfaces;
+using Common.MessageBroker.Contracts.Achievements;
 using Common.MessageBroker.Contracts.Activities;
 using MassTransit;
 using Microsoft.Extensions.Logging;
@@ -8,11 +9,13 @@ public sealed class DeleteActivityEventConsumer : IConsumer<DeleteActivityEvent>
 {
     private readonly ILogger<DeleteActivityEventConsumer> _logger;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IBus _bus;
 
-    public DeleteActivityEventConsumer(ILogger<DeleteActivityEventConsumer> logger, IUnitOfWork unitOfWork)
+    public DeleteActivityEventConsumer(ILogger<DeleteActivityEventConsumer> logger, IUnitOfWork unitOfWork, IBus bus)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
+        _bus = bus;
     }
 
     public async Task Consume(ConsumeContext<DeleteActivityEvent> context)
@@ -26,6 +29,8 @@ public sealed class DeleteActivityEventConsumer : IConsumer<DeleteActivityEvent>
         {
             _unitOfWork.Activities.Delete(activity);
             await _unitOfWork.SaveChangesAsync();
+
+            await _bus.Publish(new UpdateAchievementsEvent(activity.StravaUserId));
 
             _logger.LogInformation("Activity:{ActivityId} has been removed successfully.", context.Message.StravaActivityId);
 

@@ -1,4 +1,5 @@
 ﻿using Activities.Application.Consumers;
+using Activities.Infrastracture.Consumers;
 using Common.MessageBroker.Settings;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,8 @@ internal static class MassTransitExtensions
 
             e.AddConsumer<ReceivedActivityDataEventConsumer>();
             e.AddConsumer<DeleteActivityEventConsumer>();
+
+            e.AddConsumer<GetUserActivitiesConsumer>();
 
             e.UsingRabbitMq((context, cfg) =>
             {
