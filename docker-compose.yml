@@ -99,6 +99,24 @@ services:
         - rabbitmq
 
 
+  achievements-api:
+    container_name: achievements-api
+    image: ${DOCKER_REGISTRY-}achievements-api
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ConnectionStrings__DbConnection=${TILES_SERVICE_DB_CONNECTION_STRING:-Server=db_server;Database=Achievements;User Id=SA;Password=Password_123;TrustServerCertificate=True}
+
+        - MessageBrokerSettings__Host=amqp://rabbitmq:5672
+        - MessageBrokerSettings__Username=${RABBITMQ_USERNAME:-admin}
+        - MessageBrokerSettings__Password=${RABBITMQ_PASSWORD:-admin}
+    build:
+        context: .
+        dockerfile: src/Services/Achievements/Achievements.Api/Dockerfile
+    depends_on:
+        - db_server
+        - rabbitmq
+
+
   gateway-api:
     container_name: gateway-api
     image: ${DOCKER_REGISTRY-}gateway-api
