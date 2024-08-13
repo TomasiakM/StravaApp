@@ -1,7 +1,6 @@
-﻿
-using Achievements.Domain.Aggregates.Achievement.ValueObjects;
+﻿using Achievements.Domain.Aggregates.Achievement.ValueObjects;
 
-namespace Achievements.Domain.Tests.Aggregates.ValueObjects.AchievementIds;
+namespace Achievements.Domain.Tests.Aggregates.Achievements.ValueObjects.AchievementIds;
 public class Create
 {
     [Fact]

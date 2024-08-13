@@ -2,7 +2,7 @@
 using Achievements.Domain.Aggregates.Achievement.AchevementTypes.DistanceAchievements;
 using Achievements.Domain.Aggregates.Achievement.Factories;
 
-namespace Achievements.Domain.Tests.Aggregates.Factiories.AchievementFactories;
+namespace Achievements.Domain.Tests.Aggregates.Achievements.Factiories.AchievementFactories;
 public class CreateAll
 {
     [Fact]
