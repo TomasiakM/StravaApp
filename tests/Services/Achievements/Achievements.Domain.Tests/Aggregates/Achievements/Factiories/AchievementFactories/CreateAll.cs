@@ -18,7 +18,7 @@ public class CreateAll
     }
 
     [Fact]
-    public void ShouldCreateAllAchievementsExpect()
+    public void ShouldCreateAllAchievementsExceptOne()
     {
         var stravaUserId = 12342;
         var factory = new AchievementFactory();
@@ -35,7 +35,7 @@ public class CreateAll
     }
 
     [Fact]
-    public void ShouldCreateAllAchievementsExpect2()
+    public void ShouldCreateSingleAchievement()
     {
         var stravaUserId = 12342;
         var factory = new AchievementFactory();
@@ -49,23 +49,17 @@ public class CreateAll
 
         var achievements = factory.CreateAll(stravaUserId, except);
 
-        Assert.Equal(1, achievements.Count);
+        Assert.Single(achievements);
         Assert.Single(achievements.DistinctBy(e => e.AchievementType));
     }
 
     [Fact]
-    public void ShouldCreateAllAchievementsExpect3()
+    public void ShouldCreateEmptyCollection()
     {
         var stravaUserId = 12342;
         var factory = new AchievementFactory();
 
-        var except = new List<Achievement>
-        {
-            new CumulativeDistanceAchievement(stravaUserId),
-            new MaxDistanceAchievement(stravaUserId),
-            new MonthlyCumulativeDistanceAchievement(stravaUserId),
-            new YearlyCumulativeDistanceAchievement(stravaUserId),
-        };
+        var except = factory.CreateAll(stravaUserId);
 
         var achievements = factory.CreateAll(stravaUserId, except);
 
