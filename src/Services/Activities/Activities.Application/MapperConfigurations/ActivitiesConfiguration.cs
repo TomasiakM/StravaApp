@@ -3,7 +3,7 @@ using Activities.Domain.Aggregates.Activities;
 using Common.Domain.Models;
 using Mapster;
 
-namespace Activities.Application.Mapper;
+namespace Activities.Application.MapperConfigurations;
 public sealed class ActivitiesConfiguration : IRegister
 {
     public void Register(TypeAdapterConfig config)
