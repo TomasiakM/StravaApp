@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\src\Services\Tiles\Tiles.Application\Tiles.Application.csproj" />
+    <ProjectReference Include="..\..\..\Common.Tests\Common.Tests.csproj" />
   </ItemGroup>
 
   <ItemGroup>

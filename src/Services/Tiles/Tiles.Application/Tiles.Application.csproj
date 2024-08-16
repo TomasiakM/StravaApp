@@ -12,4 +12,8 @@
     <ProjectReference Include="..\Tiles.Domain\Tiles.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+	<InternalsVisibleTo Include="Tiles.Application.Tests" />
+  </ItemGroup>
+	
 </Project>
