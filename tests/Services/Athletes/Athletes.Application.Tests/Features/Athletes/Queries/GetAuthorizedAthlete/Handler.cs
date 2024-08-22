@@ -4,6 +4,7 @@ using Athletes.Application.MapperConfigurations;
 using Athletes.Domain.Aggregates.Athletes;
 using Common.Application.Interfaces;
 using Common.Domain.Enums;
+using Common.Domain.Exceptions;
 using Mapster;
 using MapsterMapper;
 using Moq;
@@ -52,5 +53,38 @@ public class Handler
         Assert.Equal(athlete.CreatedAt, response.CreatedAt);
         Assert.Equal(athlete.Profile, response.Profile);
         Assert.Equal(athlete.ProfileMedium, response.ProfileMedium);
+    }
+
+    [Fact]
+    public async Task ShouldThrowNotFoundExcpetion()
+    {
+        var userId = 2;
+
+        var userIdProvider = new Mock<IUserIdProvider>();
+        userIdProvider.Setup(e => e.GetUserId()).Returns(userId);
+
+        var athleteRepository = new Mock<IAthleteRepository>();
+        athleteRepository
+            .Setup(e => e.GetAsync(
+                It.IsAny<Expression<Func<AthleteAggregate, bool>>>(),
+                It.IsAny<Expression<Func<AthleteAggregate, object>>>(),
+                It.IsAny<SortOrder>(),
+                It.IsAny<bool>(),
+                default))
+            .ReturnsAsync((AthleteAggregate?)null);
+
+        var unitOfWork = new Mock<IUnitOfWork>();
+        unitOfWork.Setup(e => e.Athletes).Returns(athleteRepository.Object);
+
+        var config = TypeAdapterConfig.GlobalSettings;
+        config.Scan(typeof(AthleteConfiguration).Assembly);
+        var mapper = new Mapper(config);
+
+        var handler = new GetAuthorizedAthleteQueryHandler(
+            userIdProvider.Object,
+            unitOfWork.Object,
+            mapper);
+
+        await Assert.ThrowsAsync<NotFoundException>(async () => await handler.Handle(new GetAuthorizedAthleteQuery(), default));
     }
 }
