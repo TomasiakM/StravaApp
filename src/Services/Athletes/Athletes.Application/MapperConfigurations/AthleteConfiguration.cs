@@ -2,7 +2,7 @@
 using Athletes.Domain.Aggregates.Athletes;
 using Mapster;
 
-namespace Athletes.Application.Mapper;
+namespace Athletes.Application.MapperConfigurations;
 public sealed class AthleteConfiguration : IRegister
 {
     public void Register(TypeAdapterConfig config)
