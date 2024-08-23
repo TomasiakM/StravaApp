@@ -5,8 +5,7 @@ using Athletes.Domain.Aggregates.Athletes;
 using Common.Application.Interfaces;
 using Common.Domain.Enums;
 using Common.Domain.Exceptions;
-using Mapster;
-using MapsterMapper;
+using Common.Tests.Utils;
 using Moq;
 using System.Linq.Expressions;
 
@@ -35,14 +34,12 @@ public class Handler
         var unitOfWork = new Mock<IUnitOfWork>();
         unitOfWork.Setup(e => e.Athletes).Returns(athleteRepository.Object);
 
-        var config = TypeAdapterConfig.GlobalSettings;
-        config.Scan(typeof(AthleteConfiguration).Assembly);
-        var mapper = new Mapper(config);
+
 
         var handler = new GetAuthorizedAthleteQueryHandler(
             userIdProvider.Object,
             unitOfWork.Object,
-            mapper);
+            MapperFactory.Create(typeof(AthleteConfiguration).Assembly));
 
         var response = await handler.Handle(new GetAuthorizedAthleteQuery(), default);
 
@@ -76,14 +73,10 @@ public class Handler
         var unitOfWork = new Mock<IUnitOfWork>();
         unitOfWork.Setup(e => e.Athletes).Returns(athleteRepository.Object);
 
-        var config = TypeAdapterConfig.GlobalSettings;
-        config.Scan(typeof(AthleteConfiguration).Assembly);
-        var mapper = new Mapper(config);
-
         var handler = new GetAuthorizedAthleteQueryHandler(
             userIdProvider.Object,
             unitOfWork.Object,
-            mapper);
+            MapperFactory.Create(typeof(AthleteConfiguration).Assembly));
 
         await Assert.ThrowsAsync<NotFoundException>(async () => await handler.Handle(new GetAuthorizedAthleteQuery(), default));
     }

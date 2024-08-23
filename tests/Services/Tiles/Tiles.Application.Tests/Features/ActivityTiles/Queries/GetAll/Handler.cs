@@ -1,10 +1,11 @@
 ﻿using Common.Application.Interfaces;
 using Common.Domain.Enums;
-using MapsterMapper;
+using Common.Tests.Utils;
 using Moq;
 using System.Linq.Expressions;
 using Tiles.Application.Features.ActivityTiles.Queries.GetAll;
 using Tiles.Application.Interfaces;
+using Tiles.Application.MapperConfigurations;
 using Tiles.Domain.Aggregates.ActivityTiles;
 using Tiles.Domain.Aggregates.ActivityTiles.ValueObjects;
 
@@ -41,7 +42,7 @@ public class Handler
 
         var handler = new GetAllActivityTilesQueryHandler(
             mockUnitOfWork.Object,
-            new Mapper(),
+            MapperFactory.Create(typeof(ActivityTilesConfiguration).Assembly),
             mockUserProvider.Object);
 
         var result = await handler.Handle(new GetAllActivityTilesQuery(), default);

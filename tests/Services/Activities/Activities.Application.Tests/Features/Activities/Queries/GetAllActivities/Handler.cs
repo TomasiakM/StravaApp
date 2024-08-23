@@ -1,11 +1,12 @@
 ﻿using Activities.Application.Features.Activities.Queries.GetAllActivities;
 using Activities.Application.Interfaces;
+using Activities.Application.MapperConfigurations;
 using Activities.Domain.Aggregates.Activities;
 using Activities.Domain.Aggregates.Activities.ValueObjects;
 using Common.Application.Interfaces;
 using Common.Domain.Enums;
 using Common.Domain.Models;
-using MapsterMapper;
+using Common.Tests.Utils;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Linq.Expressions;
@@ -47,7 +48,7 @@ public class Handler
             Mock.Of<ILogger<GetAllActivitiesQueryHandler>>(),
             mockUnitOfWork.Object,
             mockUserProvider.Object,
-            new Mapper());
+            MapperFactory.Create(typeof(ActivitiesConfiguration).Assembly));
 
         var activitiesDtos = await queryHandler.Handle(new GetAllActivitiesQuery(), default);
 

@@ -1,11 +1,12 @@
 ﻿using Achievements.Application.Features.Achievements.Queries.GetAchievements;
 using Achievements.Application.Interfaces;
+using Achievements.Application.MapperConfigurations;
 using Achievements.Domain.Aggregates.Achievement;
 using Achievements.Domain.Aggregates.Achievement.AchevementTypes.DistanceAchievements;
 using Achievements.Domain.Aggregates.Achievement.Factories;
 using Common.Application.Interfaces;
 using Common.Domain.Enums;
-using MapsterMapper;
+using Common.Tests.Utils;
 using Moq;
 using System.Linq.Expressions;
 
@@ -40,7 +41,7 @@ public class Handler
         var handler = new GetAchievementsQueryHandler(
             mockUnitOfWork.Object,
             mockUserIdProvider.Object,
-            new Mapper(),
+            MapperFactory.Create(typeof(AchievementsConfiguration).Assembly),
             new AchievementFactory());
 
         var result = await handler.Handle(new GetAchievementsQuery(), default);
