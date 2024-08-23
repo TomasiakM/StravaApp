@@ -3,7 +3,6 @@ using Activities.Application.Interfaces;
 using Activities.Application.MapperConfigurations;
 using Activities.Domain.Aggregates.Activities;
 using Activities.Domain.Aggregates.Activities.ValueObjects;
-using Common.Application.Interfaces;
 using Common.Domain.Enums;
 using Common.Domain.Models;
 using Common.Tests.Utils;
@@ -41,13 +40,10 @@ public class Handler
         var mockUnitOfWork = new Mock<IUnitOfWork>();
         mockUnitOfWork.Setup(e => e.Activities).Returns(mockRepository.Object);
 
-        var mockUserProvider = new Mock<IUserIdProvider>();
-        mockUserProvider.Setup(e => e.GetUserId()).Returns(stravaUserId);
-
         var queryHandler = new GetAllActivitiesQueryHandler(
             Mock.Of<ILogger<GetAllActivitiesQueryHandler>>(),
             mockUnitOfWork.Object,
-            mockUserProvider.Object,
+            UserIdProviderFactory.Create(stravaUserId),
             MapperFactory.Create(typeof(ActivitiesConfiguration).Assembly));
 
         var activitiesDtos = await queryHandler.Handle(new GetAllActivitiesQuery(), default);

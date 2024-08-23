@@ -4,7 +4,6 @@ using Achievements.Application.MapperConfigurations;
 using Achievements.Domain.Aggregates.Achievement;
 using Achievements.Domain.Aggregates.Achievement.AchevementTypes.DistanceAchievements;
 using Achievements.Domain.Aggregates.Achievement.Factories;
-using Common.Application.Interfaces;
 using Common.Domain.Enums;
 using Common.Tests.Utils;
 using Moq;
@@ -33,14 +32,9 @@ public class Handler
             .Setup(e => e.Achievements)
             .Returns(mockRepository.Object);
 
-        var mockUserIdProvider = new Mock<IUserIdProvider>();
-        mockUserIdProvider
-            .Setup(e => e.GetUserId())
-            .Returns(userId);
-
         var handler = new GetAchievementsQueryHandler(
             mockUnitOfWork.Object,
-            mockUserIdProvider.Object,
+            UserIdProviderFactory.Create(userId),
             MapperFactory.Create(typeof(AchievementsConfiguration).Assembly),
             new AchievementFactory());
 

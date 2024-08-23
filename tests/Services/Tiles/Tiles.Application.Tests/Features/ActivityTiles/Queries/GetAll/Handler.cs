@@ -43,7 +43,7 @@ public class Handler
         var handler = new GetAllActivityTilesQueryHandler(
             mockUnitOfWork.Object,
             MapperFactory.Create(typeof(ActivityTilesConfiguration).Assembly),
-            mockUserProvider.Object);
+            UserIdProviderFactory.Create(stravaUserId));
 
         var result = await handler.Handle(new GetAllActivityTilesQuery(), default);
 

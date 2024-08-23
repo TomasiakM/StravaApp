@@ -2,7 +2,6 @@
 using Athletes.Application.Interfaces;
 using Athletes.Application.MapperConfigurations;
 using Athletes.Domain.Aggregates.Athletes;
-using Common.Application.Interfaces;
 using Common.Domain.Enums;
 using Common.Domain.Exceptions;
 using Common.Tests.Utils;
@@ -16,9 +15,6 @@ public class Handler
     public async Task ShouldReturnAuthorizedAthlete()
     {
         var userId = 6;
-
-        var userIdProvider = new Mock<IUserIdProvider>();
-        userIdProvider.Setup(e => e.GetUserId()).Returns(userId);
 
         var athlete = AthleteAggregate.Create(userId, "test", "test", "last", "profile", "profileMedium", new DateTime());
         var athleteRepository = new Mock<IAthleteRepository>();
@@ -34,10 +30,8 @@ public class Handler
         var unitOfWork = new Mock<IUnitOfWork>();
         unitOfWork.Setup(e => e.Athletes).Returns(athleteRepository.Object);
 
-
-
         var handler = new GetAuthorizedAthleteQueryHandler(
-            userIdProvider.Object,
+            UserIdProviderFactory.Create(userId),
             unitOfWork.Object,
             MapperFactory.Create(typeof(AthleteConfiguration).Assembly));
 
@@ -57,9 +51,6 @@ public class Handler
     {
         var userId = 2;
 
-        var userIdProvider = new Mock<IUserIdProvider>();
-        userIdProvider.Setup(e => e.GetUserId()).Returns(userId);
-
         var athleteRepository = new Mock<IAthleteRepository>();
         athleteRepository
             .Setup(e => e.GetAsync(
@@ -74,7 +65,7 @@ public class Handler
         unitOfWork.Setup(e => e.Athletes).Returns(athleteRepository.Object);
 
         var handler = new GetAuthorizedAthleteQueryHandler(
-            userIdProvider.Object,
+            UserIdProviderFactory.Create(userId),
             unitOfWork.Object,
             MapperFactory.Create(typeof(AthleteConfiguration).Assembly));
 
