@@ -33,9 +33,79 @@ internal sealed class ActivityStreamsService : IActivityStreamsService
         _logger.LogInformation("Activity:{ActivityId} streams fetched successfully.", stravaActivityId);
 
         var streams = new ActivityStreams(
+            GetWatts(response),
+            GetCadence(response),
+            GetHeartrate(response),
+            GetAltitude(response),
+            GetDistance(response),
             GetLatLngs(response));
 
         return streams;
+    }
+
+    private static List<int> GetWatts(List<StravaActivityStreamResponse> activityStreams)
+    {
+        var watts = new List<int>();
+        var wattsStream = activityStreams.FirstOrDefault(e => e.Type == StreamType.Watts);
+
+        if (wattsStream is not null)
+        {
+            wattsStream.Data.ForEach(e => watts.Add(int.Parse(e)));
+        }
+
+        return watts;
+    }
+
+    private static List<int> GetCadence(List<StravaActivityStreamResponse> activityStreams)
+    {
+        var cadence = new List<int>();
+        var cadenceStream = activityStreams.FirstOrDefault(e => e.Type == StreamType.Cadence);
+
+        if (cadenceStream is not null)
+        {
+            cadenceStream.Data.ForEach(e => cadence.Add(int.Parse(e)));
+        }
+
+        return cadence;
+    }
+
+    private static List<int> GetHeartrate(List<StravaActivityStreamResponse> activityStreams)
+    {
+        var heartrate = new List<int>();
+        var heartrateStream = activityStreams.FirstOrDefault(e => e.Type == StreamType.Heartrate);
+
+        if (heartrateStream is not null)
+        {
+            heartrateStream.Data.ForEach(e => heartrate.Add(int.Parse(e)));
+        }
+
+        return heartrate;
+    }
+
+    private static List<float> GetAltitude(List<StravaActivityStreamResponse> activityStreams)
+    {
+        var altitude = new List<float>();
+        var altitudeStream = activityStreams.FirstOrDefault(e => e.Type == StreamType.Altitude);
+
+        if (altitudeStream is not null)
+        {
+            altitudeStream.Data.ForEach(e => altitude.Add(float.Parse(e)));
+        }
+
+        return altitude;
+    }
+
+    private static List<float> GetDistance(List<StravaActivityStreamResponse> activityStreams)
+    {
+        var distance = new List<float>();
+        var distanceStream = activityStreams.FirstOrDefault(e => e.Type == StreamType.Distance);
+
+        if (distanceStream is not null)
+        {
+            distanceStream.Data.ForEach(e => distance.Add(float.Parse(e)));
+        }
+
+        return distance;
     }
 
     private static List<LatLng> GetLatLngs(List<StravaActivityStreamResponse> activityStreams)
