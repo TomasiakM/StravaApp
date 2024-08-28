@@ -29,16 +29,13 @@ public sealed class FetchAthleteActivityEventConsumer
 
         if (activity is null)
         {
-            _logger.LogWarning("Activity {ActivityId} is not found, user:{UserId}", context.Message.StravaActivityId, context.Message.StravaUserId);
+            _logger.LogWarning("Activity:{ActivityId} is not found, user:{UserId}", context.Message.StravaActivityId, context.Message.StravaUserId);
             return;
         }
 
         var activityStreams = await _activityStreamsService.GetAsync(activity.Athlete.Id, activity.Id);
 
         _logger.LogInformation("[BUS] Sending event with detailed activity:{ActivityId} \"{Name}\"", activity.Id, activity.Name);
-        await _bus.Publish(_mapper.Map<ReceivedActivityDataEvent>(activity));
-
-        _logger.LogInformation("[BUS] Sending event with detailed gpx track for activity:{ActivityId}.", activity.Id);
-        await _bus.Publish(new ReceivedActivityTrackDetailsEvent(activity.Athlete.Id, activity.Id, activity.StartDate, activityStreams.LatLngs));
+        await _bus.Publish(_mapper.Map<ReceivedActivityDataEvent>((activity, activityStreams)));
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Common.Domain.Enums;
+using Common.Domain.Models;
 
 namespace Common.MessageBroker.Contracts.Activities;
 public record ReceivedActivityDataEvent(
@@ -27,7 +28,8 @@ public record ReceivedActivityDataEvent(
     float AverageHeartrate,
     float MaxHeartrate,
     AthleteMetaEvent Athlete,
-    MapSummaryEvent Map);
+    MapSummaryEvent Map,
+    StreamsEvent Streams);
 
 public record AthleteMetaEvent(
     long Id);
@@ -36,3 +38,11 @@ public record MapSummaryEvent(
     string Id,
     string? Polyline,
     string? SummaryPolyline);
+
+public record StreamsEvent(
+    List<int> Watts,
+    List<int> Cadence,
+    List<int> Heartrate,
+    List<float> Altitude,
+    List<float> Distance,
+    List<LatLng> LatLngs);
