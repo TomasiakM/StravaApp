@@ -1,4 +1,5 @@
 ﻿using Activities.Domain.Aggregates.Activities;
+using Activities.Domain.Aggregates.Streams;
 using Common.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +11,7 @@ internal sealed class ServiceDbContext : BaseDbContext
     private readonly IConfiguration _configuration;
 
     public DbSet<ActivityAggregate> Athletes => Set<ActivityAggregate>();
+    public DbSet<StreamAggregate> Streams => Set<StreamAggregate>();
 
     public ServiceDbContext(IConfiguration configuration)
     {
