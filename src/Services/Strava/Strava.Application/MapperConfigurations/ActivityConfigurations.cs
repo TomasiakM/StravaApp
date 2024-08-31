@@ -1,4 +1,4 @@
-﻿using Common.MessageBroker.Contracts.Activities;
+﻿using Common.MessageBroker.Saga.ProcessActivityData;
 using Mapster;
 using Strava.Application.Models;
 using Strava.Contracts.Activity;
@@ -8,7 +8,8 @@ internal class ActivityConfigurations : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
-        config.NewConfig<(StravaActivityDetailsResponse activityDetails, ActivityStreams streams), ReceivedActivityDataEvent>()
+        config.NewConfig<(Guid guid, StravaActivityDetailsResponse activityDetails, ActivityStreams streams), ProcessActivityDataMessage>()
+            .Map(dest => dest.CorrelationId, src => src.guid)
             .Map(dest => dest, src => src.activityDetails)
             .Map(dest => dest.Streams, src => src.streams);
     }

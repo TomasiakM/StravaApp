@@ -1,4 +1,5 @@
 ﻿using Common.MessageBroker.Contracts.Activities;
+using Common.MessageBroker.Saga.ProcessActivityData;
 using MapsterMapper;
 using MassTransit;
 using Microsoft.Extensions.Logging;
@@ -35,7 +36,7 @@ public sealed class FetchAthleteActivityEventConsumer
 
         var activityStreams = await _activityStreamsService.GetAsync(activity.Athlete.Id, activity.Id);
 
-        _logger.LogInformation("[BUS] Sending event with detailed activity:{ActivityId} \"{Name}\"", activity.Id, activity.Name);
-        await _bus.Publish(_mapper.Map<ReceivedActivityDataEvent>((activity, activityStreams)));
+        _logger.LogInformation("[BUS] Sending saga message with detailed activity:{ActivityId} \"{Name}\"", activity.Id, activity.Name);
+        await _bus.Publish(_mapper.Map<ProcessActivityDataMessage>((Guid.NewGuid(), activity, activityStreams)));
     }
 }
