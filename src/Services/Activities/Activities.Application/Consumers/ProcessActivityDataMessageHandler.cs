@@ -39,7 +39,9 @@ public sealed class ProcessActivityDataMessageHandler
         await _bus.Publish(new ActivityProcessedEvent(
             context.Message.CorrelationId,
             context.Message.Id,
-            context.Message.Athlete.Id));
+            context.Message.Athlete.Id,
+            context.Message.StartDate,
+            context.Message.Streams.LatLngs));
     }
 
     private async Task<StreamAggregate> CreateOrUpdateStreams(ActivityId activityId, ConsumeContext<ProcessActivityDataMessage> context)

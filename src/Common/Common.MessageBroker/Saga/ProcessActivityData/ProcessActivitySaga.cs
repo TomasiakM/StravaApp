@@ -36,7 +36,9 @@ public sealed class ProcessActivitySaga : MassTransitStateMachine<ProcessActivit
                     new ActivityProcessedEvent(
                         context.Message.CorrelationId,
                         context.Message.Id,
-                        context.Message.Athlete.Id))
+                        context.Message.Athlete.Id,
+                        context.Message.StartDate,
+                        context.Message.Streams.LatLngs))
                 .TransitionTo(ActivityProcessed));
 
         During(ActivityProcessed,
