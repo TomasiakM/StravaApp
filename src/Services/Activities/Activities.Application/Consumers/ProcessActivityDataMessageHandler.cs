@@ -2,20 +2,21 @@
 using Activities.Domain.Aggregates.Activities;
 using Activities.Domain.Aggregates.Activities.ValueObjects;
 using Activities.Domain.Aggregates.Streams;
-using Common.MessageBroker.Contracts.Activities;
+using Common.MessageBroker.Saga.ProcessActivityData;
+using Common.MessageBroker.Saga.ProcessActivityData.Events;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
 namespace Activities.Application.Consumers;
-public sealed class ReceivedActivityDataEventConsumer
-    : IConsumer<ReceivedActivityDataEvent>
+public sealed class ProcessActivityDataMessageHandler
+    : IConsumer<ProcessActivityDataMessage>
 {
-    private readonly ILogger<ReceivedActivityDataEventConsumer> _logger;
+    private readonly ILogger<ProcessActivityDataMessageHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IActivityAggregateFactory _activityAggregateFactory;
     private readonly IBus _bus;
 
-    public ReceivedActivityDataEventConsumer(ILogger<ReceivedActivityDataEventConsumer> logger, IUnitOfWork unitOfWork, IActivityAggregateFactory activityAggregateFactory, IBus bus)
+    public ProcessActivityDataMessageHandler(ILogger<ProcessActivityDataMessageHandler> logger, IUnitOfWork unitOfWork, IActivityAggregateFactory activityAggregateFactory, IBus bus)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
@@ -23,7 +24,7 @@ public sealed class ReceivedActivityDataEventConsumer
         _bus = bus;
     }
 
-    public async Task Consume(ConsumeContext<ReceivedActivityDataEvent> context)
+    public async Task Consume(ConsumeContext<ProcessActivityDataMessage> context)
     {
         _logger.LogInformation("Starting processing activity:{Id}.", context.Message.Id);
 
@@ -34,10 +35,14 @@ public sealed class ReceivedActivityDataEventConsumer
 
         _logger.LogInformation("Processing activity:{Id} completed.", context.Message.Id);
 
-        // add saga pattern to handle tiles and achievements services
+        _logger.LogInformation("[BUS] Publishing activity processed event.");
+        await _bus.Publish(new ActivityProcessedEvent(
+            context.Message.CorrelationId,
+            context.Message.Id,
+            context.Message.Athlete.Id));
     }
 
-    private async Task<StreamAggregate> CreateOrUpdateStreams(ActivityId activityId, ConsumeContext<ReceivedActivityDataEvent> context)
+    private async Task<StreamAggregate> CreateOrUpdateStreams(ActivityId activityId, ConsumeContext<ProcessActivityDataMessage> context)
     {
         var streams = await _unitOfWork.Streams
                     .GetAsync(e => e.ActivityId == activityId);
@@ -64,10 +69,10 @@ public sealed class ReceivedActivityDataEventConsumer
                 context.Message.Streams.LatLngs);
         }
 
-        return streams!;
+        return streams;
     }
 
-    private async Task<ActivityAggregate> CreateOrUpdateActivity(ConsumeContext<ReceivedActivityDataEvent> context)
+    private async Task<ActivityAggregate> CreateOrUpdateActivity(ConsumeContext<ProcessActivityDataMessage> context)
     {
         var activity = await _unitOfWork.Activities
                     .GetAsync(e => e.StravaId == context.Message.Id);
