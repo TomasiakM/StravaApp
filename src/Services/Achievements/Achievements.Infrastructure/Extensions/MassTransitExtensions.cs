@@ -13,7 +13,7 @@ internal static class MassTransitExtensions
         {
             e.SetKebabCaseEndpointNameFormatter();
 
-            e.AddConsumer<UpdateAchievementsEventConsumer>();
+            e.AddConsumer<TilesProcessedEventConsumer>();
 
             e.UsingRabbitMq((context, cfg) =>
             {

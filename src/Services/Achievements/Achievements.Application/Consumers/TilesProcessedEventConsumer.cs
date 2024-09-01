@@ -2,18 +2,18 @@
 using Achievements.Application.Interfaces.Services;
 using Achievements.Domain.Interfaces;
 using Common.Domain.Interfaces;
-using Common.MessageBroker.Contracts.Achievements;
+using Common.MessageBroker.Saga.ProcessActivityData.Events;
 using MassTransit;
 
 namespace Achievements.Application.Consumers;
-public sealed class UpdateAchievementsEventConsumer : IConsumer<UpdateAchievementsEvent>
+public sealed class TilesProcessedEventConsumer : IConsumer<TilesProcessedEvent>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IAchievementFactory _achievementFactory;
     private readonly IDateProvider _dateProvider;
     private readonly IUserActivitiesService _userActivitiesService;
 
-    public UpdateAchievementsEventConsumer(IUnitOfWork unitOfWork, IAchievementFactory achievementFactory, IDateProvider dateProvider, IUserActivitiesService userActivitiesService)
+    public TilesProcessedEventConsumer(IUnitOfWork unitOfWork, IAchievementFactory achievementFactory, IDateProvider dateProvider, IUserActivitiesService userActivitiesService)
     {
         _unitOfWork = unitOfWork;
         _achievementFactory = achievementFactory;
@@ -21,7 +21,7 @@ public sealed class UpdateAchievementsEventConsumer : IConsumer<UpdateAchievemen
         _userActivitiesService = userActivitiesService;
     }
 
-    public async Task Consume(ConsumeContext<UpdateAchievementsEvent> context)
+    public async Task Consume(ConsumeContext<TilesProcessedEvent> context)
     {
         var stravaUserId = context.Message.StravaUserId;
 
