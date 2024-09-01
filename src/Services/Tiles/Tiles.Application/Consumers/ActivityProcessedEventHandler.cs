@@ -1,5 +1,5 @@
 ﻿using Common.Domain.Models;
-using Common.MessageBroker.Contracts.Activities;
+using Common.MessageBroker.Saga.ProcessActivityData.Events;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
@@ -9,14 +9,14 @@ using Tiles.Domain.Aggregates.ActivityTiles;
 using Tiles.Domain.Aggregates.Coordinates;
 
 namespace Tiles.Application.Consumers;
-public sealed class ReceivedActivityTrackDetailsEventHandler : IConsumer<ReceivedActivityTrackDetailsEvent>
+public sealed class ActivityProcessedEventHandler : IConsumer<ActivityProcessedEvent>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ILogger<ReceivedActivityTrackDetailsEventHandler> _logger;
+    private readonly ILogger<ActivityProcessedEventHandler> _logger;
     private readonly NewActivityTilesHandler _newActivityTilesHandler;
     private readonly ExistingActivityTilesHandler _existingActivityTilesHandler;
 
-    public ReceivedActivityTrackDetailsEventHandler(IUnitOfWork unitOfWork, ILogger<ReceivedActivityTrackDetailsEventHandler> logger, NewActivityTilesHandler newActivityTilesHandler, ExistingActivityTilesHandler existingActivityTilesHandler)
+    public ActivityProcessedEventHandler(IUnitOfWork unitOfWork, ILogger<ActivityProcessedEventHandler> logger, NewActivityTilesHandler newActivityTilesHandler, ExistingActivityTilesHandler existingActivityTilesHandler)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;
@@ -24,7 +24,7 @@ public sealed class ReceivedActivityTrackDetailsEventHandler : IConsumer<Receive
         _existingActivityTilesHandler = existingActivityTilesHandler;
     }
 
-    public async Task Consume(ConsumeContext<ReceivedActivityTrackDetailsEvent> context)
+    public async Task Consume(ConsumeContext<ActivityProcessedEvent> context)
     {
         var coordinates = await _unitOfWork.Coordinates
             .GetAsync(e => e.StravaActivityId == context.Message.StravaActivityId);
@@ -56,7 +56,7 @@ public sealed class ReceivedActivityTrackDetailsEventHandler : IConsumer<Receive
         await _unitOfWork.SaveChangesAsync();
     }
 
-    private void CreateOrUpdateCoordinates(ReceivedActivityTrackDetailsEvent message, CoordinatesAggregate? coordinates)
+    private void CreateOrUpdateCoordinates(ActivityProcessedEvent message, CoordinatesAggregate? coordinates)
     {
         if (coordinates is null)
         {

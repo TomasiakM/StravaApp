@@ -1,5 +1,5 @@
 ﻿using Common.Domain.Extensions;
-using Common.MessageBroker.Contracts.Activities;
+using Common.MessageBroker.Saga.ProcessActivityData.Events;
 using Tiles.Application.Extensions;
 using Tiles.Domain.Aggregates.ActivityTiles;
 using Tiles.Domain.Aggregates.ActivityTiles.ValueObjects;
@@ -7,7 +7,7 @@ using Tiles.Domain.Aggregates.ActivityTiles.ValueObjects;
 namespace Tiles.Application.Utils.ReceivedActivityTrackDetailsEventUtils;
 public sealed class ExistingActivityTilesHandler
 {
-    public void UpdateAggregates(ReceivedActivityTrackDetailsEvent message, IEnumerable<ActivityTilesAggregate> activityTilesList)
+    public void UpdateAggregates(ActivityProcessedEvent message, IEnumerable<ActivityTilesAggregate> activityTilesList)
     {
         var prevTiles = new HashSet<Tile>();
         var activityUpdated = false;

@@ -1,5 +1,5 @@
 ﻿using Common.Domain.Extensions;
-using Common.MessageBroker.Contracts.Activities;
+using Common.MessageBroker.Saga.ProcessActivityData.Events;
 using Tiles.Application.Extensions;
 using Tiles.Application.Interfaces;
 using Tiles.Domain.Aggregates.ActivityTiles;
@@ -16,7 +16,7 @@ public sealed class NewActivityTilesHandler
         _unitOfWork = unitOfWork;
     }
 
-    public void UpdateAggregates(ReceivedActivityTrackDetailsEvent message, IEnumerable<ActivityTilesAggregate> activityTilesList)
+    public void UpdateAggregates(ActivityProcessedEvent message, IEnumerable<ActivityTilesAggregate> activityTilesList)
     {
         if (IsActivityLatest(message, activityTilesList))
         {
@@ -38,7 +38,7 @@ public sealed class NewActivityTilesHandler
         }
     }
 
-    private void HandleActivityTilesUpdate(ReceivedActivityTrackDetailsEvent message, HashSet<Tile> previousTiles, ActivityTilesAggregate activityTiles)
+    private void HandleActivityTilesUpdate(ActivityProcessedEvent message, HashSet<Tile> previousTiles, ActivityTilesAggregate activityTiles)
     {
         if (IsValidToCreate(message, activityTiles))
         {
@@ -60,7 +60,7 @@ public sealed class NewActivityTilesHandler
         previousTiles.AddRange(activityTiles.Tiles);
     }
 
-    private static ActivityTilesAggregate CreateActivityTiles(ReceivedActivityTrackDetailsEvent message, HashSet<Tile> previousTiles)
+    private static ActivityTilesAggregate CreateActivityTiles(ActivityProcessedEvent message, HashSet<Tile> previousTiles)
     {
         var tiles = message.LatLngs.ToUniqueTiles(Tile.DEFAULT_TILE_ZOOM);
         var activityTiles = ActivityTilesAggregate.Create(
@@ -73,12 +73,12 @@ public sealed class NewActivityTilesHandler
         return activityTiles;
     }
 
-    private bool IsValidToCreate(ReceivedActivityTrackDetailsEvent message, ActivityTilesAggregate actTiles)
+    private bool IsValidToCreate(ActivityProcessedEvent message, ActivityTilesAggregate actTiles)
     {
         return !_isCreated && actTiles.CreatedAt > message.CreatedAt;
     }
 
-    private static bool IsActivityLatest(ReceivedActivityTrackDetailsEvent message, IEnumerable<ActivityTilesAggregate> activityTilesList)
+    private static bool IsActivityLatest(ActivityProcessedEvent message, IEnumerable<ActivityTilesAggregate> activityTilesList)
     {
         return activityTilesList.All(e => e.CreatedAt < message.CreatedAt);
     }
