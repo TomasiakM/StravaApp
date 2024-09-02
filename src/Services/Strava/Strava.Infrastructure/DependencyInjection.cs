@@ -1,9 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Common.Infrastructure.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using Strava.Application.Interfaces.Services.StravaDataServices;
 using Strava.Infrastructure.Extensions;
 using Strava.Infrastructure.HttpClients;
 using Strava.Infrastructure.Interfaces;
 using Strava.Infrastructure.Interfaces.Auth;
+using Strava.Infrastructure.Persistence;
 using Strava.Infrastructure.Services.Auth;
 using Strava.Infrastructure.Services.StravaDataServices;
 
@@ -15,6 +17,8 @@ public static class DependencyInjection
         services.AddHttpClient();
         services.AddServiceSettings();
         services.AddServiceMassTransit();
+
+        services.AddServiceDbContext<ServiceDbContext>();
 
         services.AddScoped<StravaHttpClientService>();
         services.AddScoped<StravaAuthenticationHttpClientService>();

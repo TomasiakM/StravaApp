@@ -1,9 +1,11 @@
-﻿using Common.MessageBroker.Settings;
+﻿using Common.MessageBroker.Saga.ProcessActivityData;
+using Common.MessageBroker.Settings;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Strava.Application.Consumers;
 using Strava.Infrastructure.Consumers;
+using Strava.Infrastructure.Persistence;
 
 namespace Strava.Infrastructure.Extensions;
 internal static class MassTransitExtensions
@@ -19,6 +21,14 @@ internal static class MassTransitExtensions
 
             e.AddConsumer<AuthorizeCodeConsumer>();
             e.AddConsumer<RefreshStravaTokenConsumer>();
+
+            e.AddSagaStateMachine<ProcessActivitySaga, ProcessActivitySagaData>()
+                .EntityFrameworkRepository(r =>
+                {
+                    r.ExistingDbContext<ServiceDbContext>();
+
+                    r.UseSqlServer();
+                });
 
             e.UsingRabbitMq((context, cfg) =>
             {
