@@ -4,7 +4,7 @@ namespace Common.MessageBroker.Saga.ProcessActivityData;
 public class ProcessActivitySagaData : SagaStateMachineInstance
 {
     public Guid CorrelationId { get; set; }
-    public string CurrentState { get; set; } = string.Empty;
+    public string CurrentState { get; set; }
 
     public long StravaActivityId { get; set; }
     public long StravaUserId { get; set; }

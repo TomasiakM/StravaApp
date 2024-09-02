@@ -1,4 +1,5 @@
 ﻿using Common.MessageBroker.Saga.ProcessActivityData.Events;
+using Common.MessageBroker.Saga.ProcessActivityData.Messages;
 using MassTransit;
 
 namespace Common.MessageBroker.Saga.ProcessActivityData;
@@ -25,6 +26,7 @@ public sealed class ProcessActivitySaga : MassTransitStateMachine<ProcessActivit
 
         Initially(
             When(ProcessActivityDataMessage)
+                .Publish(context => CreateProcessActivityMessage(context.Message))
                 .Then(context =>
                 {
                     context.Saga.StravaUserId = context.Message.Athlete.Id;
@@ -32,34 +34,70 @@ public sealed class ProcessActivitySaga : MassTransitStateMachine<ProcessActivit
 
                     context.Saga.ActivitiesServiceProcessed = true;
                 })
-                .Publish(context =>
-                    new ActivityProcessedEvent(
-                        context.Message.CorrelationId,
-                        context.Message.Id,
-                        context.Message.Athlete.Id,
-                        context.Message.StartDate,
-                        context.Message.Streams.LatLngs))
                 .TransitionTo(ActivityProcessed));
 
         During(ActivityProcessed,
             When(ActivityProcessedEvent)
+                .Publish(context => CreateProcessTilesMessage(context.Message))
                 .Then(context => context.Saga.TilesServiceProcessed = true)
-                .Publish(context =>
-                    new TilesProcessedEvent(
-                        context.Message.CorrelationId,
-                        context.Message.StravaActivityId,
-                        context.Message.StravaUserId))
                 .TransitionTo(TilesProcessed));
 
         During(TilesProcessed,
             When(AchievementsProcessedEvent)
+                .Publish(context => CreateProcessAchievementsMessage(context.Message))
                 .Then(context => context.Saga.AchievementsServiceProcessed = true)
-                .Publish(context =>
-                    new AchievementsProcessedEvent(
-                        context.Message.CorrelationId,
-                        context.Message.StravaActivityId,
-                        context.Message.StravaUserId))
                 .TransitionTo(AchievementsProcessed)
                 .Finalize());
+    }
+
+    private static ProcessAchievementsMessage CreateProcessAchievementsMessage(AchievementsProcessedEvent message)
+    {
+        return new ProcessAchievementsMessage(
+            message.CorrelationId,
+            message.StravaActivityId,
+            message.StravaUserId);
+    }
+
+    private static ProcessTilesMessage CreateProcessTilesMessage(ActivityProcessedEvent message)
+    {
+        return new ProcessTilesMessage(
+            message.CorrelationId,
+            message.StravaActivityId,
+            message.StravaUserId,
+            message.CreatedAt,
+            message.LatLngs);
+    }
+
+    private static ProcessActivityMessage CreateProcessActivityMessage(ProcessActivityDataMessage message)
+    {
+        return new ProcessActivityMessage(
+            message.CorrelationId,
+            message.Id,
+            message.Name,
+            message.Distance,
+            message.MovingTime,
+            message.ElapsedTime,
+            message.TotalElevationGain,
+            message.SportType,
+            message.StartDate,
+            message.StartDateLocal,
+            message.StartLatlng,
+            message.EndLatlng,
+            message.Private,
+            message.AverageSpeed,
+            message.MaxSpeed,
+            message.AverageCadence,
+            message.AverageWatts,
+            message.MaxWatts,
+            message.DeviceWatts,
+            message.Kilojoules,
+            message.Calories,
+            message.DeviceName,
+            message.HasHeartrate,
+            message.AverageHeartrate,
+            message.MaxHeartrate,
+            new AthleteMetaMessage(message.Athlete.Id),
+            new MapSummaryMessage(message.Map.Id, message.Map.Polyline, message.Map.SummaryPolyline),
+            new StreamsMessage(message.Streams.Watts, message.Streams.Cadence, message.Streams.Heartrate, message.Streams.Altitude, message.Streams.Distance, message.Streams.LatLngs));
     }
 }
