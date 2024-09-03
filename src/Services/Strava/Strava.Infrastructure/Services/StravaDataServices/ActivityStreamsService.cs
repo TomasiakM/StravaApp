@@ -50,7 +50,7 @@ internal sealed class ActivityStreamsService : IActivityStreamsService
 
         if (wattsStream is not null)
         {
-            wattsStream.Data.ForEach(e => watts.Add(int.Parse(e)));
+            wattsStream.Data.ForEach(e => watts.Add(int.Parse(e.GetRawText())));
         }
 
         return watts;
@@ -63,7 +63,7 @@ internal sealed class ActivityStreamsService : IActivityStreamsService
 
         if (cadenceStream is not null)
         {
-            cadenceStream.Data.ForEach(e => cadence.Add(int.Parse(e)));
+            cadenceStream.Data.ForEach(e => cadence.Add(int.Parse(e.GetRawText())));
         }
 
         return cadence;
@@ -76,7 +76,7 @@ internal sealed class ActivityStreamsService : IActivityStreamsService
 
         if (heartrateStream is not null)
         {
-            heartrateStream.Data.ForEach(e => heartrate.Add(int.Parse(e)));
+            heartrateStream.Data.ForEach(e => heartrate.Add(int.Parse(e.GetRawText())));
         }
 
         return heartrate;
@@ -89,7 +89,7 @@ internal sealed class ActivityStreamsService : IActivityStreamsService
 
         if (altitudeStream is not null)
         {
-            altitudeStream.Data.ForEach(e => altitude.Add(float.Parse(e)));
+            altitudeStream.Data.ForEach(e => altitude.Add(float.Parse(e.GetRawText())));
         }
 
         return altitude;
@@ -102,7 +102,7 @@ internal sealed class ActivityStreamsService : IActivityStreamsService
 
         if (distanceStream is not null)
         {
-            distanceStream.Data.ForEach(e => distance.Add(float.Parse(e)));
+            distanceStream.Data.ForEach(e => distance.Add(float.Parse(e.GetRawText())));
         }
 
         return distance;
