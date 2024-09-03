@@ -30,6 +30,7 @@ public static class DependencyInjection
         services.AddScoped<ITokenService, TokenService>();
 
         services.AddScoped<ILoginService, LoginService>();
+        services.AddScoped<ILogoutService, LogoutService>();
         services.AddScoped<IAuthorizeCodeService, AuthorizeCodeService>();
 
         services.AddScoped<IRefreshTokenService, RefreshTokenService>();
