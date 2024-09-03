@@ -2,12 +2,12 @@
 using Activities.Domain.Aggregates.Activities;
 using Activities.Domain.Aggregates.Activities.ValueObjects;
 using Common.Domain.Models;
-using Common.MessageBroker.Saga.ProcessActivityData;
+using Common.MessageBroker.Saga.ProcessActivityData.Messages;
 
 namespace Activities.Application.Factories;
 internal sealed class ActivityAggregateFactory : IActivityAggregateFactory
 {
-    public ActivityAggregate CreateActivity(ProcessActivityDataMessage activityData)
+    public ActivityAggregate CreateActivity(ProcessActivityMessage activityData)
     {
 
         return ActivityAggregate.Create(
@@ -29,7 +29,7 @@ internal sealed class ActivityAggregateFactory : IActivityAggregateFactory
                 CreateMap(activityData));
     }
 
-    public LatLng? CreateEndLatLng(ProcessActivityDataMessage activityData)
+    public LatLng? CreateEndLatLng(ProcessActivityMessage activityData)
     {
         if (activityData.EndLatlng.Length == 2)
         {
@@ -41,7 +41,7 @@ internal sealed class ActivityAggregateFactory : IActivityAggregateFactory
         return null;
     }
 
-    public Heartrate CreateHeartrate(ProcessActivityDataMessage activityData)
+    public Heartrate CreateHeartrate(ProcessActivityMessage activityData)
     {
         return Heartrate.Create(
             activityData.HasHeartrate,
@@ -49,7 +49,7 @@ internal sealed class ActivityAggregateFactory : IActivityAggregateFactory
             activityData.AverageHeartrate);
     }
 
-    public Map CreateMap(ProcessActivityDataMessage activityData)
+    public Map CreateMap(ProcessActivityMessage activityData)
     {
         return Map.Create(
             CreateStartLatLng(activityData),
@@ -58,14 +58,14 @@ internal sealed class ActivityAggregateFactory : IActivityAggregateFactory
             activityData.Map.SummaryPolyline);
     }
 
-    public Speed CreateSpeed(ProcessActivityDataMessage activityData)
+    public Speed CreateSpeed(ProcessActivityMessage activityData)
     {
         return Speed.Create(
             activityData.MaxSpeed,
             activityData.AverageSpeed);
     }
 
-    public LatLng? CreateStartLatLng(ProcessActivityDataMessage activityData)
+    public LatLng? CreateStartLatLng(ProcessActivityMessage activityData)
     {
         if (activityData.StartLatlng.Length == 2)
         {
@@ -77,7 +77,7 @@ internal sealed class ActivityAggregateFactory : IActivityAggregateFactory
         return null;
     }
 
-    public Time CreateTime(ProcessActivityDataMessage activityData)
+    public Time CreateTime(ProcessActivityMessage activityData)
     {
         return Time.Create(
             activityData.MovingTime,
@@ -86,7 +86,7 @@ internal sealed class ActivityAggregateFactory : IActivityAggregateFactory
             activityData.StartDateLocal);
     }
 
-    public Watts CreateWatts(ProcessActivityDataMessage activityData)
+    public Watts CreateWatts(ProcessActivityMessage activityData)
     {
         return Watts.Create(
             activityData.DeviceWatts,

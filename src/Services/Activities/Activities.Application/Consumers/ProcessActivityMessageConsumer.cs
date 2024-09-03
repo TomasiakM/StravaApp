@@ -2,21 +2,21 @@
 using Activities.Domain.Aggregates.Activities;
 using Activities.Domain.Aggregates.Activities.ValueObjects;
 using Activities.Domain.Aggregates.Streams;
-using Common.MessageBroker.Saga.ProcessActivityData;
 using Common.MessageBroker.Saga.ProcessActivityData.Events;
+using Common.MessageBroker.Saga.ProcessActivityData.Messages;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
 namespace Activities.Application.Consumers;
-public sealed class ProcessActivityDataMessageHandler
-    : IConsumer<ProcessActivityDataMessage>
+public sealed class ProcessActivityMessageConsumer
+    : IConsumer<ProcessActivityMessage>
 {
-    private readonly ILogger<ProcessActivityDataMessageHandler> _logger;
+    private readonly ILogger<ProcessActivityMessageConsumer> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IActivityAggregateFactory _activityAggregateFactory;
     private readonly IBus _bus;
 
-    public ProcessActivityDataMessageHandler(ILogger<ProcessActivityDataMessageHandler> logger, IUnitOfWork unitOfWork, IActivityAggregateFactory activityAggregateFactory, IBus bus)
+    public ProcessActivityMessageConsumer(ILogger<ProcessActivityMessageConsumer> logger, IUnitOfWork unitOfWork, IActivityAggregateFactory activityAggregateFactory, IBus bus)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
@@ -24,7 +24,7 @@ public sealed class ProcessActivityDataMessageHandler
         _bus = bus;
     }
 
-    public async Task Consume(ConsumeContext<ProcessActivityDataMessage> context)
+    public async Task Consume(ConsumeContext<ProcessActivityMessage> context)
     {
         _logger.LogInformation("Starting processing activity:{Id}.", context.Message.Id);
 
@@ -44,7 +44,7 @@ public sealed class ProcessActivityDataMessageHandler
             context.Message.Streams.LatLngs));
     }
 
-    private async Task<StreamAggregate> CreateOrUpdateStreams(ActivityId activityId, ConsumeContext<ProcessActivityDataMessage> context)
+    private async Task<StreamAggregate> CreateOrUpdateStreams(ActivityId activityId, ConsumeContext<ProcessActivityMessage> context)
     {
         var streams = await _unitOfWork.Streams
                     .GetAsync(e => e.ActivityId == activityId);
@@ -74,7 +74,7 @@ public sealed class ProcessActivityDataMessageHandler
         return streams;
     }
 
-    private async Task<ActivityAggregate> CreateOrUpdateActivity(ConsumeContext<ProcessActivityDataMessage> context)
+    private async Task<ActivityAggregate> CreateOrUpdateActivity(ConsumeContext<ProcessActivityMessage> context)
     {
         var activity = await _unitOfWork.Activities
                     .GetAsync(e => e.StravaId == context.Message.Id);

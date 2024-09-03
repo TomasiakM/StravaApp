@@ -14,7 +14,7 @@ internal static class MassTransitExtensions
         {
             e.SetKebabCaseEndpointNameFormatter();
 
-            e.AddConsumer<ProcessActivityDataMessageHandler>();
+            e.AddConsumer<ProcessActivityMessageConsumer>();
             e.AddConsumer<DeleteActivityEventConsumer>();
 
             e.AddConsumer<GetUserActivitiesConsumer>();

@@ -13,7 +13,7 @@ internal static class MassTransitExtensions
         {
             e.SetKebabCaseEndpointNameFormatter();
 
-            e.AddConsumer<ActivityProcessedEventHandler>();
+            e.AddConsumer<ProcessTilesMessageConsumer>();
 
             e.UsingRabbitMq((context, cfg) =>
             {

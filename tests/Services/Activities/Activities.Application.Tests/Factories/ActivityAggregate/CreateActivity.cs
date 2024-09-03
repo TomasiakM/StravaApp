@@ -1,6 +1,6 @@
 ﻿using Activities.Application.Factories;
 using Common.Domain.Enums;
-using Common.MessageBroker.Saga.ProcessActivityData;
+using Common.MessageBroker.Saga.ProcessActivityData.Messages;
 
 namespace Activities.Application.Tests.Factories.ActivityAggregate;
 public class CreateActivity
@@ -43,7 +43,7 @@ public class CreateActivity
         var polyline = "testPolyline";
         var summaryPolyline = "testSummaryPolyline";
 
-        var @event = new ProcessActivityDataMessage(
+        var @event = new ProcessActivityMessage(
             Guid.NewGuid(),
             stravaId,
             name,
@@ -69,9 +69,9 @@ public class CreateActivity
             hasHeartrate,
             avgHeartrate,
             maxHeartrate,
-            new AthleteMetaEvent(stravaUserId),
-            new MapSummaryEvent("id", polyline, summaryPolyline),
-            new StreamsEvent(new() { }, new() { }, new(), new() { }, new() { }, new() { }));
+            new AthleteMetaMessage(stravaUserId),
+            new MapSummaryMessage("id", polyline, summaryPolyline),
+            new StreamsMessage(new() { }, new() { }, new(), new() { }, new() { }, new() { }));
 
         var activity = activityAggregateFactory.CreateActivity(@event);
 
