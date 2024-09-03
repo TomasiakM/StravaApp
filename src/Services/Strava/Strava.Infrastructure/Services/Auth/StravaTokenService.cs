@@ -14,7 +14,8 @@ public sealed class StravaTokenService : IStravaTokenService
 
     public async Task<GetUserTokenResponse?> GetUserStravaTokens(long stravaUserId)
     {
-        var response = await _client.GetResponse<GetUserTokenResponse, GetUserTokenNotFoundResponse>(stravaUserId);
+        var response = await _client.GetResponse<GetUserTokenResponse, GetUserTokenNotFoundResponse>(
+            new GetUserTokenRequest(stravaUserId));
 
         if (response.Is(out Response<GetUserTokenResponse> responseWithToken))
         {
