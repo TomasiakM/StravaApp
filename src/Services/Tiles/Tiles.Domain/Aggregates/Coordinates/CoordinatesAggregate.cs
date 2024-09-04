@@ -6,13 +6,15 @@ namespace Tiles.Domain.Aggregates.Coordinates;
 public sealed class CoordinatesAggregate : AggregateRoot<CoordinatesId>
 {
     public long StravaActivityId { get; init; }
-    public List<LatLng> Coordinates { get; private set; }
+
+    private List<LatLng> _coordinates = new();
+    public IReadOnlyList<LatLng> Coordinates => _coordinates.AsReadOnly();
 
     private CoordinatesAggregate(long stravaActivityId, List<LatLng> coordinates)
         : base(CoordinatesId.Create())
     {
         StravaActivityId = stravaActivityId;
-        Coordinates = coordinates;
+        _coordinates = coordinates;
     }
 
     public static CoordinatesAggregate Create(long stravaActivityId, List<LatLng> coordinates)
@@ -20,7 +22,7 @@ public sealed class CoordinatesAggregate : AggregateRoot<CoordinatesId>
 
     public void Update(List<LatLng> coordinates)
     {
-        Coordinates = coordinates;
+        _coordinates = coordinates;
     }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Tiles.Infrastructure.Persistence.Configuration.Utils;
 internal sealed class LatLngModelComparer
-    : ValueComparer<List<LatLng>>
+    : ValueComparer<IReadOnlyList<LatLng>>
 {
     public LatLngModelComparer()
     : base((c1, c2) => c1!.SequenceEqual(c2!),

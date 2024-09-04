@@ -23,6 +23,8 @@ internal sealed class CoordinatesConfiguration : IEntityTypeConfiguration<Coordi
         builder.HasIndex(e => e.StravaActivityId)
             .IsUnique();
 
+        builder.Metadata.FindNavigation(nameof(CoordinatesAggregate.Coordinates))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
         builder.Property(e => e.Coordinates)
             .HasConversion(
                 e => JsonSerializer.Serialize(e, (JsonSerializerOptions?)null),
