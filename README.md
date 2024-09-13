@@ -29,12 +29,13 @@ Project is created with:
 
 | Element | Responsibility |
 | ------- | :------------- |
-| Api Gateway        | Api Gateway is only one element in microservice that is the single entry point for clients. Gateway is responsible for redirect requests to appropriate service. It also handling main full security verification of JWT authentication so the services can decode it without secret key. |
-| Strava service     | Strava service is responsible for sending request to Strava external service and publish responses to appropriate service via message broker. |
-| Athletes service   | Athletes service is responsible for storing athletes data. |
-| Activities service | Activities service is responsible for storing activities data. |
-| Tiles service | Activities service is responsible for calculating visited tiles & storing data. Main responsibility is receiving track data and calculate it to tiles (more about tiles [here](https://developer.tomtom.com/map-display-api/documentation/zoom-levels-and-tile-grid)). |
-| Auth service | Auth service is responsible for users authentication. |
+| Api Gateway           | Api Gateway is only one element in microservice that is the single entry point for clients. Gateway is responsible for redirect requests to appropriate service. It also handling main full security verification of JWT authentication so the services can decode it without secret key. |
+| Strava service        | Strava service is responsible for sending request to Strava external service and publish responses to appropriate service via message broker. |
+| Athletes service      | Athletes service is responsible for storing athletes data. |
+| Activities service    | Activities service is responsible for storing activities data. |
+| Tiles service         | Activities service is responsible for calculating visited tiles & storing data. Main responsibility is receiving track data and calculate it to tiles (more about tiles [here](https://developer.tomtom.com/map-display-api/documentation/zoom-levels-and-tile-grid)). |
+| Auth service          | Auth service is responsible for users authentication. |
+| Achievements service  | Achievements service is responsible for storing and calculating achievements. |
 
 ## Installation
 
@@ -143,7 +144,5 @@ curl -X GET http://localhost:5000/api/activity \
 
 List of things to-do in future:
 
-- Add service with badges
-- Add unit tests
-- Check if activities without GPX track saving properly
+- Add more achievements
 - Create README file for each service
