@@ -8,6 +8,7 @@ Application used to fetching athletes data from [Strava API](https://developers.
 - [Architecture](#architecture)
 - [Installation](#installation)
 - [TODO](#todo)
+- [Useful links](#useful-links)
 
 ## Technologies
 
@@ -146,3 +147,11 @@ List of things to-do in future:
 
 - Add more achievements
 - Create README file for each service
+
+## Useful links
+
+[Tile grid and zoom explanation & different formulas](https://developer.tomtom.com/map-display-api/documentation/zoom-levels-and-tile-grid)
+[Strava authorization](https://developers.strava.com/docs/authentication)
+[Strava webhooks](https://developers.strava.com/docs/webhooks)
+[Strava API docs](https://developers.strava.com/docs/reference)
+Similar websites: [Squadrats](https://squadrats.com) | [StatsHunters](https://www.statshunters.com/)
