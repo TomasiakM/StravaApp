@@ -5,6 +5,7 @@ using MassTransit;
 namespace Common.MessageBroker.Saga.ProcessActivityData;
 public sealed class ProcessActivitySaga : MassTransitStateMachine<ProcessActivitySagaData>
 {
+    public State StartingSaga { get; set; }
     public State ActivityProcessed { get; set; }
     public State TilesProcessed { get; set; }
     public State AchievementsProcessed { get; set; }
@@ -31,26 +32,29 @@ public sealed class ProcessActivitySaga : MassTransitStateMachine<ProcessActivit
                 {
                     context.Saga.StravaUserId = context.Message.Athlete.Id;
                     context.Saga.StravaActivityId = context.Message.Id;
-
-                    context.Saga.ActivitiesServiceProcessed = true;
                 })
+                .TransitionTo(StartingSaga));
+
+        During(StartingSaga,
+            When(ActivityProcessedEvent)
+                .Then(context => context.Saga.AchievementsServiceProcessed = true)
+                .Publish(context => CreateProcessTilesMessage(context.Message))
                 .TransitionTo(ActivityProcessed));
 
         During(ActivityProcessed,
-            When(ActivityProcessedEvent)
-                .Publish(context => CreateProcessTilesMessage(context.Message))
+            When(TilesProcessedEvent)
                 .Then(context => context.Saga.TilesServiceProcessed = true)
+                .Publish(context => CreateProcessAchievementsMessage(context.Message))
                 .TransitionTo(TilesProcessed));
 
         During(TilesProcessed,
             When(AchievementsProcessedEvent)
-                .Publish(context => CreateProcessAchievementsMessage(context.Message))
                 .Then(context => context.Saga.AchievementsServiceProcessed = true)
                 .TransitionTo(AchievementsProcessed)
                 .Finalize());
     }
 
-    private static ProcessAchievementsMessage CreateProcessAchievementsMessage(AchievementsProcessedEvent message)
+    private static ProcessAchievementsMessage CreateProcessAchievementsMessage(TilesProcessedEvent message)
     {
         return new ProcessAchievementsMessage(
             message.CorrelationId,
