@@ -21,5 +21,10 @@ public sealed class ActivitiesConfiguration : IRegister
                     e.Latitude,
                     e.Longitude
                 });
+
+        config.NewConfig<ActivityAggregate, Activity>()
+            .Map(dest => dest.Id, src => src.Id.Value)
+            .Map(dest => dest.Distance, src => src.Distance)
+            .Map(dest => dest.StartDateLocal, src => src.Time.StartDateLocal);
     }
 }

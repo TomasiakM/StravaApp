@@ -15,7 +15,8 @@ internal sealed class UserActivitiesService : IUserActivitiesService
 
     public async Task<IEnumerable<Activity>> GetAllAsync(long stravaUserId)
     {
-        var response = await _client.GetResponse<GetUserActivitiesResponse>(stravaUserId);
+        var response = await _client.GetResponse<GetUserActivitiesResponse>(
+            new GetUserActivitiesRequest(stravaUserId));
 
         return response.Message.Activities;
     }
