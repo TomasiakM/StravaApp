@@ -26,7 +26,7 @@ public sealed class MonthlyCumulativeDistanceAchievement : Achievement
                     .Sum(activity => activity.Distance));
 
             level = s_thresholds
-                .Where(threshold => threshold <= maxMonthDistance)
+                .Where(threshold => threshold * 1000 <= maxMonthDistance)
                 .Count();
         }
 

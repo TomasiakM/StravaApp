@@ -26,7 +26,7 @@ public sealed class YearlyCumulativeDistanceAchievement : Achievement
                     .Sum(activity => activity.Distance));
 
             level = s_thresholds
-                .Where(threshold => threshold <= maxYearDistance)
+                .Where(threshold => threshold * 1000 <= maxYearDistance)
                 .Count();
         }
 

@@ -24,7 +24,7 @@ public sealed class MaxDistanceAchievement : Achievement
                 .Max(activity => activity.Distance);
 
             level = s_thresholds
-                .Where(threshold => threshold <= maxDistance)
+                .Where(threshold => threshold * 1000 <= maxDistance)
                 .Count();
         }
 

@@ -21,7 +21,7 @@ public sealed class CumulativeDistanceAchievement : Achievement
         var distance = activities.Sum(a => a.Distance);
 
         var level = s_thresholds
-            .Where(threshold => threshold <= distance)
+            .Where(threshold => threshold * 1000 <= distance)
             .Count();
 
         SetLevel(level, dateProvider);
