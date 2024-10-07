@@ -7,6 +7,7 @@ public sealed class AchievementsConfiguration : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
-        config.NewConfig<Achievement, AchievementsResponse>();
+        config.NewConfig<Achievement, AchievementsResponse>()
+            .Map(dest => dest.CurrentLevel, src => src.AchievementLevels.Count);
     }
 }
