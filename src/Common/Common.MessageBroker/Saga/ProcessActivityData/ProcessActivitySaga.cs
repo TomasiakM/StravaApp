@@ -69,6 +69,7 @@ public sealed class ProcessActivitySaga : MassTransitStateMachine<ProcessActivit
             message.StravaActivityId,
             message.StravaUserId,
             message.CreatedAt,
+            message.SportType,
             message.LatLngs);
     }
 

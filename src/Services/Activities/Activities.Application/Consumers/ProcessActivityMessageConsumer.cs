@@ -41,6 +41,7 @@ public sealed class ProcessActivityMessageConsumer
             context.Message.Id,
             context.Message.Athlete.Id,
             context.Message.StartDate,
+            context.Message.SportType,
             context.Message.Streams.LatLngs));
     }
 
