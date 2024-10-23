@@ -48,7 +48,7 @@ public class StravaWebhookController : ControllerBase
             return Ok(response);
         }
 
-        _logger.LogWarning("[Strava hook] Strava hook subscription failed. {Request}.", query);
+        _logger.LogWarning("[Strava hook] Strava hook subscription failed. {Query}.", query);
 
         return Unauthorized();
     }

@@ -51,7 +51,7 @@ public sealed class ProcessAchievementsMessageConsumer : IConsumer<ProcessAchiev
 
         await _unitOfWork.SaveChangesAsync();
 
-        _logger.LogInformation("[BUS] Sending achievements process event");
+        _logger.LogInformation("[BUS] Sending achievements processed event");
         await _bus.Publish(new AchievementsProcessedEvent(
             context.Message.CorrelationId,
             context.Message.StravaActivityId,

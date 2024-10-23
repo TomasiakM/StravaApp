@@ -45,7 +45,7 @@ internal sealed class HandleEventCommandHandler : IRequestHandler<HandleEventCom
             }
         }
 
-        _logger.LogWarning("Event data was not processed: {Rrequest}.", request);
+        _logger.LogWarning("Event data was not processed: {Request}.", request);
         return Unit.Value;
     }
 }

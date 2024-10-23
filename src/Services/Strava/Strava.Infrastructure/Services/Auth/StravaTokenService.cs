@@ -17,7 +17,7 @@ public sealed class StravaTokenService : IStravaTokenService
         var response = await _client.GetResponse<GetUserTokenResponse, GetUserTokenNotFoundResponse>(
             new GetUserTokenRequest(stravaUserId));
 
-        if (response.Is(out Response<GetUserTokenResponse> responseWithToken))
+        if (response.Is(out Response<GetUserTokenResponse>? responseWithToken))
         {
             return responseWithToken.Message;
         }
