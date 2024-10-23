@@ -1,4 +1,5 @@
-﻿using Common.MessageBroker.Saga.ProcessActivityData;
+﻿using Common.MessageBroker.Saga.DeleteActivity;
+using Common.MessageBroker.Saga.ProcessActivityData;
 using Common.MessageBroker.Settings;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,14 @@ internal static class MassTransitExtensions
             e.AddConsumer<RefreshStravaTokenConsumer>();
 
             e.AddSagaStateMachine<ProcessActivitySaga, ProcessActivitySagaData>()
+                .EntityFrameworkRepository(r =>
+                {
+                    r.ExistingDbContext<ServiceDbContext>();
+
+                    r.UseSqlServer();
+                });
+
+            e.AddSagaStateMachine<DeleteActivitySaga, DeleteActivitySagaData>()
                 .EntityFrameworkRepository(r =>
                 {
                     r.ExistingDbContext<ServiceDbContext>();

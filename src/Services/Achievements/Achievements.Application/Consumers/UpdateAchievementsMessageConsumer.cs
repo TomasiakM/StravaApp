@@ -6,7 +6,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Achievements.Application.Consumers;
-internal sealed class UpdateAchievementsMessageConsumer : IConsumer<UpdateAchievementsMessage>
+public sealed class UpdateAchievementsMessageConsumer : IConsumer<UpdateAchievementsMessage>
 {
     private readonly ISender _sender;
     private readonly IBus _bus;
