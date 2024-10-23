@@ -1,4 +1,4 @@
-﻿namespace Common.MessageBroker.Saga.DeleteActivity.Events;
+﻿namespace Common.MessageBroker.Saga.Common.Events;
 public record AchievementsUpdatedEvent(
     Guid CorrelationId,
     long StravaActivityId,

@@ -1,6 +1,6 @@
 ﻿using Achievements.Application.Features.Achievements.Commands.UpdateAchievements;
-using Common.MessageBroker.Saga.DeleteActivity.Events;
-using Common.MessageBroker.Saga.DeleteActivity.Messages;
+using Common.MessageBroker.Saga.Common.Events;
+using Common.MessageBroker.Saga.Common.Messages;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;

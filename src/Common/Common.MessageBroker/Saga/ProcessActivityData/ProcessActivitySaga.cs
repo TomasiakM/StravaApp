@@ -1,4 +1,6 @@
-﻿using Common.MessageBroker.Saga.ProcessActivityData.Events;
+﻿using Common.MessageBroker.Saga.Common.Events;
+using Common.MessageBroker.Saga.Common.Messages;
+using Common.MessageBroker.Saga.ProcessActivityData.Events;
 using Common.MessageBroker.Saga.ProcessActivityData.Messages;
 using MassTransit;
 
@@ -15,7 +17,7 @@ public sealed class ProcessActivitySaga : MassTransitStateMachine<ProcessActivit
 
     public Event<ActivityProcessedEvent> ActivityProcessedEvent { get; set; }
     public Event<TilesProcessedEvent> TilesProcessedEvent { get; set; }
-    public Event<AchievementsProcessedEvent> AchievementsProcessedEvent { get; set; }
+    public Event<AchievementsUpdatedEvent> AchievementsUpdatedEvent { get; set; }
 
     public ProcessActivitySaga()
     {
@@ -24,7 +26,7 @@ public sealed class ProcessActivitySaga : MassTransitStateMachine<ProcessActivit
         Event(() => ProcessActivityDataMessage, e => e.CorrelateById(m => m.Message.CorrelationId));
         Event(() => ActivityProcessedEvent, e => e.CorrelateById(m => m.Message.CorrelationId));
         Event(() => TilesProcessedEvent, e => e.CorrelateById(m => m.Message.CorrelationId));
-        Event(() => AchievementsProcessedEvent, e => e.CorrelateById(m => m.Message.CorrelationId));
+        Event(() => AchievementsUpdatedEvent, e => e.CorrelateById(m => m.Message.CorrelationId));
 
         Initially(
             When(ProcessActivityDataMessage)
@@ -49,15 +51,15 @@ public sealed class ProcessActivitySaga : MassTransitStateMachine<ProcessActivit
                 .TransitionTo(TilesProcessed));
 
         During(TilesProcessed,
-            When(AchievementsProcessedEvent)
+            When(AchievementsUpdatedEvent)
                 .Then(context => context.Saga.AchievementsServiceProcessed = true)
                 .TransitionTo(AchievementsProcessed)
                 .Finalize());
     }
 
-    private static ProcessAchievementsMessage CreateProcessAchievementsMessage(TilesProcessedEvent message)
+    private static UpdateAchievementsMessage CreateProcessAchievementsMessage(TilesProcessedEvent message)
     {
-        return new ProcessAchievementsMessage(
+        return new UpdateAchievementsMessage(
             message.CorrelationId,
             message.StravaActivityId,
             message.StravaUserId);

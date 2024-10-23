@@ -1,4 +1,6 @@
-﻿using Common.MessageBroker.Saga.DeleteActivity.Events;
+﻿using Common.MessageBroker.Saga.Common.Events;
+using Common.MessageBroker.Saga.Common.Messages;
+using Common.MessageBroker.Saga.DeleteActivity.Events;
 using Common.MessageBroker.Saga.DeleteActivity.Messages;
 using MassTransit;
 
