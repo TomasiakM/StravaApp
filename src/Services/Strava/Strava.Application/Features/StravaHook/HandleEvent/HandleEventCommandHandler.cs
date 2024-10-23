@@ -1,6 +1,7 @@
 ﻿
 using Common.MessageBroker.Contracts.Activities;
 using Common.MessageBroker.Contracts.Athletes;
+using Common.MessageBroker.Saga.DeleteActivity;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -29,7 +30,7 @@ internal sealed class HandleEventCommandHandler : IRequestHandler<HandleEventCom
             }
             else
             {
-                await _bus.Publish(new DeleteActivityEvent(request.ObjectId));
+                await _bus.Publish(new DeleteActivityDataMessage(Guid.NewGuid(), request.ObjectId, request.OwnerId));
 
                 return Unit.Value;
             }
