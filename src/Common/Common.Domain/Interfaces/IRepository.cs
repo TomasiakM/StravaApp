@@ -21,6 +21,10 @@ public interface IRepository<TEntity, TId>
         bool asSplitQuery = false,
         CancellationToken cancellationToken = default);
 
+    Task<bool> AnyAsync(
+        Expression<Func<TEntity, bool>> filter,
+        CancellationToken cancellationToken = default);
+
     void Add(TEntity entity);
     void Update(TEntity entity);
     void Delete(TEntity entity);

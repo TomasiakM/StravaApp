@@ -88,6 +88,12 @@ public abstract class GenericRepository<TEntity, TId>
         return await query.ToListAsync(cancellationToken);
     }
 
+    public Task<bool> AnyAsync(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken = default)
+    {
+        return _dbContext.Set<TEntity>()
+            .AnyAsync(filter, cancellationToken);
+    }
+
     public void Add(TEntity entity)
     {
         _dbContext
