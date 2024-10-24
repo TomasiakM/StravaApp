@@ -24,22 +24,28 @@ internal sealed class DeleteActivityTilesCommandHandler : IRequestHandler<Delete
             asSplitQuery: true,
             cancellationToken: cancellationToken);
 
-        bool tilesDeleted = false;
+        bool isDeleted = false;
         var prevTiles = new HashSet<Tile>();
         foreach (var activityTiles in activityTilesList)
         {
             if (activityTiles.StravaActivityId == request.StravaActivityId)
             {
                 _unitOfWork.Tiles.Delete(activityTiles);
-                tilesDeleted = true;
+                isDeleted = true;
                 continue;
             }
 
             prevTiles.AddRange(activityTiles.Tiles);
-            if (tilesDeleted)
+            if (isDeleted)
             {
                 activityTiles.Update(prevTiles, activityTiles.Tiles);
             }
+        }
+
+        var coordinates = await _unitOfWork.Coordinates.GetAsync(e => e.StravaActivityId == request.StravaActivityId);
+        if (coordinates is not null)
+        {
+            _unitOfWork.Coordinates.Delete(coordinates);
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
