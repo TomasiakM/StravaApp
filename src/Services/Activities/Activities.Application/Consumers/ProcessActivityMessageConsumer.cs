@@ -1,41 +1,46 @@
-﻿using Activities.Application.Interfaces;
-using Activities.Domain.Aggregates.Activities;
-using Activities.Domain.Aggregates.Activities.ValueObjects;
-using Activities.Domain.Aggregates.Streams;
+﻿using Activities.Application.Features.Activities.Commands.Add;
+using Activities.Application.Features.Activities.Commands.Update;
+using Activities.Application.Interfaces;
 using Common.MessageBroker.Saga.ProcessActivityData.Events;
 using Common.MessageBroker.Saga.ProcessActivityData.Messages;
+using MapsterMapper;
 using MassTransit;
+using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Activities.Application.Consumers;
 public sealed class ProcessActivityMessageConsumer
     : IConsumer<ProcessActivityMessage>
 {
-    private readonly ILogger<ProcessActivityMessageConsumer> _logger;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IActivityAggregateFactory _activityAggregateFactory;
     private readonly IBus _bus;
+    private readonly ISender _sender;
+    private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly ILogger<ProcessActivityMessageConsumer> _logger;
 
-    public ProcessActivityMessageConsumer(ILogger<ProcessActivityMessageConsumer> logger, IUnitOfWork unitOfWork, IActivityAggregateFactory activityAggregateFactory, IBus bus)
+    public ProcessActivityMessageConsumer(IBus bus, ISender sender, IMapper mapper, IUnitOfWork unitOfWork, ILogger<ProcessActivityMessageConsumer> logger)
     {
-        _logger = logger;
-        _unitOfWork = unitOfWork;
-        _activityAggregateFactory = activityAggregateFactory;
         _bus = bus;
+        _sender = sender;
+        _mapper = mapper;
+        _unitOfWork = unitOfWork;
+        _logger = logger;
     }
 
     public async Task Consume(ConsumeContext<ProcessActivityMessage> context)
     {
         _logger.LogInformation("Starting processing activity:{Id}.", context.Message.Id);
+        var isActivityCreated = await _unitOfWork.Activities.AnyAsync(e => e.StravaId == context.Message.Id);
+        if (isActivityCreated)
+        {
+            await _sender.Send(_mapper.Map<UpdateActivityCommand>(context.Message));
+        }
+        else
+        {
+            await _sender.Send(_mapper.Map<AddActivityCommand>(context.Message));
+        }
 
-        var activity = await CreateOrUpdateActivity(context);
-        await CreateOrUpdateStreams(activity.Id, context);
-
-        await _unitOfWork.SaveChangesAsync();
-
-        _logger.LogInformation("Processing activity:{Id} completed.", context.Message.Id);
-
-        _logger.LogInformation("[BUS] Publishing activity processed event.");
+        _logger.LogInformation("[BUS] Publishing {Event}.", nameof(ActivityProcessedEvent));
         await _bus.Publish(new ActivityProcessedEvent(
             context.Message.CorrelationId,
             context.Message.Id,
@@ -43,68 +48,5 @@ public sealed class ProcessActivityMessageConsumer
             context.Message.StartDate,
             context.Message.SportType,
             context.Message.Streams.LatLngs));
-    }
-
-    private async Task<StreamAggregate> CreateOrUpdateStreams(ActivityId activityId, ConsumeContext<ProcessActivityMessage> context)
-    {
-        var streams = await _unitOfWork.Streams
-                    .GetAsync(e => e.ActivityId == activityId);
-
-        if (streams is null)
-        {
-            streams = StreamAggregate.Create(
-                activityId,
-                context.Message.Streams.Cadence,
-                context.Message.Streams.Heartrate,
-                context.Message.Streams.Altitude,
-                context.Message.Streams.Distance,
-                context.Message.Streams.LatLngs);
-
-            _unitOfWork.Streams.Add(streams);
-        }
-        else
-        {
-            streams.Update(
-                context.Message.Streams.Cadence,
-                context.Message.Streams.Heartrate,
-                context.Message.Streams.Altitude,
-                context.Message.Streams.Distance,
-                context.Message.Streams.LatLngs);
-        }
-
-        return streams;
-    }
-
-    private async Task<ActivityAggregate> CreateOrUpdateActivity(ConsumeContext<ProcessActivityMessage> context)
-    {
-        var activity = await _unitOfWork.Activities
-                    .GetAsync(e => e.StravaId == context.Message.Id);
-
-        if (activity is null)
-        {
-            activity = _activityAggregateFactory.CreateActivity(context.Message);
-            _unitOfWork.Activities.Add(activity);
-        }
-        else
-        {
-            var message = context.Message;
-            activity.Update(
-                    message.Name,
-                    message.DeviceName,
-                    message.SportType,
-                    message.Private,
-                    message.Distance,
-                    message.TotalElevationGain,
-                    message.AverageCadence,
-                    message.Kilojoules,
-                    message.Calories,
-                    _activityAggregateFactory.CreateSpeed(message),
-                    _activityAggregateFactory.CreateTime(message),
-                    _activityAggregateFactory.CreateWatts(message),
-                    _activityAggregateFactory.CreateHeartrate(message),
-                    _activityAggregateFactory.CreateMap(message));
-        }
-
-        return activity;
     }
 }
