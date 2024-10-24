@@ -1,5 +1,4 @@
 ﻿using Activities.Application.Features.Activities.Commands.Delete;
-using Activities.Application.Interfaces;
 using Common.MessageBroker.Saga.DeleteActivity.Events;
 using Common.MessageBroker.Saga.DeleteActivity.Messages;
 using MassTransit;
@@ -12,7 +11,7 @@ public sealed class DeleteActivityEventConsumer : IConsumer<DeleteActivityMessag
     private readonly ILogger<DeleteActivityEventConsumer> _logger;
     private readonly IBus _bus;
     private readonly ISender _sender;
-    public DeleteActivityEventConsumer(ILogger<DeleteActivityEventConsumer> logger, IUnitOfWork unitOfWork, IBus bus, ISender sender)
+    public DeleteActivityEventConsumer(ILogger<DeleteActivityEventConsumer> logger, IBus bus, ISender sender)
     {
         _logger = logger;
         _bus = bus;
