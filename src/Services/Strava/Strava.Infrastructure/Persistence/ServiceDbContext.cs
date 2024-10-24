@@ -1,4 +1,5 @@
 ﻿using Common.Infrastructure.Persistence;
+using Common.MessageBroker.Saga.DeleteActivity;
 using Common.MessageBroker.Saga.ProcessActivityData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -8,7 +9,8 @@ internal sealed class ServiceDbContext : BaseDbContext
 {
     private readonly IConfiguration _configuration;
 
-    public DbSet<ProcessActivitySagaData> SagaDatas => Set<ProcessActivitySagaData>();
+    public DbSet<ProcessActivitySagaData> ProcessActivitySagaDatas => Set<ProcessActivitySagaData>();
+    public DbSet<DeleteActivitySagaData> DeleteActivitySagaDatas => Set<DeleteActivitySagaData>();
 
     public ServiceDbContext(IConfiguration configuration)
     {
@@ -23,5 +25,6 @@ internal sealed class ServiceDbContext : BaseDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ProcessActivitySagaData>().HasKey(e => e.CorrelationId);
+        modelBuilder.Entity<DeleteActivitySagaData>().HasKey(e => e.CorrelationId);
     }
 }
