@@ -23,7 +23,7 @@ public sealed class DeleteTilesMessageConsumer : IConsumer<DeleteTilesMessage>
     {
         await _sender.Send(new DeleteActivityTilesCommand(context.Message.StravaActivityId));
 
-        _logger.LogInformation("[BUS] Sending {Event}", nameof(TilesDeletedEvent));
+        _logger.LogInformation("[BUS]: Publishing {Event}", nameof(TilesDeletedEvent));
         await _bus.Publish(new TilesDeletedEvent(
             context.Message.CorrelationId,
             context.Message.StravaActivityId,

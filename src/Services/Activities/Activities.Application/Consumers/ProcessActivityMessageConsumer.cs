@@ -40,7 +40,7 @@ public sealed class ProcessActivityMessageConsumer
             await _sender.Send(_mapper.Map<AddActivityCommand>(context.Message));
         }
 
-        _logger.LogInformation("[BUS] Publishing {Event}.", nameof(ActivityProcessedEvent));
+        _logger.LogInformation("[BUS]: Publishing {Event}.", nameof(ActivityProcessedEvent));
         await _bus.Publish(new ActivityProcessedEvent(
             context.Message.CorrelationId,
             context.Message.Id,

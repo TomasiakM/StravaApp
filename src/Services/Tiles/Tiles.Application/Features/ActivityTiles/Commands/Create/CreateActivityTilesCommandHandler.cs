@@ -7,19 +7,19 @@ using Tiles.Domain.Aggregates.ActivityTiles;
 using Tiles.Domain.Aggregates.ActivityTiles.ValueObjects;
 using Tiles.Domain.Aggregates.Coordinates;
 
-namespace Tiles.Application.Features.ActivityTiles.Commands.Add;
-internal sealed class AddActivityTilesCommandHandler : IRequestHandler<AddActivityTilesCommand, Unit>
+namespace Tiles.Application.Features.ActivityTiles.Commands.Create;
+internal sealed class CreateActivityTilesCommandHandler : IRequestHandler<CreateActivityTilesCommand, Unit>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ILogger<AddActivityTilesCommandHandler> _logger;
+    private readonly ILogger<CreateActivityTilesCommandHandler> _logger;
 
-    public AddActivityTilesCommandHandler(IUnitOfWork unitOfWork, ILogger<AddActivityTilesCommandHandler> logger)
+    public CreateActivityTilesCommandHandler(IUnitOfWork unitOfWork, ILogger<CreateActivityTilesCommandHandler> logger)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
-    public async Task<Unit> Handle(AddActivityTilesCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(CreateActivityTilesCommand request, CancellationToken cancellationToken)
     {
         var coordinates = CoordinatesAggregate.Create(request.StravaActivityId, request.LatLngs);
         _unitOfWork.Coordinates.Add(coordinates);

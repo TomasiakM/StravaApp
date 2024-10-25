@@ -1,4 +1,4 @@
-﻿using Achievements.Application.Features.Achievements.Commands.UpdateAchievements;
+﻿using Achievements.Application.Features.Achievements.Commands.Calculate;
 using Common.MessageBroker.Saga.Common.Events;
 using Common.MessageBroker.Saga.Common.Messages;
 using MassTransit;
@@ -21,9 +21,9 @@ public sealed class UpdateAchievementsMessageConsumer : IConsumer<UpdateAchievem
 
     public async Task Consume(ConsumeContext<UpdateAchievementsMessage> context)
     {
-        await _sender.Send(new UpdateAchievementsCommand(context.Message.StravaUserId));
+        await _sender.Send(new CalculateAchievementsCommand(context.Message.StravaUserId));
 
-        _logger.LogInformation("[BUS]: Sending {Event}", nameof(AchievementsUpdatedEvent));
+        _logger.LogInformation("[BUS]: Publishing {Event}", nameof(AchievementsUpdatedEvent));
         await _bus.Publish(new AchievementsUpdatedEvent(
             context.Message.CorrelationId,
             context.Message.StravaActivityId,

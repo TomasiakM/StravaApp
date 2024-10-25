@@ -6,12 +6,12 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Activities.Application.Consumers;
-public sealed class DeleteActivityEventConsumer : IConsumer<DeleteActivityMessage>
+public sealed class DeleteActivityMessageConsumer : IConsumer<DeleteActivityMessage>
 {
-    private readonly ILogger<DeleteActivityEventConsumer> _logger;
+    private readonly ILogger _logger;
     private readonly IBus _bus;
     private readonly ISender _sender;
-    public DeleteActivityEventConsumer(ILogger<DeleteActivityEventConsumer> logger, IBus bus, ISender sender)
+    public DeleteActivityMessageConsumer(ILogger logger, IBus bus, ISender sender)
     {
         _logger = logger;
         _bus = bus;
@@ -22,7 +22,7 @@ public sealed class DeleteActivityEventConsumer : IConsumer<DeleteActivityMessag
     {
         await _sender.Send(new DeleteActivityCommand(context.Message.StravaActivityId));
 
-        _logger.LogInformation("[BUS]: Sending {Event}", nameof(ActivityDeletedEvent));
+        _logger.LogInformation("[BUS]: Publishing {Event}", nameof(ActivityDeletedEvent));
         await _bus.Publish(new ActivityDeletedEvent(
             context.Message.CorrelationId,
             context.Message.StravaActivityId,

@@ -5,8 +5,8 @@ using Common.Domain.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Achievements.Application.Features.Achievements.Commands.UpdateAchievements;
-internal sealed class UpdateAchievementsCommandHandler : IRequestHandler<UpdateAchievementsCommand, Unit>
+namespace Achievements.Application.Features.Achievements.Commands.Calculate;
+internal sealed class CalculateAchievementsCommandHandler : IRequestHandler<CalculateAchievementsCommand, Unit>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IAchievementFactory _achievementFactory;
@@ -14,7 +14,7 @@ internal sealed class UpdateAchievementsCommandHandler : IRequestHandler<UpdateA
     private readonly IUserActivitiesService _userActivitiesService;
     private readonly ILogger _logger;
 
-    public UpdateAchievementsCommandHandler(IUnitOfWork unitOfWork, IAchievementFactory achievementFactory, IDateProvider dateProvider, IUserActivitiesService userActivitiesService, ILogger logger)
+    public CalculateAchievementsCommandHandler(IUnitOfWork unitOfWork, IAchievementFactory achievementFactory, IDateProvider dateProvider, IUserActivitiesService userActivitiesService, ILogger logger)
     {
         _unitOfWork = unitOfWork;
         _achievementFactory = achievementFactory;
@@ -23,7 +23,7 @@ internal sealed class UpdateAchievementsCommandHandler : IRequestHandler<UpdateA
         _logger = logger;
     }
 
-    public async Task<Unit> Handle(UpdateAchievementsCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(CalculateAchievementsCommand request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Processing user:{UserId} achievements", request.StravaUserId);
 

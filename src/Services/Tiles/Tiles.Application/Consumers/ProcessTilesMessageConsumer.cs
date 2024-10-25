@@ -6,7 +6,7 @@ using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
-using Tiles.Application.Features.ActivityTiles.Commands.Add;
+using Tiles.Application.Features.ActivityTiles.Commands.Create;
 using Tiles.Application.Features.ActivityTiles.Commands.Delete;
 using Tiles.Application.Features.ActivityTiles.Commands.Update;
 using Tiles.Application.Interfaces;
@@ -39,7 +39,7 @@ public sealed class ProcessTilesMessageConsumer : IConsumer<ProcessTilesMessage>
 
             _logger.LogInformation("Activity tiles processing cannot be done for {SportType} sport type", context.Message.SportType);
 
-            _logger.LogInformation("[BUS] Sending {Event}.", nameof(TilesProcessedEvent));
+            _logger.LogInformation("[BUS]: Publishing {Event}.", nameof(TilesProcessedEvent));
             await _bus.Publish(new TilesProcessedEvent(
                 context.Message.CorrelationId,
                 context.Message.StravaActivityId,
@@ -62,7 +62,7 @@ public sealed class ProcessTilesMessageConsumer : IConsumer<ProcessTilesMessage>
             }
             else
             {
-                await _sender.Send(new AddActivityTilesCommand(
+                await _sender.Send(new CreateActivityTilesCommand(
                     context.Message.StravaUserId,
                     context.Message.StravaActivityId,
                     context.Message.CreatedAt,
@@ -74,7 +74,7 @@ public sealed class ProcessTilesMessageConsumer : IConsumer<ProcessTilesMessage>
             _logger.LogInformation("Activity:{ActivityId} latlngs are the same, no need to recalculate it.", context.Message.StravaActivityId);
         }
 
-        _logger.LogInformation("[BUS] Sending {Event}.", nameof(TilesProcessedEvent));
+        _logger.LogInformation("[BUS]: Publishing {Event}.", nameof(TilesProcessedEvent));
         await _bus.Publish(new TilesProcessedEvent(
             context.Message.CorrelationId,
             context.Message.StravaActivityId,

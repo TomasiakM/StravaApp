@@ -24,7 +24,7 @@ public class NewAthleteLoggedInEventConsumer
 
         foreach (var activity in activities)
         {
-            _logger.LogInformation("[BUS] Sending activity event to fetch details for activity:{ActivityId}.", activity.Id);
+            _logger.LogInformation("[BUS]: Publishing {Event}", nameof(FetchAthleteActivityEvent));
             await _bus.Publish(new FetchAthleteActivityEvent(activity.Athlete.Id, activity.Id));
         }
     }
