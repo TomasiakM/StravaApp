@@ -1,48 +1,47 @@
-﻿using Athletes.Application.Interfaces;
-using Athletes.Domain.Aggregates.Athletes;
+﻿using Athletes.Application.Features.Athletes.Commands.Create;
+using Athletes.Application.Features.Athletes.Commands.Update;
+using Athletes.Application.Interfaces;
 using Common.MessageBroker.Contracts.Athletes;
 using MassTransit;
+using MediatR;
 
 namespace Athletes.Application.Consumers;
 public sealed class ReceivedAthleteDataEventConsumer : IConsumer<ReceivedAthleteDataEvent>
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ISender _sender;
 
-    public ReceivedAthleteDataEventConsumer(IUnitOfWork unitOfWork)
+    public ReceivedAthleteDataEventConsumer(IUnitOfWork unitOfWork, ISender sender)
     {
         _unitOfWork = unitOfWork;
+        _sender = sender;
     }
 
     public async Task Consume(ConsumeContext<ReceivedAthleteDataEvent> context)
     {
-        var athlete = await _unitOfWork.Athletes
-            .GetAsync(e => e.StravaUserId == context.Message.Id);
-
-        var message = context.Message;
-        if (athlete is null)
+        var athleteExists = await _unitOfWork.Athletes.AnyAsync(e => e.StravaUserId == context.Message.Id);
+        if (athleteExists)
         {
-            athlete = AthleteAggregate.Create(
-                message.Id,
-                message.Username,
-                message.Firstname,
-                message.Lastname,
-                message.Profile,
-                message.ProfileMedium,
-                message.CreatedAt);
+            await _sender.Send(new UpdateAthleteCommand(
+                context.Message.Id,
+                context.Message.Username,
+                context.Message.Firstname,
+                context.Message.Lastname,
+                context.Message.CreatedAt,
+                context.Message.Profile,
+                context.Message.ProfileMedium));
 
-            _unitOfWork.Athletes.Add(athlete);
-            await _unitOfWork.SaveChangesAsync();
-
-            return;
         }
-
-        athlete.Update(
-            message.Username,
-            message.Firstname,
-            message.Lastname,
-            message.Profile,
-            message.ProfileMedium);
-
-        await _unitOfWork.SaveChangesAsync();
+        else
+        {
+            await _sender.Send(new CreateAthleteCommand(
+                context.Message.Id,
+                context.Message.Username,
+                context.Message.Firstname,
+                context.Message.Lastname,
+                context.Message.CreatedAt,
+                context.Message.Profile,
+                context.Message.ProfileMedium));
+        }
     }
 }
