@@ -10,7 +10,6 @@ using Tiles.Application.Features.ActivityTiles.Commands.Create;
 using Tiles.Application.Features.ActivityTiles.Commands.Delete;
 using Tiles.Application.Features.ActivityTiles.Commands.Update;
 using Tiles.Application.Interfaces;
-using Tiles.Domain.Aggregates.Coordinates;
 
 namespace Tiles.Application.Consumers;
 public sealed class ProcessTilesMessageConsumer : IConsumer<ProcessTilesMessage>
@@ -48,9 +47,7 @@ public sealed class ProcessTilesMessageConsumer : IConsumer<ProcessTilesMessage>
             return;
         }
 
-        var coordinates = await _unitOfWork.Coordinates
-            .GetAsync(e => e.StravaActivityId == context.Message.StravaActivityId);
-        if (IsRecalculationRequired(coordinates, context.Message.LatLngs))
+        if (await IsRecalculationRequired(context.Message.StravaActivityId, context.Message.LatLngs))
         {
             if (await _unitOfWork.Tiles.AnyAsync(e => e.StravaActivityId == context.Message.StravaActivityId))
             {
@@ -95,9 +92,12 @@ public sealed class ProcessTilesMessageConsumer : IConsumer<ProcessTilesMessage>
         };
     }
 
-    private static bool IsRecalculationRequired(CoordinatesAggregate? coordinates, List<LatLng> latlngs)
+    private async Task<bool> IsRecalculationRequired(long stravaActivityId, List<LatLng> latlngs)
     {
+        var coordinates = await _unitOfWork.Coordinates
+            .GetAsync(e => e.StravaActivityId == stravaActivityId);
+
         return coordinates is null ||
-            JsonSerializer.Serialize(coordinates.Coordinates) != JsonSerializer.Serialize(latlngs);
+            JsonSerializer.Serialize(coordinates.LatLngs) != JsonSerializer.Serialize(latlngs);
     }
 }

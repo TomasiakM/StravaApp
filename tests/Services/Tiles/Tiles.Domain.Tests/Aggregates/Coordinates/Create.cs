@@ -19,6 +19,6 @@ public class Create
             coordinates);
 
         Assert.Equal(stravaActivityId, coordinatesAggregate.StravaActivityId);
-        Assert.True(coordinates.SequenceEqual(coordinatesAggregate.Coordinates));
+        Assert.True(coordinates.SequenceEqual(coordinatesAggregate.LatLngs));
     }
 }

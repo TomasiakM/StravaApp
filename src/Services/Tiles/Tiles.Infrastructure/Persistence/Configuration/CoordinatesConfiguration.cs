@@ -23,9 +23,9 @@ internal sealed class CoordinatesConfiguration : IEntityTypeConfiguration<Coordi
         builder.HasIndex(e => e.StravaActivityId)
             .IsUnique();
 
-        builder.Metadata.FindNavigation(nameof(CoordinatesAggregate.Coordinates))!
+        builder.Metadata.FindNavigation(nameof(CoordinatesAggregate.LatLngs))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
-        builder.Property(e => e.Coordinates)
+        builder.Property(e => e.LatLngs)
             .HasConversion(
                 e => JsonSerializer.Serialize(e, (JsonSerializerOptions?)null),
                 e => JsonSerializer.Deserialize<List<LatLng>>(e, (JsonSerializerOptions?)null)!,
