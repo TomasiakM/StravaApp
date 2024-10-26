@@ -8,9 +8,9 @@ namespace Tiles.Application.Features.ActivityTiles.Commands.Delete;
 internal sealed class DeleteActivityTilesCommandHandler : IRequestHandler<DeleteActivityTilesCommand, Unit>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ILogger _logger;
+    private readonly ILogger<DeleteActivityTilesCommandHandler> _logger;
 
-    public DeleteActivityTilesCommandHandler(IUnitOfWork unitOfWork, ILogger logger)
+    public DeleteActivityTilesCommandHandler(IUnitOfWork unitOfWork, ILogger<DeleteActivityTilesCommandHandler> logger)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;

@@ -12,9 +12,9 @@ internal sealed class CalculateAchievementsCommandHandler : IRequestHandler<Calc
     private readonly IAchievementFactory _achievementFactory;
     private readonly IDateProvider _dateProvider;
     private readonly IUserActivitiesService _userActivitiesService;
-    private readonly ILogger _logger;
+    private readonly ILogger<CalculateAchievementsCommandHandler> _logger;
 
-    public CalculateAchievementsCommandHandler(IUnitOfWork unitOfWork, IAchievementFactory achievementFactory, IDateProvider dateProvider, IUserActivitiesService userActivitiesService, ILogger logger)
+    public CalculateAchievementsCommandHandler(IUnitOfWork unitOfWork, IAchievementFactory achievementFactory, IDateProvider dateProvider, IUserActivitiesService userActivitiesService, ILogger<CalculateAchievementsCommandHandler> logger)
     {
         _unitOfWork = unitOfWork;
         _achievementFactory = achievementFactory;

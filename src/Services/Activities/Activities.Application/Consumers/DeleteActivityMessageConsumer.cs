@@ -8,10 +8,10 @@ using Microsoft.Extensions.Logging;
 namespace Activities.Application.Consumers;
 public sealed class DeleteActivityMessageConsumer : IConsumer<DeleteActivityMessage>
 {
-    private readonly ILogger _logger;
+    private readonly ILogger<DeleteActivityMessageConsumer> _logger;
     private readonly IBus _bus;
     private readonly ISender _sender;
-    public DeleteActivityMessageConsumer(ILogger logger, IBus bus, ISender sender)
+    public DeleteActivityMessageConsumer(ILogger<DeleteActivityMessageConsumer> logger, IBus bus, ISender sender)
     {
         _logger = logger;
         _bus = bus;
