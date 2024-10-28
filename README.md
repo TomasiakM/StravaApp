@@ -150,8 +150,8 @@ List of things to-do in future:
 
 ## Useful links
 
-[Tile grid and zoom explanation & different formulas](https://developer.tomtom.com/map-display-api/documentation/zoom-levels-and-tile-grid)
-[Strava authorization](https://developers.strava.com/docs/authentication)
-[Strava webhooks](https://developers.strava.com/docs/webhooks)
-[Strava API docs](https://developers.strava.com/docs/reference)
-Similar websites: [Squadrats](https://squadrats.com) | [StatsHunters](https://www.statshunters.com/)
+- [Tile grid and zoom explanation & different formulas](https://developer.tomtom.com/map-display-api/documentation/zoom-levels-and-tile-grid)
+- [Strava authorization](https://developers.strava.com/docs/authentication)
+- [Strava webhooks](https://developers.strava.com/docs/webhooks)
+- [Strava API docs](https://developers.strava.com/docs/reference)
+- Similar websites: [Squadrats](https://squadrats.com) | [StatsHunters](https://www.statshunters.com/)
