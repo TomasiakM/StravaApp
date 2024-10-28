@@ -16,20 +16,22 @@ internal sealed class DeleteActivityCommandHandler : IRequestHandler<DeleteActiv
 
     public async Task<Unit> Handle(DeleteActivityCommand request, CancellationToken cancellationToken)
     {
-        var activity = await _unitOfWork.Activities
-            .GetAsync(e => e.StravaId == request.StravaActivityId);
-
+        var activity = await _unitOfWork.Activities.GetAsync(e => e.StravaId == request.StravaActivityId, cancellationToken: cancellationToken);
         if (activity is not null)
         {
-            _unitOfWork.Activities.Delete(activity);
-            await _unitOfWork.SaveChangesAsync();
+            var streams = await _unitOfWork.Streams
+                .GetAsync(e => e.ActivityId == activity.Id, cancellationToken: cancellationToken);
 
-            _logger.LogInformation("Activity:{ActivityId} has been removed successfully.", request.StravaActivityId);
+            if (streams is not null)
+            {
+                _unitOfWork.Streams.Delete(streams);
+            }
+
+            _unitOfWork.Activities.Delete(activity);
         }
-        else
-        {
-            _logger.LogInformation("Activity:{ActivityId} not found.", request.StravaActivityId);
-        }
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        _logger.LogInformation("Activity:{ActivityId} has been removed successfully.", request.StravaActivityId);
 
         return Unit.Value;
     }
