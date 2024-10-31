@@ -114,4 +114,11 @@ public abstract class GenericRepository<TEntity, TId>
             .Set<TEntity>()
             .Remove(entity);
     }
+
+    public void DeleteRange(IEnumerable<TEntity> entities)
+    {
+        _dbContext
+            .Set<TEntity>()
+            .RemoveRange(entities);
+    }
 }
