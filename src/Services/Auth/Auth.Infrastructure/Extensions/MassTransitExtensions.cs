@@ -1,5 +1,4 @@
-﻿using Auth.Application.Consumers;
-using Auth.Infrastructure.Consumers;
+﻿using Auth.Infrastructure.Consumers;
 using Common.MessageBroker.Settings;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,8 +12,6 @@ internal static class MassTransitExtensions
         services.AddMassTransit(e =>
         {
             e.SetKebabCaseEndpointNameFormatter();
-
-            e.AddConsumer<UnauthorizeAthleteEventConsumer>();
 
             e.AddConsumer<GetUserTokenConsumer>();
 
