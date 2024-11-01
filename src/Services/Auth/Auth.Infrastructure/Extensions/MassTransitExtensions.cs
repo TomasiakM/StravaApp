@@ -1,4 +1,5 @@
-﻿using Auth.Infrastructure.Consumers;
+﻿using Auth.Application.Consumers;
+using Auth.Infrastructure.Consumers;
 using Common.MessageBroker.Settings;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +15,8 @@ internal static class MassTransitExtensions
             e.SetKebabCaseEndpointNameFormatter();
 
             e.AddConsumer<GetUserTokenConsumer>();
+
+            e.AddConsumer<DeleteUserTokenMessageConsumer>();
 
             e.UsingRabbitMq((context, cfg) =>
             {

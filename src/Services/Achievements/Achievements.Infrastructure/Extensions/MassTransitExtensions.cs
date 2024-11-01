@@ -14,6 +14,7 @@ internal static class MassTransitExtensions
             e.SetKebabCaseEndpointNameFormatter();
 
             e.AddConsumer<UpdateAchievementsMessageConsumer>();
+            e.AddConsumer<DeleteUserAchievementsMessageConsumer>();
 
             e.UsingRabbitMq((context, cfg) =>
             {

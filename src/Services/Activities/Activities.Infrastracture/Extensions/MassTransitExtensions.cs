@@ -16,6 +16,7 @@ internal static class MassTransitExtensions
 
             e.AddConsumer<ProcessActivityMessageConsumer>();
             e.AddConsumer<DeleteActivityMessageConsumer>();
+            e.AddConsumer<DeleteUserActivitiesMessageConsumer>();
 
             e.AddConsumer<GetUserActivitiesConsumer>();
 

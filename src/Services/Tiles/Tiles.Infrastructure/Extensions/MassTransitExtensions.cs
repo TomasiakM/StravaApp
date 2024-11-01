@@ -15,6 +15,7 @@ internal static class MassTransitExtensions
 
             e.AddConsumer<ProcessTilesMessageConsumer>();
             e.AddConsumer<DeleteTilesMessageConsumer>();
+            e.AddConsumer<DeleteUserTilesMessageConsumer>();
 
             e.UsingRabbitMq((context, cfg) =>
             {
