@@ -16,8 +16,9 @@ internal sealed class DeleteTokenCommandHandler : IRequestHandler<DeleteTokenCom
 
     public async Task<Unit> Handle(DeleteTokenCommand request, CancellationToken cancellationToken)
     {
-        var token = await _unitOfWork.Tokens
-            .GetAsync(e => e.StravaUserId == request.StravaUserId);
+        var token = await _unitOfWork.Tokens.GetAsync(
+            t => t.StravaUserId == request.StravaUserId,
+            cancellationToken: cancellationToken);
 
         if (token is not null)
         {

@@ -16,11 +16,14 @@ internal sealed class DeleteAllUserActivitiesCommandHandler : IRequestHandler<De
 
     public async Task<Unit> Handle(DeleteAllUserActivitiesCommand request, CancellationToken cancellationToken)
     {
-        var activicities = await _unitOfWork.Activities
-            .GetAllAsync(e => e.StravaUserId == request.StravaUserId, cancellationToken: cancellationToken);
+        var activicities = await _unitOfWork.Activities.GetAllAsync(
+            a => a.StravaUserId == request.StravaUserId,
+            cancellationToken: cancellationToken);
 
-        var activityIds = activicities.Select(e => e.Id).ToList();
-        var streams = await _unitOfWork.Streams.GetAllAsync(e => activityIds.Contains(e.ActivityId));
+        var activityIds = activicities.Select(e => e.Id);
+        var streams = await _unitOfWork.Streams.GetAllAsync(
+            s => activityIds.Contains(s.ActivityId),
+            cancellationToken: cancellationToken);
 
         _unitOfWork.Activities.DeleteRange(activicities);
         _unitOfWork.Streams.DeleteRange(streams);
