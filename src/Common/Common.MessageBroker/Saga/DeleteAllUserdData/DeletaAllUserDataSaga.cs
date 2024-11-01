@@ -14,7 +14,7 @@ public sealed class DeletaAllUserDataSaga : MassTransitStateMachine<DeletaAllUse
     public State TilesProcessed { get; set; }
     public State AchievementsProcessed { get; set; }
 
-    public Event<DeletaAllUserDataStartSagaMessage> DeletaAllUserDataStartSagaMessage { get; set; }
+    public Event<DeleteAllUserDataStartSagaMessage> DeleteAllUserDataStartSagaMessage { get; set; }
 
     public Event<UserTokenDeletedEvent> UserTokenDeletedEvent { get; set; }
     public Event<UserDetailsDeletedEvent> UserDetailsDeletedEvent { get; set; }
@@ -26,14 +26,14 @@ public sealed class DeletaAllUserDataSaga : MassTransitStateMachine<DeletaAllUse
     {
         InstanceState(e => e.CurrentState);
 
-        Event(() => DeletaAllUserDataStartSagaMessage, e => e.CorrelateById(m => m.Message.CorrelationId));
+        Event(() => DeleteAllUserDataStartSagaMessage, e => e.CorrelateById(m => m.Message.CorrelationId));
         Event(() => UserTokenDeletedEvent, e => e.CorrelateById(m => m.Message.CorrelationId));
         Event(() => UserDetailsDeletedEvent, e => e.CorrelateById(m => m.Message.CorrelationId));
         Event(() => UserActivitiesDeletedEvent, e => e.CorrelateById(m => m.Message.CorrelationId));
         Event(() => UserTilesDeletedEvent, e => e.CorrelateById(m => m.Message.CorrelationId));
 
         Initially(
-            When(DeletaAllUserDataStartSagaMessage)
+            When(DeleteAllUserDataStartSagaMessage)
                 .Publish(context => CreateDeleteUserTokenMessage(context.Message))
                 .Then(context => context.Saga.StravaUserId = context.Message.StravaUserId)
                 .TransitionTo(StartingSaga));
@@ -69,7 +69,7 @@ public sealed class DeletaAllUserDataSaga : MassTransitStateMachine<DeletaAllUse
                 .Finalize());
     }
 
-    private static DeleteUserTokenMessage CreateDeleteUserTokenMessage(DeletaAllUserDataStartSagaMessage message)
+    private static DeleteUserTokenMessage CreateDeleteUserTokenMessage(DeleteAllUserDataStartSagaMessage message)
     {
         return new(message.CorrelationId, message.StravaUserId);
     }

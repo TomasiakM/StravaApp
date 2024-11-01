@@ -1,7 +1,7 @@
 ﻿
 using Common.MessageBroker.Contracts.Activities;
-using Common.MessageBroker.Contracts.Athletes;
 using Common.MessageBroker.Saga.DeleteActivity;
+using Common.MessageBroker.Saga.DeleteAllUserdData;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -40,7 +40,7 @@ internal sealed class HandleEventCommandHandler : IRequestHandler<HandleEventCom
         {
             if (request.Updates.Authorized == "false")
             {
-                await _bus.Publish(new UnauthorizeAthleteEvent(request.OwnerId));
+                await _bus.Publish(new DeleteAllUserDataStartSagaMessage(Guid.NewGuid(), request.OwnerId));
 
                 return Unit.Value;
             }

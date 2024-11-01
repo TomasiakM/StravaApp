@@ -1,4 +1,4 @@
 ﻿namespace Common.MessageBroker.Saga.DeleteAllUserdData;
-public record DeletaAllUserDataStartSagaMessage(
+public record DeleteAllUserDataStartSagaMessage(
     Guid CorrelationId,
     long StravaUserId);
