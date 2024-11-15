@@ -28,6 +28,11 @@ public abstract class Achievement : AggregateRoot<AchievementId>
             throw new ArgumentException("Level cannot be negative");
         }
 
+        if (level > GetThresholds().Count())
+        {
+            throw new ArgumentException("Level cannot be greater than thresholds count");
+        }
+
         var currentMaxLevel = _achievementLevels.Count == 0
             ? 0 :
             _achievementLevels.Max(e => e.Level);
