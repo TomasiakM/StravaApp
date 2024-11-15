@@ -1,5 +1,4 @@
-﻿using Achievements.Application.Dtos.Achievements;
-using MediatR;
+﻿using MediatR;
 
 namespace Achievements.Application.Features.Achievements.Queries.GetAchievements;
-public record GetAchievementsQuery() : IRequest<IEnumerable<AchievementsResponse>>;
+public record GetAchievementsQuery() : IRequest<IEnumerable<GetAchievementsQueryResponse>>;

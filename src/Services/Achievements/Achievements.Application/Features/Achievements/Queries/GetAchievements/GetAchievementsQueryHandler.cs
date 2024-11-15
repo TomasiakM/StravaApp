@@ -1,5 +1,4 @@
-﻿using Achievements.Application.Dtos.Achievements;
-using Achievements.Application.Interfaces;
+﻿using Achievements.Application.Interfaces;
 using Achievements.Domain.Interfaces;
 using Common.Application.Interfaces;
 using MapsterMapper;
@@ -7,7 +6,7 @@ using MediatR;
 
 namespace Achievements.Application.Features.Achievements.Queries.GetAchievements;
 internal sealed class GetAchievementsQueryHandler
-    : IRequestHandler<GetAchievementsQuery, IEnumerable<AchievementsResponse>>
+    : IRequestHandler<GetAchievementsQuery, IEnumerable<GetAchievementsQueryResponse>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserIdProvider _userIdProvider;
@@ -22,7 +21,7 @@ internal sealed class GetAchievementsQueryHandler
         _achievementFactory = achievementFactory;
     }
 
-    public async Task<IEnumerable<AchievementsResponse>> Handle(GetAchievementsQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<GetAchievementsQueryResponse>> Handle(GetAchievementsQuery request, CancellationToken cancellationToken)
     {
         var stravaUserId = _userIdProvider.GetUserId();
         var achievements = await _unitOfWork.Achievements
@@ -30,7 +29,7 @@ internal sealed class GetAchievementsQueryHandler
 
         var restAchievements = _achievementFactory.CreateAll(stravaUserId, achievements);
 
-        var achievementDtos = _mapper.Map<IEnumerable<AchievementsResponse>>(achievements.Concat(restAchievements));
+        var achievementDtos = _mapper.Map<List<GetAchievementsQueryResponse>>(achievements.Concat(restAchievements));
 
         return achievementDtos;
     }
