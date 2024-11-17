@@ -10,7 +10,7 @@ public abstract class ValueObject : IEquatable<ValueObject>
 
     public static bool operator !=(ValueObject one, ValueObject two)
     {
-        return Equals(one, two);
+        return !Equals(one, two);
     }
 
     public override bool Equals(object? obj)
