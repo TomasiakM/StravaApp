@@ -1,7 +1,7 @@
 ﻿using Common.Domain.Enums;
 
-namespace Activities.Application.Dtos.Activities;
-public record ActivityResponse(
+namespace Activities.Application.Features.Activities.Queries.GetAllActivities;
+public record GetAllActivitiesQueryResponse(
     long StravaId,
     string Name,
     float Distance,

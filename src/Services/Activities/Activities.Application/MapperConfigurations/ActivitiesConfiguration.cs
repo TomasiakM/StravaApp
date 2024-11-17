@@ -1,4 +1,4 @@
-﻿using Activities.Application.Dtos.Activities;
+﻿using Activities.Application.Features.Activities.Queries.GetAllActivities;
 using Activities.Domain.Aggregates.Activities;
 using Common.Domain.Models;
 using Mapster;
@@ -8,7 +8,7 @@ public sealed class ActivitiesConfiguration : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
-        config.NewConfig<ActivityAggregate, ActivityResponse>()
+        config.NewConfig<ActivityAggregate, GetAllActivitiesQueryResponse>()
             .Map(dest => dest, src => src.Heartrate)
             .Map(dest => dest, src => src.Speed)
             .Map(dest => dest, src => src.Time)
