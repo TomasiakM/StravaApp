@@ -53,6 +53,11 @@ internal sealed class UpdateActivityCommandHandler : IRequestHandler<UpdateActiv
             request.Streams.Distance,
             request.Streams.LatLngs);
 
+        _unitOfWork.Streams.Update(streams);
+        _unitOfWork.Activities.Update(activity);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
         _logger.LogInformation("Activity:{ActivityId} updated successfully.", request.Id);
 
         return Unit.Value;
