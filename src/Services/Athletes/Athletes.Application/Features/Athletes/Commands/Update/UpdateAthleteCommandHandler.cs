@@ -30,6 +30,7 @@ internal sealed class UpdateAthleteCommandHandler : IRequestHandler<UpdateAthlet
             request.Profile,
             request.ProfileMedium);
 
+        _unitOfWork.Athletes.Update(athlete);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation("Athlete:{AthleteId} successfully updated.", request.Id);
