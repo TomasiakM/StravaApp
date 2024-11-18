@@ -3,7 +3,7 @@
 namespace Activities.Domain.Aggregates.Activities.ValueObjects;
 public sealed class ActivityId : ValueObject
 {
-    public Guid Value { get; set; }
+    public Guid Value { get; init; }
 
     private ActivityId(Guid value) => Value = value;
 

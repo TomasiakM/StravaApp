@@ -4,8 +4,8 @@ using Common.Domain.Models;
 namespace Activities.Domain.Aggregates.Activities.ValueObjects;
 public sealed class Map : ValueObject
 {
-    public LatLng? StartLatlng { get; private set; }
-    public LatLng? EndLatlng { get; private set; }
+    public LatLng? StartLatlng { get; init; }
+    public LatLng? EndLatlng { get; init; }
 
     public string? Polyline { get; init; }
     public string? SummaryPolyline { get; init; }
