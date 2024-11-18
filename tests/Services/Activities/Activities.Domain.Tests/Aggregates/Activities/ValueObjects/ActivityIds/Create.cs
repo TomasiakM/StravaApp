@@ -21,11 +21,11 @@ public class Create
     }
 
     [Fact]
-    public void Should2ActivityIdsBeDifferents()
+    public void ShouldCreateUniqueActivityIds()
     {
         var activityId = ActivityId.Create();
         var activityId2 = ActivityId.Create();
 
-        Assert.NotEqual(activityId.Value, activityId2.Value);
+        Assert.False(activityId == activityId2);
     }
 }
