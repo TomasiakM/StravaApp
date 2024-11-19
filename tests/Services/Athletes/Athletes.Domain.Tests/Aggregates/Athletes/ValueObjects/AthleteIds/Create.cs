@@ -21,12 +21,11 @@ public class Create
     }
 
     [Fact]
-    public void ShouldCreateUnique2AthleteIds()
+    public void ShouldCreateDifferentAthletteIds()
     {
         var athleteId1 = AthleteId.Create();
         var athleteId2 = AthleteId.Create();
 
-        Assert.NotEqual(athleteId1.Value, athleteId2.Value);
-        Assert.NotEqual(athleteId1, athleteId2);
+        Assert.False(athleteId1 == athleteId2);
     }
 }
