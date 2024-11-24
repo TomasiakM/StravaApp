@@ -31,6 +31,8 @@ internal sealed class UpdateActivityTilesCommandHandler : IRequestHandler<Update
             {
                 var tiles = request.LatLngs.ToUniqueTiles(Tile.DEFAULT_TILE_ZOOM);
                 actTiles.Update(prevTiles, tiles);
+                _unitOfWork.Tiles.Update(actTiles);
+
                 prevTiles.AddRange(actTiles.Tiles);
 
                 isUpdated = true;
@@ -45,6 +47,8 @@ internal sealed class UpdateActivityTilesCommandHandler : IRequestHandler<Update
             }
 
             actTiles.Update(prevTiles, actTiles.Tiles);
+            _unitOfWork.Tiles.Update(actTiles);
+
             prevTiles.AddRange(actTiles.Tiles);
         }
 
@@ -56,6 +60,7 @@ internal sealed class UpdateActivityTilesCommandHandler : IRequestHandler<Update
         if (coordinates is not null)
         {
             coordinates.Update(request.LatLngs);
+            _unitOfWork.Coordinates.Update(coordinates);
         }
         else
         {

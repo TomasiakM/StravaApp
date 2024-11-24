@@ -25,7 +25,7 @@ internal sealed class CreateActivityTilesCommandHandler : IRequestHandler<Create
         _unitOfWork.Coordinates.Add(coordinates);
 
         var activityTilesList = await _unitOfWork.Tiles.GetAllAsync(e => e.StravaUserId == request.StravaUserId);
-        if (activityTilesList.Any(e => e.CreatedAt > request.CreatedAt))
+        if (!activityTilesList.Any() || !activityTilesList.Any(e => e.CreatedAt > request.CreatedAt))
         {
             var activityTiles = ActivityTilesAggregate.Create(
                 request.StravaActivityId,
@@ -69,8 +69,12 @@ internal sealed class CreateActivityTilesCommandHandler : IRequestHandler<Create
             }
 
             activityTiles.Update(prevTiles, activityTiles.Tiles);
+            _unitOfWork.Tiles.Update(activityTiles);
+
             prevTiles.AddRange(activityTiles.Tiles);
         }
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation("Activity tiles created.");
 

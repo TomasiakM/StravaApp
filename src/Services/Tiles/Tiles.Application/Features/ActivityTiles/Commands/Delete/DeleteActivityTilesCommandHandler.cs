@@ -39,6 +39,7 @@ internal sealed class DeleteActivityTilesCommandHandler : IRequestHandler<Delete
             if (isDeleted)
             {
                 activityTiles.Update(prevTiles, activityTiles.Tiles);
+                _unitOfWork.Tiles.Update(activityTiles);
             }
         }
 
