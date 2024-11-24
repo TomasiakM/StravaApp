@@ -26,6 +26,6 @@ public class Create
         var activityTilesId = ActivityTilesId.Create();
         var activityTilesId2 = ActivityTilesId.Create();
 
-        Assert.NotEqual(activityTilesId.Value, activityTilesId2.Value);
+        Assert.NotEqual(activityTilesId, activityTilesId2);
     }
 }
