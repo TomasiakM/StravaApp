@@ -1,5 +1,5 @@
-﻿namespace Tiles.Application.Dtos.ActivityTiles;
-public record ActivityTilesResponse(
+﻿namespace Tiles.Application.Features.ActivityTiles.Queries.GetAll;
+public record GetAllActivityTilesQueryResponse(
     long StravaUserId,
     long StravaActivityId,
     int NewSquare,

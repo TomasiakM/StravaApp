@@ -2,11 +2,10 @@
 using Common.Domain.Enums;
 using MapsterMapper;
 using MediatR;
-using Tiles.Application.Dtos.ActivityTiles;
 using Tiles.Application.Interfaces;
 
 namespace Tiles.Application.Features.ActivityTiles.Queries.GetAll;
-internal sealed class GetAllActivityTilesQueryHandler : IRequestHandler<GetAllActivityTilesQuery, IEnumerable<ActivityTilesResponse>>
+internal sealed class GetAllActivityTilesQueryHandler : IRequestHandler<GetAllActivityTilesQuery, IEnumerable<GetAllActivityTilesQueryResponse>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -19,7 +18,7 @@ internal sealed class GetAllActivityTilesQueryHandler : IRequestHandler<GetAllAc
         _userIdProvider = userIdProvider;
     }
 
-    public async Task<IEnumerable<ActivityTilesResponse>> Handle(GetAllActivityTilesQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<GetAllActivityTilesQueryResponse>> Handle(GetAllActivityTilesQuery request, CancellationToken cancellationToken)
     {
         var stravaUserId = _userIdProvider.GetUserId();
 
@@ -30,7 +29,7 @@ internal sealed class GetAllActivityTilesQueryHandler : IRequestHandler<GetAllAc
                 sortOrder: SortOrder.Desc,
                 cancellationToken: cancellationToken);
 
-        var dtos = _mapper.Map<IEnumerable<ActivityTilesResponse>>(activityTiles);
+        var dtos = _mapper.Map<IEnumerable<GetAllActivityTilesQueryResponse>>(activityTiles);
 
         return dtos;
     }
