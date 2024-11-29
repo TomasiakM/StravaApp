@@ -13,4 +13,12 @@
     <ProjectReference Include="..\Strava.Domain\Strava.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+	<InternalsVisibleTo Include="Strava.Application.Tests" />
+
+	<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+	  <_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
+	</AssemblyAttribute>
+  </ItemGroup>
+
 </Project>
