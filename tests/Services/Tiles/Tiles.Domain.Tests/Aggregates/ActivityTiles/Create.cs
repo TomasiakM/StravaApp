@@ -32,7 +32,7 @@ public class Create
 
         Assert.Equal(3, activityTiles.NewSquare);
         Assert.Equal(9, activityTiles.NewTiles.Count);
-        Assert.Equal(1, activityTiles.NewClusterTiles.Count);
+        Assert.Single(activityTiles.NewClusterTiles);
     }
 
     [Fact]
@@ -61,6 +61,6 @@ public class Create
 
         Assert.Equal(2, activityTiles.NewSquare);
         Assert.Equal(7, activityTiles.NewTiles.Count);
-        Assert.Equal(1, activityTiles.NewClusterTiles.Count);
+        Assert.Single(activityTiles.NewClusterTiles);
     }
 }

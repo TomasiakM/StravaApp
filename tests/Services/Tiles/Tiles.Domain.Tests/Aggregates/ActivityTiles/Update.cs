@@ -38,6 +38,6 @@ public class Update
         Assert.Equal(1, activityTiles.NewSquare);
         Assert.Equal(5, activityTiles.Tiles.Count);
         Assert.Equal(4, activityTiles.NewTiles.Count);
-        Assert.Equal(0, activityTiles.NewClusterTiles.Count);
+        Assert.Empty(activityTiles.NewClusterTiles);
     }
 }
