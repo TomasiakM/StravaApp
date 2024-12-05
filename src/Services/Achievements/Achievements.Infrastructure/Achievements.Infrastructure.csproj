@@ -11,4 +11,8 @@
     <ProjectReference Include="..\Achievements.Application\Achievements.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+	<InternalsVisibleTo Include="Achievements.Integration.Tests" />
+  </ItemGroup>
+
 </Project>
