@@ -1,5 +1,6 @@
 ﻿using Achievements.Infrastructure.Persistence;
 using Common.Tests.Utils;
+using MassTransit.Testing;
 
 namespace Achievements.Integration.Tests;
 [Collection(nameof(TestCollection))]
@@ -8,6 +9,7 @@ public abstract class BaseTest : IAsyncLifetime
     private protected readonly ServiceDbContext Db;
     protected HttpClient ServiceClient;
     protected Func<Task> ResetDb;
+    protected ITestHarness Harness;
 
     public BaseTest(IntegrationTestWebAppFactory factory)
     {
@@ -15,6 +17,7 @@ public abstract class BaseTest : IAsyncLifetime
 
         ResetDb = factory.ResetDatabase;
 
+        Harness = factory.Services.GetTestHarness();
         ServiceClient = factory.CreateClient();
     }
 

@@ -1,4 +1,5 @@
 ﻿using Achievements.Infrastructure.Persistence;
+using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -57,6 +58,7 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
                 options.UseSqlServer(_container.GetConnectionString());
             });
             services.EnsureDbCreated<ServiceDbContext>();
+            services.AddMassTransitTestHarness();
         });
     }
 }
