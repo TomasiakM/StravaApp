@@ -142,6 +142,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strava.Application.Tests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Achievements.Integration.Tests", "tests\Services\Achievements\Achievements.Integration.Tests\Achievements.Integration.Tests.csproj", "{59E8BB32-827F-4624-9B1F-BF54709716D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Activities.Integration.Tests", "tests\Services\Activities\Activities.Integration.Tests\Activities.Integration.Tests.csproj", "{91E6E9FC-CA20-40BE-B643-BCDBD8E1EE9D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -324,6 +326,10 @@ Global
 		{59E8BB32-827F-4624-9B1F-BF54709716D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59E8BB32-827F-4624-9B1F-BF54709716D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59E8BB32-827F-4624-9B1F-BF54709716D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91E6E9FC-CA20-40BE-B643-BCDBD8E1EE9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91E6E9FC-CA20-40BE-B643-BCDBD8E1EE9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91E6E9FC-CA20-40BE-B643-BCDBD8E1EE9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91E6E9FC-CA20-40BE-B643-BCDBD8E1EE9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -390,6 +396,7 @@ Global
 		{F8C9AB26-257E-49CB-A47D-7133F232E4EB} = {289F58E5-7755-426B-9CB7-3411A578374C}
 		{438F9283-475D-45EF-92F9-F0A25B2B8201} = {F8C9AB26-257E-49CB-A47D-7133F232E4EB}
 		{59E8BB32-827F-4624-9B1F-BF54709716D8} = {02384182-0741-4F06-968E-BC87F4AD010C}
+		{91E6E9FC-CA20-40BE-B643-BCDBD8E1EE9D} = {E7B5EBFD-D173-4A5C-97EA-F1B2AEEEA02E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D3722679-F2EA-4213-837A-7BA48B497A6E}

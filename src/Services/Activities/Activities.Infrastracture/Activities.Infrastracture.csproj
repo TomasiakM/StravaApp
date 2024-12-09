@@ -11,4 +11,8 @@
     <ProjectReference Include="..\Activities.Application\Activities.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+	<InternalsVisibleTo Include="Activities.Integration.Tests" />
+  </ItemGroup>
+
 </Project>
