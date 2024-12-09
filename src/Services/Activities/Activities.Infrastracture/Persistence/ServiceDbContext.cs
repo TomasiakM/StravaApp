@@ -10,7 +10,7 @@ internal sealed class ServiceDbContext : BaseDbContext
 {
     private readonly IConfiguration _configuration;
 
-    public DbSet<ActivityAggregate> Athletes => Set<ActivityAggregate>();
+    public DbSet<ActivityAggregate> Activities => Set<ActivityAggregate>();
     public DbSet<StreamAggregate> Streams => Set<StreamAggregate>();
 
     public ServiceDbContext(IConfiguration configuration)
