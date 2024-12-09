@@ -1,9 +1,10 @@
 ﻿using Achievements.Infrastructure.Persistence;
+using Common.Tests;
 using Common.Tests.Utils;
 using MassTransit.Testing;
 
 namespace Achievements.Integration.Tests;
-[Collection(nameof(TestCollection))]
+[Collection(nameof(IntegrationTestCollection<IntegrationTestWebAppFactory>))]
 public abstract class BaseTest : IAsyncLifetime
 {
     private protected readonly ServiceDbContext Db;
