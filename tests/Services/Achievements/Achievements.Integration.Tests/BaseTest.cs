@@ -4,6 +4,8 @@ using Common.Tests.Utils;
 using MassTransit.Testing;
 
 namespace Achievements.Integration.Tests;
+
+[Trait("Category", "Integration")]
 [Collection(nameof(IntegrationTestCollection<IntegrationTestWebAppFactory>))]
 public abstract class BaseTest : IAsyncLifetime
 {
