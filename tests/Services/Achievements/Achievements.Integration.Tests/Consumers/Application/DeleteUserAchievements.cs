@@ -24,7 +24,7 @@ public class DeleteUserAchievements : BaseTest, IClassFixture<IntegrationTestWeb
     }
 
     [Fact]
-    public async Task DeleteUserAchievementsConsumerShould_DeleteAllUserAchievements()
+    public async Task DeleteUserAchievementsConsumerShould_DeleteAllUserAchievements_IfUserIdIsRelatedWithUser()
     {
         var userId = 5;
         var message = new DeleteUserAchievementsMessage(Guid.NewGuid(), userId);
@@ -47,7 +47,7 @@ public class DeleteUserAchievements : BaseTest, IClassFixture<IntegrationTestWeb
     }
 
     [Fact]
-    public async Task DeleteUserAchievementsConsumer_ShouldNot_DeleteUserAchievements_WhichHaveDifferentId()
+    public async Task DeleteUserAchievementsConsumer_ShouldNotDeleteUserAchievements_IfUserIdIsNotRelatedWithUser()
     {
         var userId = 6;
         var message = new DeleteUserAchievementsMessage(Guid.NewGuid(), userId);
@@ -63,18 +63,17 @@ public class DeleteUserAchievements : BaseTest, IClassFixture<IntegrationTestWeb
         await Insert(achievement3);
         await Insert(achievement4);
 
+
         await Harness.Bus.Publish(message);
         Assert.True(await Harness.Published.Any<UserAchievementsDeletedEvent>());
-
         await Task.Delay(50);
 
-        var userAchievements = await Db
-            .Achievements
+
+        var userAchievements = await Db.Achievements
             .Where(e => e.StravaUserId == otherUserId)
             .ToListAsync();
 
-        var deletedUserAchievements = await Db
-            .Achievements
+        var deletedUserAchievements = await Db.Achievements
             .Where(e => e.StravaUserId == userId)
             .ToListAsync();
 

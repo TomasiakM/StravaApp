@@ -14,7 +14,10 @@ public class DeleteUserActivities : BaseTest, IClassFixture<IntegrationTestWebAp
     public async Task ShouldPublishCorrelatedEvent()
     {
         var message = new DeleteUserActivitiesMessage(Guid.NewGuid(), 1);
+
+
         await Harness.Bus.Publish(message);
+
 
         Assert.True(await Harness.Published
             .SelectAsync<UserActivitiesDeletedEvent>(e =>
@@ -31,7 +34,6 @@ public class DeleteUserActivities : BaseTest, IClassFixture<IntegrationTestWebAp
 
         var activity = Aggregates.CreateActivity(1, userId);
         var stream = Aggregates.CreateStream(activity.Id);
-
         await Insert(activity);
         await Insert(stream);
 
@@ -40,13 +42,14 @@ public class DeleteUserActivities : BaseTest, IClassFixture<IntegrationTestWebAp
         await Insert(activity2);
         await Insert(stream2);
 
+
         await Harness.Bus.Publish(message);
         Assert.True(await Harness.Published.Any<UserActivitiesDeletedEvent>());
         await Task.Delay(50);
 
+
         var activities = await Db.Activities.ToListAsync();
         var streams = await Db.Streams.ToListAsync();
-
         Assert.Empty(activities);
         Assert.Empty(streams);
     }
@@ -55,6 +58,8 @@ public class DeleteUserActivities : BaseTest, IClassFixture<IntegrationTestWebAp
     public async Task ShouldNotDeleteAllUserActivitiesWithRelatedStreams_IfUserIdIsNotRelated()
     {
         var userId = 59;
+        var notRelatedUserId = 6;
+        var message = new DeleteUserActivitiesMessage(Guid.NewGuid(), notRelatedUserId);
 
         var activity = Aggregates.CreateActivity(1, userId);
         var stream = Aggregates.CreateStream(activity.Id);
@@ -66,15 +71,14 @@ public class DeleteUserActivities : BaseTest, IClassFixture<IntegrationTestWebAp
         await Insert(activity2);
         await Insert(stream2);
 
-        var notRelatedUserId = 6;
-        var message = new DeleteUserActivitiesMessage(Guid.NewGuid(), notRelatedUserId);
+
         await Harness.Bus.Publish(message);
         Assert.True(await Harness.Published.Any<UserActivitiesDeletedEvent>());
         await Task.Delay(50);
 
+
         var activities = await Db.Activities.ToListAsync();
         var streams = await Db.Streams.ToListAsync();
-
         Assert.Equal(2, activities.Count);
         Assert.Equal(2, streams.Count);
     }

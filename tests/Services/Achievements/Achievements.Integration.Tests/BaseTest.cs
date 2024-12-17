@@ -24,8 +24,9 @@ public abstract class BaseTest : IAsyncLifetime
 
     public async Task Insert<T>(T entity) where T : class
     {
-        await Db.AddAsync(entity);
+        Db.Add(entity);
         await Db.SaveChangesAsync();
+        Db.ChangeTracker.Clear();
     }
 
     public void AddToken(int userId = 1)
