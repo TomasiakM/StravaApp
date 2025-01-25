@@ -2,6 +2,7 @@
 using Common.Tests;
 using Common.Tests.Utils;
 using MassTransit.Testing;
+using MediatR;
 
 namespace Achievements.Integration.Tests;
 
@@ -13,10 +14,12 @@ public abstract class BaseTest : IAsyncLifetime
     protected HttpClient ServiceClient;
     protected Func<Task> ResetDb;
     protected ITestHarness Harness;
+    protected IMediator Mediator;
 
     public BaseTest(IntegrationTestWebAppFactory factory)
     {
         Db = factory.Db;
+        Mediator = factory.Mediator;
 
         ResetDb = factory.ResetDatabase;
 

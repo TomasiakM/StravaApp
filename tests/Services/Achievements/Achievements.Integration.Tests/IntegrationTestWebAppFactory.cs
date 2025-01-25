@@ -1,5 +1,6 @@
 ﻿using Achievements.Infrastructure.Persistence;
 using MassTransit;
+using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -21,9 +22,11 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
     internal ServiceDbContext Db { get; private set; } = null!;
     private Respawner _respawner = null!;
     private DbConnection _connection = null!;
+    internal IMediator Mediator = null!;
 
     public async Task ResetDatabase()
     {
+        Db.ChangeTracker.Clear();
         await _respawner.ResetAsync(_connection);
     }
 
@@ -31,7 +34,12 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
     {
         await _container.StartAsync();
 
-        Db = Services.CreateScope().ServiceProvider.GetRequiredService<ServiceDbContext>();
+        var scope = Services.CreateScope();
+        var serviceProvider = scope.ServiceProvider;
+
+        Db = serviceProvider.GetRequiredService<ServiceDbContext>();
+        Mediator = serviceProvider.GetRequiredService<IMediator>();
+
         _connection = Db.Database.GetDbConnection();
         await _connection.OpenAsync();
 
