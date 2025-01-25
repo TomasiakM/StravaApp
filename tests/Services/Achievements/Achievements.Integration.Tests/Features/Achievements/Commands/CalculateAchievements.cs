@@ -1,24 +1,25 @@
-﻿using Achievements.Domain.Aggregates.Achievement.AchevementTypes.DistanceAchievements;
+﻿using Achievements.Application.Features.Achievements.Commands.Calculate;
+using Achievements.Domain.Aggregates.Achievement.AchevementTypes.DistanceAchievements;
 using Achievements.Domain.Aggregates.Achievement.Enums;
 using Common.Application.Providers;
 using Common.Domain.Models;
 using Common.MessageBroker.Contracts.Activities.GetUserActivities;
-using Common.MessageBroker.Saga.Common.Events;
 using Common.MessageBroker.Saga.Common.Messages;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
-namespace Achievements.Integration.Tests.Consumers.Application;
-public class UpdateAchievements : BaseTest, IClassFixture<IntegrationTestWebAppFactory>
+namespace Achievements.Integration.Tests.Features.Achievements.Commands;
+
+// TODO: Tests works fine when you run them separatly, but when all those tests are launched, only first one is passing
+// Setting up response in every test do nothing, each test will have data configurated in first running test (sometimes last test can receive data from second test)
+// Problem with setting up data in Harness.Bus.ConnectReceiveEndpoint
+public class CalculateAchievements : BaseTest, IClassFixture<IntegrationTestWebAppFactory>
 {
-    // TODO: Tests works fine when you run them separatly, but when all those tests are launched, only first one is passing
-    // Setting up response in every test do nothing, each test will have data configurated in first running test (sometimes last test can receive data from second test)
-    // Problem with setting up data in Harness.Bus.ConnectReceiveEndpoint
-    public UpdateAchievements(IntegrationTestWebAppFactory factory)
+    public CalculateAchievements(IntegrationTestWebAppFactory factory)
         : base(factory) { }
 
     [Fact]
-    public async Task Should_CreateAllAchievements_WithInitialLevel()
+    public async Task ShouldCreateAchievements_WhenTheyNotExists()
     {
         var message = new UpdateAchievementsMessage(Guid.NewGuid(), 1, 22);
         Harness.Bus.ConnectReceiveEndpoint(
@@ -27,11 +28,8 @@ public class UpdateAchievements : BaseTest, IClassFixture<IntegrationTestWebAppF
                     new GetUserActivitiesResponse(new List<Activity>()))));
 
 
-        await Harness.Bus.Publish(message);
-        Assert.True(await Harness.Published.Any<AchievementsUpdatedEvent>());
-        await Task.Delay(50);
-
-        Harness.ForceInactive();
+        var command = new CalculateAchievementsCommand(message.StravaUserId);
+        await Mediator.Send(command);
 
         var achievements = await Db
             .Achievements
@@ -43,32 +41,27 @@ public class UpdateAchievements : BaseTest, IClassFixture<IntegrationTestWebAppF
     }
 
     [Fact]
-    public async Task Should_CreateAllAchievements_WithRightLevel()
+    public async Task ShouldCreateAchievements_WhenTheyNotExists_WithCalculatedLevel()
     {
-        var message = new UpdateAchievementsMessage(Guid.NewGuid(), 1, 33);
+        var message = new UpdateAchievementsMessage(Guid.NewGuid(), 1, 22);
+        var command = new CalculateAchievementsCommand(message.StravaUserId);
+
         var activities = new List<Activity>
         {
              new (Guid.NewGuid(), 2000000, new(2022, 1, 1)),
         };
 
+
         Harness.Bus.ConnectReceiveEndpoint(
-           e => e.Handler<GetUserActivitiesRequest>(
-               async e => await e.RespondAsync(
-                   new GetUserActivitiesResponse(activities))));
-
-
-        await Harness.Bus.Publish(message);
-        Assert.True(await Harness.Published.Any<AchievementsUpdatedEvent>());
-        await Task.Delay(50);
-
-        Harness.ForceInactive();
+            e => e.Handler<GetUserActivitiesRequest>(
+                async e => await e.RespondAsync(
+                    new GetUserActivitiesResponse(activities))));
+        await Mediator.Send(command);
 
         var achievements = await Db
             .Achievements
             .Where(e => e.StravaUserId == message.StravaUserId)
             .ToListAsync();
-
-        Assert.NotEmpty(achievements);
 
         var first = achievements.Where(e => e.AchievementType == AchievementType.CumulativeDistance).First();
         var second = achievements.Where(e => e.AchievementType == AchievementType.YearlyCumulativeDistance).First();
@@ -77,9 +70,11 @@ public class UpdateAchievements : BaseTest, IClassFixture<IntegrationTestWebAppF
     }
 
     [Fact]
-    public async Task Should_UpdateAllAchievements_WithRightLevel()
+    public async Task ShouldUpdateAchievements()
     {
-        var message = new UpdateAchievementsMessage(Guid.NewGuid(), 1, 36);
+        var message = new UpdateAchievementsMessage(Guid.NewGuid(), 1, 22);
+        var command = new CalculateAchievementsCommand(message.StravaUserId);
+
         var activities = new List<Activity>
         {
              new (Guid.NewGuid(), 2000000, new(2022, 1, 1)),
@@ -92,28 +87,24 @@ public class UpdateAchievements : BaseTest, IClassFixture<IntegrationTestWebAppF
         await Insert(achievement);
         await Insert(achievement2);
 
+        activities.Add(new(Guid.NewGuid(), 4000000, new(2022, 1, 2)));
 
-        activities.Add(new(Guid.NewGuid(), 2000000, new(2022, 1, 2)));
+
         Harness.Bus.ConnectReceiveEndpoint(
-           e => e.Handler<GetUserActivitiesRequest>(
-               async e => await e.RespondAsync(
-                   new GetUserActivitiesResponse(activities))));
+            e => e.Handler<GetUserActivitiesRequest>(
+                async e => await e.RespondAsync(
+                    new GetUserActivitiesResponse(activities))));
 
-
-        await Harness.Bus.Publish(message);
-        Assert.True(await Harness.Published.Any<AchievementsUpdatedEvent>());
-        await Task.Delay(50);
+        await Mediator.Send(command);
 
         var achievements = await Db
             .Achievements
             .Where(e => e.StravaUserId == message.StravaUserId)
             .ToListAsync();
 
-        Assert.NotEmpty(achievements);
-
         var first = achievements.Where(e => e.AchievementType == achievement.AchievementType).First();
         var second = achievements.Where(e => e.AchievementType == achievement2.AchievementType).First();
-        Assert.Equal(5, first.AchievementLevels.Count);
-        Assert.Equal(5, second.AchievementLevels.Count);
+        Assert.Equal(6, first.AchievementLevels.Count);
+        Assert.Equal(7, second.AchievementLevels.Count);
     }
 }
