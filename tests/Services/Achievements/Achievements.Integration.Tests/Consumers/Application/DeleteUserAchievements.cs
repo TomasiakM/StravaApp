@@ -1,6 +1,7 @@
 ﻿using Achievements.Application.Consumers;
 using Common.MessageBroker.Saga.DeleteAllUserdData.Events;
 using Common.MessageBroker.Saga.DeleteAllUserdData.Messages;
+using MassTransit.Testing;
 
 namespace Achievements.Integration.Tests.Consumers.Application;
 
@@ -19,6 +20,10 @@ public class DeleteUserAchievements : BaseTest, IClassFixture<IntegrationTestWeb
 
         var consumerHarness = Harness.GetConsumerHarness<DeleteUserAchievementsMessageConsumer>();
         Assert.True(await consumerHarness.Consumed.Any<DeleteUserAchievementsMessage>());
-        Assert.True(await Harness.Published.Any<UserAchievementsDeletedEvent>());
+        Assert.True(await Harness.Published
+            .SelectAsync<UserAchievementsDeletedEvent>(e =>
+                e.Context.Message.CorrelationId == message.CorrelationId &&
+                e.Context.Message.StravaUserId == message.StravaUserId)
+            .Any());
     }
 }
